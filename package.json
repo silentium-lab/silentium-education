@@ -1,0 +1,23 @@
+{
+  "name": "silentium-education",
+  "version": "0.0.0",
+  "description": "Silentium education site",
+  "source": "public/index.html",
+  "scripts": {
+    "start": "parcel",
+    "build": "parcel build"
+  },
+  "author": "Silentium Lab",
+  "license": "MIT",
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.15.4",
+    "parcel": "^2.15.4",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "silentium": "^0.0.61",
+    "silentium-components": "^0.0.26",
+    "silentium-morphdom": "^0.0.2",
+    "silentium-web-api": "^0.0.12"
+  }
+}
