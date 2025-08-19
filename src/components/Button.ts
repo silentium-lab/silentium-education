@@ -11,11 +11,13 @@ export const button = (): InformationType<string> => {
   const [sharedCountSrc] = shared(countSrc);
   const [incrementIdSrc] = shared(id(i("increment")));
   const [resetIdSrc] = shared(id(i("reset")));
+
   clicked(first(elements(className(incrementIdSrc))))(() => {
     once(sharedCountSrc)((c) => {
       countOwner(c + 1);
     });
   });
+
   clicked(first(elements(className(resetIdSrc))))(() => {
     countOwner(1);
   });
