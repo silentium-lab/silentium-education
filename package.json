@@ -15,9 +15,10 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
-    "silentium": "^0.0.61",
-    "silentium-components": "^0.0.26",
-    "silentium-morphdom": "^0.0.2",
-    "silentium-web-api": "^0.0.12"
+    "silentium": "^0.0.63",
+    "silentium-components": "^0.0.27",
+    "silentium-morphdom": "^0.0.3",
+    "silentium-web-api": "^0.0.13",
+    "uuid": "^11.1.0"
   }
 }
