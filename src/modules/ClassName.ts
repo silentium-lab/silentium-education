@@ -1,4 +1,12 @@
-import { applied, InformationType } from "silentium";
+import { Applied, InformationType, TheInformation, TheOwner } from "silentium";
 
-export const className = (s: InformationType<string>) =>
-  applied(s, (s) => "." + s);
+export class ClassName extends TheInformation<string> {
+  public constructor(private s: InformationType<string>) {
+    super(s);
+  }
+
+  public value(o: TheOwner<string>): this {
+    new Applied(this.s, (s) => "." + s).value(o);
+    return this;
+  }
+}

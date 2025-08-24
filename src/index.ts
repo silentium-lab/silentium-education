@@ -1,4 +1,5 @@
+import { Void } from "silentium";
 import "./assets/common.scss";
-import { app } from "./components/App";
+import { App } from "./components/App";
 
-app(() => {});
+new App().value(new Void());

@@ -1,37 +1,18 @@
-import { all, i, InformationType } from "silentium";
+import { FromEvent, InformationType, Of, OwnerType, TheInformation } from "silentium";
 
-const fromEvent = (
-  emitterSrc: InformationType<any>,
-  eventNameSrc: InformationType<string>,
-  subscribeMethodSrc: InformationType<string>,
-  unsubscribeMethodSrc: InformationType<string> = i(""),
-): InformationType => {
-  const a = all(
-    emitterSrc,
-    eventNameSrc,
-    subscribeMethodSrc,
-    unsubscribeMethodSrc,
-  );
-  return (o) => {
-    const handler = (...args: any[]) => {
-      o(args);
-    };
-    const d = a(([emitter, eventName, subscribe, unsubscribe]) => {
-      emitter[subscribe](eventName, handler);
-      return () => {
-        if (unsubscribe !== undefined) {
-          emitter[unsubscribe](eventName, handler);
-        }
-      };
-    });
-  };
-};
+export class Clicked extends TheInformation<Event> {
+  public constructor(private elSrc: InformationType<HTMLElement>) {
+    super(elSrc);
+  }
 
-export const clicked = (elSrc: InformationType<HTMLElement>) => {
-  return fromEvent(
-    elSrc,
-    i("click"),
-    i("addEventListener"),
-    i("removeEventListener"),
-  );
-};
+  public value(o: OwnerType<Event>): this {
+    const eventSrc = new FromEvent(
+      this.elSrc,
+      new Of("click"),
+      new Of("addEventListener"),
+      new Of("removeEventListener"),
+    ).value(o);
+    this.addDep(eventSrc);
+    return this;
+  }
+}
