@@ -1,5 +1,7 @@
 import {
   InformationType,
+  MaybeInformation,
+  MaybeInformationType,
   On,
   OwnerType,
   Shared,
@@ -13,11 +15,18 @@ import { ClassName } from "../modules/ClassName";
 import { urlSrc } from "../store";
 
 export class Link extends TheInformation<string> {
+  private urlSrc: InformationType<string>;
+  private textSrc: InformationType<string>;
+
   public constructor(
-    private urlSrc: InformationType<string>,
-    private textSrc: InformationType<string>,
+    theUrlSrc: MaybeInformationType<string>,
+    theTextSrc: MaybeInformationType<string>,
   ) {
+    const urlSrc = new MaybeInformation(theUrlSrc);
+    const textSrc = new MaybeInformation(theTextSrc);
     super(urlSrc, textSrc);
+    this.urlSrc = urlSrc;
+    this.textSrc = textSrc;
   }
 
   public value(o: OwnerType<string>): this {
