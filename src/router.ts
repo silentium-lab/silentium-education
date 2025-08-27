@@ -7,7 +7,7 @@ export const routerSrc = new Router(
   new Of([
     {
       pattern: "^$",
-      template: "Home",
+      template: new Of("Home") as any,
     },
     {
       pattern: "/about",

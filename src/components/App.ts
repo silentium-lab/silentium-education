@@ -17,7 +17,10 @@ export class App extends TheInformation {
         `<div class="app">
           <header>Header</header>
           <div>
-            $link $link2
+            $link1
+            $link2
+            $link3
+            $link4
           </div>
           <div class="content">$route</div>
           <div class="content">$b1</div>
@@ -27,8 +30,10 @@ export class App extends TheInformation {
         </div>`,
         new RecordOf({
           $route: this.routeSrc,
-          $link: new Link(new Of(""), new Of("Главная")),
+          $link1: new Link(new Of(""), new Of("Главная")),
           $link2: new Link(new Of("/about"), new Of("О нас")),
+          $link3: new Link(new Of("/docs"), new Of("Документация")),
+          $link4: new Link(new Of("/contacts"), new Of("Контакты")),
           $b1: new Button(),
           $b2: new Button(),
           $b3: new Button(),
