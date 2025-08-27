@@ -1,8 +1,14 @@
-import { Applied, InformationType, OwnerType, TheInformation } from "silentium";
+import {
+  Applied,
+  InformationType,
+  Of,
+  OwnerType,
+  TheInformation,
+} from "silentium";
 import { v4 } from "uuid";
 
 export class Id extends TheInformation<string> {
-  public constructor(private baseSrc: InformationType<string>) {
+  public constructor(private baseSrc: InformationType<string> = new Of("id")) {
     super(baseSrc);
   }
 
