@@ -1,27 +1,26 @@
-import { Lazy, Of } from "silentium";
+import { InformationType, Lazy, Of } from "silentium";
 import { Router } from "silentium-components";
 import { About } from "./pages/About";
 import { Documentation } from "./pages/Documentation";
 import { Home } from "./pages/Home";
 import { NotFound } from "./pages/NotFound";
 import { sharedUrlSrc } from "./store";
-import { Route } from "./modules/Route";
 
 export const routerSrc = new Router(
   sharedUrlSrc,
   new Of([
     {
       pattern: "^$",
-      template: new Route(() => new Home()),
+      template: new Lazy(() => new Home()),
     },
     {
       pattern: "/about",
-      template: new About(),
+      template: new Lazy(() => new About()),
     },
     {
       pattern: "/documentation",
-      template: new Documentation(),
+      template: new Lazy(() => new Documentation()),
     },
-  ]),
+  ]) as InformationType,
   new NotFound(),
 );

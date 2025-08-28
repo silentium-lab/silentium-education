@@ -2,7 +2,7 @@ import { OwnerType, TheInformation } from "silentium";
 import { RecordOf, Template } from "silentium-components";
 import { Button } from "../components/Button";
 
-export class Home extends TheInformation {
+export class Home extends TheInformation<string> {
   value(o: OwnerType<unknown>): this {
     new Template(
       `
