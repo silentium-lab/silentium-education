@@ -2,8 +2,9 @@ import { InformationType, Of, OwnerType, TheInformation } from "silentium";
 import { First, RecordOf, Template } from "silentium-components";
 import { Render } from "silentium-morphdom";
 import { Elements } from "silentium-web-api";
-import { Button } from "./Button";
 import { Link } from "./Link";
+import { Header } from "../chunks/Header";
+import { Footer } from "../chunks/Footer";
 
 export class App extends TheInformation {
   constructor(private routeSrc: InformationType<string>) {
@@ -14,11 +15,8 @@ export class App extends TheInformation {
     new Render(
       new First(new Elements(new Of("body .app"))),
       new Template(
-        `<div class="app">
-          <header>Header</header>
-          <h1 class="text-3xl font-bold underline">
-            Hello world!
-          </h1>
+        `<div class="container mx-auto">
+          $header
           <div class="menu">
             $link1
             $link2
@@ -26,9 +24,11 @@ export class App extends TheInformation {
             $link4
           </div>
           <div class="content">$route</div>
-          <footer>Footer</footer>
+          $footer
         </div>`,
         new RecordOf({
+          $header: new Header(),
+          $footer: new Footer(),
           $route: this.routeSrc,
           $link1: new Link("/", "Главная"),
           $link2: new Link("/about", "О нас"),
