@@ -10,7 +10,7 @@ export const routerSrc = new Router(
   sharedUrlSrc,
   new Of([
     {
-      pattern: "^$",
+      pattern: "^/?$",
       template: new Lazy(() => new Home()),
     },
     {

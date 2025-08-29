@@ -35,7 +35,7 @@ export class Link extends TheInformation<string> {
     const urlSync = new Sync(this.urlSrc);
 
     new On(new Clicked(new First(new Elements(new ClassName(idSrc)))), () => {
-      urlSrc.owner().give(urlSync.valueSync());
+      urlSrc.give(urlSync.valueSync());
     });
 
     new Template(

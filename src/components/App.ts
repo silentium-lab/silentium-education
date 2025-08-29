@@ -16,6 +16,9 @@ export class App extends TheInformation {
       new Template(
         `<div class="app">
           <header>Header</header>
+          <h1 class="text-3xl font-bold underline">
+            Hello world!
+          </h1>
           <div class="menu">
             $link1
             $link2
@@ -27,7 +30,7 @@ export class App extends TheInformation {
         </div>`,
         new RecordOf({
           $route: this.routeSrc,
-          $link1: new Link("", "Главная"),
+          $link1: new Link("/", "Главная"),
           $link2: new Link("/about", "О нас"),
           $link3: new Link("/documentation", "Документация"),
           $link4: new Link("/contacts", "Контакты"),
