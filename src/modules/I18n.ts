@@ -8,9 +8,7 @@ export class I18n extends Destroyable {
 
     public tr(field: string) {
         return new Applied(this.langSrc, (l) => {
-            console.log(field, l);
             return translations[l][field];
         })
     }
 }
-
