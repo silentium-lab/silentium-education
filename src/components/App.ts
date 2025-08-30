@@ -1,5 +1,5 @@
 import { InformationType, Of, OwnerType, TheInformation } from "silentium";
-import { First, RecordOf, Template } from "silentium-components";
+import { First, Template } from "silentium-components";
 import { Render } from "silentium-morphdom";
 import { Elements } from "silentium-web-api";
 import { Link } from "./Link";
@@ -12,29 +12,23 @@ export class App extends TheInformation {
   }
 
   value(o: OwnerType): this {
+    const t = new Template();
     new Render(
       new First(new Elements(new Of("body .app"))),
-      new Template(
+      t.template(
         `<div class="container mx-auto">
-          $header
+          ${t.var(new Header())}
           <div class="menu">
-            $link1
-            $link2
-            $link3
-            $link4
+            ${t.var(new Link("/", "Главная"))}
+            ${t.var(new Link("/about", "О нас"))}
+            ${t.var(new Link("/documentation", "Документация"))}
+            ${t.var(new Link("/contacts", "Контакты"))}
           </div>
-          <div class="content">$route</div>
-          $footer
+          <div class="content">
+            ${t.var(this.routeSrc)}
+          </div>
+          ${t.var(new Footer())}
         </div>`,
-        new RecordOf({
-          $header: new Header(),
-          $footer: new Footer(),
-          $route: this.routeSrc,
-          $link1: new Link("/", "Главная"),
-          $link2: new Link("/about", "О нас"),
-          $link3: new Link("/documentation", "Документация"),
-          $link4: new Link("/contacts", "Контакты"),
-        }),
       ),
     ).value(o);
     return this;
