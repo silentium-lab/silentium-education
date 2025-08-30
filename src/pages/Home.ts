@@ -8,8 +8,12 @@ export class Home extends TheInformation<string> {
     titleSrc.give('Главная');
     const t = new Template();
     t.template(
-      `<div>Home Page</div>
-      <div>${t.var(new Counter())}</div>`
+      `<section class="article">
+        <h1 class="title-1">
+          Home Page
+        </h1>
+        <div>${t.var(new Counter())}</div>
+      </section>`
     ).value(o);
     return this;
   }

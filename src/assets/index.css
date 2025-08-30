@@ -4,8 +4,19 @@
     --spacing: 5px;
 
     --text-logo: 25px;
+    --text-h1: 20px;
 }
 
 html, body {
     height: 100%;
+}
+
+@layer components {
+  .article {
+    @apply mx-auto max-w-150 px-4;
+  }
+
+  .title-1 {
+    @apply text-h1 font-bold mb-4 text-center;
+  }
 }
