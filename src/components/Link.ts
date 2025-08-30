@@ -7,11 +7,11 @@ import {
   Shared,
   TheInformation,
 } from "silentium";
-import { First, RecordOf, Sync, Template } from "silentium-components";
-import { Id } from "../modules/Id";
-import { Clicked } from "../modules/Clicked";
+import { First, Sync, Template } from "silentium-components";
 import { Elements } from "silentium-web-api";
 import { ClassName } from "../modules/ClassName";
+import { Clicked } from "../modules/Clicked";
+import { Id } from "../modules/Id";
 import { urlSrc } from "../store";
 
 export class Link extends TheInformation<string> {
@@ -32,18 +32,19 @@ export class Link extends TheInformation<string> {
   public value(o: OwnerType<string>): this {
     const idSrc = new Shared(new Id());
     this.addDep(idSrc);
-    const urlSync = new Sync(this.urlSrc);
+    const sharedUrlSrc = new Shared(this.urlSrc);
+    const urlSync = new Sync(sharedUrlSrc);
 
-    new On(new Clicked(new First(new Elements(new ClassName(idSrc)))), () => {
+    new On(new Clicked(new First(new Elements(new ClassName(idSrc)))), (e) => {
+      e.preventDefault();
       urlSrc.give(urlSync.valueSync());
     });
 
-    new Template(
-      `<span class="$id" style="text-decoration: underline;cursor: pointer;">$text</span>`,
-      new RecordOf({
-        $id: idSrc,
-        $text: this.textSrc,
-      }),
+    const t = new Template();
+    t.template(
+      `<a href="${t.var(sharedUrlSrc)}" class="${t.var(idSrc)} underline">
+        ${t.var(this.textSrc)}
+      </a>`,
     ).value(o);
 
     return this;

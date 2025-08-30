@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+@theme {
+    --spacing: 5px;
+
+    --text-logo: 25px;
+}
+
+html, body {
+    height: 100%;
+}

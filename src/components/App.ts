@@ -16,17 +16,11 @@ export class App extends TheInformation {
     new Render(
       new First(new Elements(new Of("body .app"))),
       t.template(
-        `<div class="container mx-auto">
+        `<div class="container mx-auto px-3 h-full flex flex-col">
           ${t.var(new Header())}
-          <div class="menu">
-            ${t.var(new Link("/", "Главная"))}
-            ${t.var(new Link("/about", "О нас"))}
-            ${t.var(new Link("/documentation", "Документация"))}
-            ${t.var(new Link("/contacts", "Контакты"))}
-          </div>
-          <div class="content">
+          <section class="content">
             ${t.var(this.routeSrc)}
-          </div>
+          </section>
           ${t.var(new Footer())}
         </div>`,
       ),
