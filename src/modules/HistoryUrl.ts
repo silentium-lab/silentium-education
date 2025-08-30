@@ -9,7 +9,7 @@ export class HistoryUrl extends TheInformation<string> implements OwnerType<stri
         const url = `${value}`;
 
         history.pushState(state, title, url);
-        this.urlSrc.owner().give(value);
+        this.urlSrc.give(value);
 
         return this;
     }

@@ -1,44 +1,40 @@
-import { Late, Of, On, Once, OwnerType, Shared, TheInformation } from "silentium";
-import { First, RecordOf, Template } from "silentium-components";
+import { InformationType, MaybeInformationType, MbInfo, On, Once, OwnerType, Shared, TheInformation } from "silentium";
+import { First, Template } from "silentium-components";
 import { Elements } from "silentium-web-api";
 import { ClassName } from "../modules/ClassName";
 import { Clicked } from "../modules/Clicked";
 import { Id } from "../modules/Id";
 
 export class Button extends TheInformation<string> {
+  private labelSrc: InformationType<string>;
+  private valueSrc: InformationType<string>;
+
+  public constructor(
+    theLabelSrc: MaybeInformationType<string>,
+    theValueSrc: MaybeInformationType<string>,
+    private valueOwner: OwnerType<string>
+  ) {
+    super();
+    this.labelSrc = this.dep(new MbInfo(theLabelSrc));
+    this.valueSrc = this.dep(new MbInfo(theValueSrc));
+  }
+
   public value(o: OwnerType<string>): this {
-    const countSrc = new Late(1);
-    const sharedCountSrc = new Shared(countSrc);
-    const incrementIdSrc = new Shared(new Id(new Of("increment")));
-    const resetIdSrc = new Shared(new Id(new Of("reset")));
+    const idSrc = new Shared(new Id());
 
     new On(
-      new Clicked(new First(new Elements(new ClassName(incrementIdSrc)))),
-      () => {
-        new On(new Once(sharedCountSrc), (c) => {
-          countSrc.owner().give(c + 1);
-        });
+      new Clicked(new First(new Elements(new ClassName(idSrc)))),
+      (e) => {
+        e.preventDefault();
+        new Once(this.valueSrc).value(this.valueOwner);
       }
     );
 
-
-    new On(
-      new Clicked(new First(new Elements(new ClassName(resetIdSrc)))),
-      () => {
-        countSrc.owner().give(1);
-      }
-    );
-
-    new Template(
+    const t = new Template();
+    t.template(
       `
-        <button class="$incrementId">clicked $count</button>
-        <button class="$resetId">reset</button>
+        <button class="${t.var(idSrc)} cursor-pointer">${t.var(this.labelSrc)}</button>
       `,
-      new RecordOf({
-        $incrementId: incrementIdSrc,
-        $resetId: resetIdSrc,
-        $count: sharedCountSrc,
-      })
     ).value(o);
 
     return this;

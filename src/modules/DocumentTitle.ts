@@ -9,7 +9,7 @@ export class DocumentTitle extends TheInformation<string> implements OwnerType<s
     }
 
     give(value: string): this {
-        this.src.owner().give(value);
+        this.src.give(value);
         document.title = value;
         return this;
     }

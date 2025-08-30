@@ -16,7 +16,7 @@ export class Counter extends TheInformation<string> {
       new Clicked(new First(new Elements(new ClassName(incrementIdSrc)))),
       () => {
         new On(new Once(sharedCountSrc), (c) => {
-          countSrc.owner().give(c + 1);
+          countSrc.give(c + 1);
         });
       }
     );
@@ -25,7 +25,7 @@ export class Counter extends TheInformation<string> {
     new On(
       new Clicked(new First(new Elements(new ClassName(resetIdSrc)))),
       () => {
-        countSrc.owner().give(1);
+        countSrc.give(1);
       }
     );
 

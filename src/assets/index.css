@@ -13,7 +13,7 @@ html, body {
 
 @layer components {
   .article {
-    @apply mx-auto max-w-150 px-4;
+    @apply mx-auto max-w-150;
   }
 
   .title-1 {
