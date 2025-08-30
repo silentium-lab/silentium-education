@@ -1,6 +1,6 @@
 import {
   InformationType,
-  MaybeInformation,
+  MbInfo,
   MaybeInformationType,
   On,
   OwnerType,
@@ -17,16 +17,17 @@ import { urlSrc } from "../store";
 export class Link extends TheInformation<string> {
   private urlSrc: InformationType<string>;
   private textSrc: InformationType<string>;
+  private classSrc: InformationType<string>;
 
   public constructor(
     theUrlSrc: MaybeInformationType<string>,
     theTextSrc: MaybeInformationType<string>,
+    theClassSrc: MaybeInformationType<string> = '',
   ) {
-    const urlSrc = new MaybeInformation(theUrlSrc);
-    const textSrc = new MaybeInformation(theTextSrc);
-    super(urlSrc, textSrc);
-    this.urlSrc = urlSrc;
-    this.textSrc = textSrc;
+    super();
+    this.urlSrc = this.dep(new MbInfo(theUrlSrc));
+    this.textSrc = this.dep(new MbInfo(theTextSrc));
+    this.classSrc = this.dep(new MbInfo(theClassSrc));
   }
 
   public value(o: OwnerType<string>): this {
@@ -42,7 +43,10 @@ export class Link extends TheInformation<string> {
 
     const t = new Template();
     t.template(
-      `<a href="${t.var(sharedUrlSrc)}" class="${t.var(idSrc)} underline">
+      `<a
+        href="${t.var(sharedUrlSrc)}"
+        class="${t.var(idSrc)} ${t.var(this.classSrc)}"
+      >
         ${t.var(this.textSrc)}
       </a>`,
     ).value(o);

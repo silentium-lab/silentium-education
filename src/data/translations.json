@@ -1,0 +1,12 @@
+{
+    "en": {
+        "about": "About",
+        "documentation": "Documentation",
+        "blog": "Blog"
+    },
+    "ru": {
+        "about": "О проекте",
+        "documentation": "Документация",
+        "blog": "Блог"
+    }
+}

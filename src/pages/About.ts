@@ -1,19 +1,16 @@
 import { OwnerType, TheInformation } from "silentium";
-import { RecordOf, Template } from "silentium-components";
-import { Button } from "../components/Button";
+import { Template } from "silentium-components";
+import { Counter } from "../chunks/Counter";
 import { titleSrc } from "../store";
 
 export class About extends TheInformation {
   value(o: OwnerType<unknown>): this {
     titleSrc.give('О нас');
-    new Template(
+    const t = new Template();
+    t.template(
       `<div>About Page</div>
-      <div>$b1</div>
-      <div>$b2</div>`,
-      new RecordOf({
-        $b1: new Button(),
-        $b2: new Button(),
-      }),
+      <div>${t.var(new Counter())}</div>
+      <div>${t.var(new Counter())}</div>`
     ).value(o);
 
     return this;

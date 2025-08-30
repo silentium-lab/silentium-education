@@ -5,6 +5,7 @@ import { Documentation } from "./pages/Documentation";
 import { Home } from "./pages/Home";
 import { NotFound } from "./pages/NotFound";
 import { sharedUrlSrc } from "./store";
+import { Blog } from "./pages/Blog";
 
 export const routerSrc = new Router(
   sharedUrlSrc,
@@ -20,6 +21,10 @@ export const routerSrc = new Router(
     {
       pattern: "/documentation",
       template: new Lazy(() => new Documentation()),
+    },
+    {
+      pattern: "/blog",
+      template: new Lazy(() => new Blog()),
     },
   ]) as InformationType,
   new NotFound(),
