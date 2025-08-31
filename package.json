@@ -9,7 +9,7 @@
     "check": "npx @biomejs/biome check --write",
     "format": "npx @biomejs/biome format --write",
     "lint": "npx @biomejs/biome lint --write",
-    "prepare": "git config core.hooksPath .git-hooks || echo 'Not in a git repo'"
+    "prepare": "git config core.hooksPath .git-hooks || echo \"Not in a git repo\""
   },
   "author": "Silentium Lab",
   "license": "MIT",
