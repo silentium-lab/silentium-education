@@ -3,12 +3,14 @@
     "home": "Main",
     "about": "About",
     "documentation": "Documentation",
-    "blog": "Blog"
+    "blog": "Blog",
+    "tg_group": "Telegram group"
   },
   "ru": {
     "home": "Главная",
     "about": "О проекте",
     "documentation": "Документация",
-    "blog": "Блог"
+    "blog": "Блог",
+    "tg_group": "Телеграм группа"
   }
 }

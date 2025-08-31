@@ -1,4 +1,5 @@
 import {
+  Applied,
   type InformationType,
   Late,
   type MaybeInformationType,
@@ -29,11 +30,15 @@ export class Lang extends TheInformation<string> {
     const t = new Template();
     t.template(
       `<nav class="px-2 ${t.var(this.classSrc)}">
-        ${t.var(new Button("ru", "", selectRu))}
-        ${t.var(new Button("en", "", selectEn))}
+        ${t.var(new Button("ru", this.active("ru"), selectRu))}
+        ${t.var(new Button("en", this.active("en"), selectEn))}
       </nav>`,
     ).value(o);
 
     return this;
+  }
+
+  private active(lang: string) {
+    return new Applied(langSrc, (l) => (l === lang ? "font-bold" : ""));
   }
 }

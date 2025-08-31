@@ -6,10 +6,10 @@ import { Blog } from "./pages/Blog";
 import { Documentation } from "./pages/Documentation";
 import { Home } from "./pages/Home";
 import { NotFound } from "./pages/NotFound";
-import { sharedUrlSrc } from "./store";
+import { urlSrc } from "./store";
 
 export const routerSrc = new Router(
-  sharedUrlSrc,
+  urlSrc,
   new Of([
     {
       pattern: "^/?$",

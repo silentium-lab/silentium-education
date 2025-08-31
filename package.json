@@ -6,7 +6,7 @@
   "scripts": {
     "start": "parcel",
     "build": "parcel build",
-    "check": "npx @biomejs/biome check --write",
+    "check": "npx @biomejs/biome check --write --unsafe",
     "format": "npx @biomejs/biome format --write",
     "lint": "npx @biomejs/biome lint --write",
     "prepare": "git config core.hooksPath .git-hooks || echo \"Not in a git repo\""
@@ -22,6 +22,7 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
+    "lodash-es": "^4.17.21",
     "silentium": "^0.0.79",
     "silentium-components": "^0.0.44",
     "silentium-morphdom": "^0.0.5",
