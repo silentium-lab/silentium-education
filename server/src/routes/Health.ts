@@ -1,4 +1,4 @@
-import { Of, OwnerType, TheInformation } from "silentium";
+import { Of, type OwnerType, TheInformation } from "silentium";
 import { ToJson } from "silentium-components";
 
 export class Health extends TheInformation<string> {

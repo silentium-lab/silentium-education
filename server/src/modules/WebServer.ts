@@ -1,10 +1,10 @@
-import { Destroyable, From, Of, type Lazy } from "silentium";
 import http from "node:http";
+import { Destroyable, From, type Lazy, Of } from "silentium";
 
 export class WebServer extends Destroyable {
   public constructor(
     private processSrc: Lazy<string>,
-    private hostname: string = 'http://127.0.0.1',
+    private hostname: string = "http://127.0.0.1",
     private port: number = 3000,
   ) {
     super(processSrc);
