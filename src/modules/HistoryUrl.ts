@@ -1,5 +1,8 @@
 import { Late, OwnerType, TheInformation } from "silentium";
 
+/**
+ * URL representation associated with the History API
+ */
 export class HistoryUrl extends TheInformation<string> implements OwnerType<string> {
     private urlSrc = new Late(location.pathname);
 

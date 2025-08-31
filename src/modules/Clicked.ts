@@ -1,5 +1,8 @@
 import { FromEvent, InformationType, Of, OwnerType, TheInformation } from "silentium";
 
+/**
+ * DOM element click even
+ */
 export class Clicked extends TheInformation<Event> {
   public constructor(private elSrc: InformationType<HTMLElement>) {
     super(elSrc);

@@ -1,14 +1,19 @@
-import { Applied, Destroyable, InformationType, TheInformation } from "silentium";
-import translations from '../data/translations.json';
+import { All, Applied, Destroyable, InformationType } from "silentium";
 
+/**
+ * Representation of static translation texts
+ */
 export class I18n extends Destroyable {
-    public constructor(private langSrc: InformationType<string>) {
-        super(langSrc);
+    public constructor(
+        private langSrc: InformationType<string>,
+        private translationsSrc: InformationType<Record<string, Record<string, string>>>
+    ) {
+        super(langSrc, translationsSrc);
     }
 
     public tr(field: string) {
-        return new Applied(this.langSrc, (l) => {
-            return translations[l][field];
+        return new Applied(new All(this.langSrc, this.translationsSrc), ([l, translations]) => {
+            return translations?.[l]?.[field] ?? field;
         })
     }
 }

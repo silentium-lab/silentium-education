@@ -7,6 +7,9 @@ import {
 } from "silentium";
 import { v4 } from "uuid";
 
+/**
+ * Representation of a unique id
+ */
 export class Id extends TheInformation<string> {
   public constructor(private baseSrc: InformationType<string> = new Of("id")) {
     super(baseSrc);

@@ -1,5 +1,8 @@
 import { InformationType, Late, OwnerType, TheInformation } from "silentium";
 
+/**
+ * Document header representation
+ */
 export class DocumentTitle extends TheInformation<string> implements OwnerType<string> {
     private src = new Late(document.title);
 

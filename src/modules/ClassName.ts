@@ -1,5 +1,8 @@
 import { Applied, InformationType, TheInformation, TheOwner } from "silentium";
 
+/**
+ * CSS class name representation
+ */
 export class ClassName extends TheInformation<string> {
   public constructor(private s: InformationType<string>) {
     super(s);
