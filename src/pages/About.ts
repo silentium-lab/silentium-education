@@ -10,8 +10,10 @@ export class About extends TheInformation {
     t.template(
       `<section class="article">
         <h1 class="title-1">${t.var(title)}</h1>
-        <div>${t.var(new Counter())}</div>
-        <div>${t.var(new Counter())}</div>
+        <div class="flex flex-col gap-1">
+          <div>${t.var(new Counter())}</div>
+          <div>${t.var(new Counter())}</div>
+        </div>
       </section>`
     ).value(o);
 

@@ -5,6 +5,9 @@
 
     --text-logo: 25px;
     --text-h1: 20px;
+
+    --color-primary: var(--color-purple-500);
+    --color-fg-inverse: #fff;
 }
 
 html, body {
@@ -18,5 +21,9 @@ html, body {
 
   .title-1 {
     @apply text-h1 font-bold mb-4 text-center;
+  }
+
+  .btn {
+    @apply py-1 px-2 bg-primary rounded-sm text-fg-inverse;
   }
 }

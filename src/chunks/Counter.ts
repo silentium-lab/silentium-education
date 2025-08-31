@@ -1,44 +1,33 @@
-import { Late, Of, On, Once, OwnerType, Shared, TheInformation } from "silentium";
-import { First, RecordOf, Template } from "silentium-components";
-import { Elements } from "silentium-web-api";
-import { ClassName } from "../modules/ClassName";
-import { Clicked } from "../modules/Clicked";
-import { Id } from "../modules/Id";
+import { Applied, From, Late, Of, Once, OwnerType, SharedSource, TheInformation } from "silentium";
+import { Concatenated, Template } from "silentium-components";
+import { Button } from "../components/Button";
 
 export class Counter extends TheInformation<string> {
   public value(o: OwnerType<string>): this {
-    const countSrc = new Late(1);
-    const sharedCountSrc = new Shared(countSrc);
-    const incrementIdSrc = new Shared(new Id(new Of("increment")));
-    const resetIdSrc = new Shared(new Id(new Of("reset")));
+    const countSrc = new SharedSource(new Late(1));
+    const clickedSrc = new SharedSource(new Late());
+    const resetSrc = new SharedSource(new Late());
 
-    new On(
-      new Clicked(new First(new Elements(new ClassName(incrementIdSrc)))),
-      () => {
-        new On(new Once(sharedCountSrc), (c) => {
-          countSrc.give(c + 1);
-        });
-      }
-    );
+    clickedSrc.value(new From(() => {
+      new Once(countSrc).value(new From((v) => {
+        countSrc.give(v + 1)
+      }))
+    }));
 
+    resetSrc.value(new From(() => {
+      countSrc.give(1);
+    }));
 
-    new On(
-      new Clicked(new First(new Elements(new ClassName(resetIdSrc)))),
-      () => {
-        countSrc.give(1);
-      }
-    );
-
-    new Template(
-      `
-        <button class="$incrementId">clicked $count</button>
-        <button class="$resetId">reset</button>
-      `,
-      new RecordOf({
-        $incrementId: incrementIdSrc,
-        $resetId: resetIdSrc,
-        $count: sharedCountSrc,
-      })
+    const t = new Template();
+    t.template(
+      `<div class="flex gap-1">
+        ${t.var(new Button(
+          new Concatenated([new Of("clicked "), new Applied(countSrc, String)]),
+          "btn",
+          clickedSrc
+        ))}
+        ${t.var(new Button("reset", "btn", resetSrc))}
+      </div>`,
     ).value(o);
 
     return this;

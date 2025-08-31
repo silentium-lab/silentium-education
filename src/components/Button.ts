@@ -1,4 +1,4 @@
-import { InformationType, MaybeInformationType, MbInfo, On, Once, OwnerType, Shared, TheInformation } from "silentium";
+import { InformationType, MaybeInformationType, MbInfo, On, OwnerType, Shared, TheInformation, Void } from "silentium";
 import { First, Template } from "silentium-components";
 import { Elements } from "silentium-web-api";
 import { ClassName } from "../modules/ClassName";
@@ -7,16 +7,16 @@ import { Id } from "../modules/Id";
 
 export class Button extends TheInformation<string> {
   private labelSrc: InformationType<string>;
-  private valueSrc: InformationType<string>;
+  private classSrc: InformationType<string>;
 
   public constructor(
-    theLabelSrc: MaybeInformationType<string>,
-    theValueSrc: MaybeInformationType<string>,
-    private valueOwner: OwnerType<string>
+    theLabel: MaybeInformationType<string>,
+    theClass: MaybeInformationType<string> = "",
+    private valueOwner: OwnerType = new Void()
   ) {
     super();
-    this.labelSrc = this.dep(new MbInfo(theLabelSrc));
-    this.valueSrc = this.dep(new MbInfo(theValueSrc));
+    this.labelSrc = this.dep(new MbInfo(theLabel));
+    this.classSrc = this.dep(new MbInfo(theClass));
   }
 
   public value(o: OwnerType<string>): this {
@@ -26,15 +26,15 @@ export class Button extends TheInformation<string> {
       new Clicked(new First(new Elements(new ClassName(idSrc)))),
       (e) => {
         e.preventDefault();
-        new Once(this.valueSrc).value(this.valueOwner);
+        this.valueOwner.give(e);
       }
     );
 
     const t = new Template();
     t.template(
-      `
-        <button class="${t.var(idSrc)} cursor-pointer">${t.var(this.labelSrc)}</button>
-      `,
+      `<button class="${t.var(idSrc)} ${t.var(this.classSrc)} cursor-pointer">
+        ${t.var(this.labelSrc)}
+      </button>`,
     ).value(o);
 
     return this;

@@ -49,7 +49,6 @@ export class StorageRecord<T> extends TheInformation<T> implements OwnerType<T> 
   public give(value: T): this {
     const storage = window[this.storageType];
     this.resultSrc.give(value);
-    console.log(value);
 
     try {
       storage[this.nameSync.valueSync()] = JSON.stringify(value);
