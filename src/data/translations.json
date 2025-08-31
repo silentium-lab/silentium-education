@@ -1,14 +1,14 @@
 {
-    "en": {
-        "home": "Main",
-        "about": "About",
-        "documentation": "Documentation",
-        "blog": "Blog"
-    },
-    "ru": {
-        "home": "Главная",
-        "about": "О проекте",
-        "documentation": "Документация",
-        "blog": "Блог"
-    }
+  "en": {
+    "home": "Main",
+    "about": "About",
+    "documentation": "Documentation",
+    "blog": "Blog"
+  },
+  "ru": {
+    "home": "Главная",
+    "about": "О проекте",
+    "documentation": "Документация",
+    "blog": "Блог"
+  }
 }

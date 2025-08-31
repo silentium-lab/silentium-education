@@ -1,11 +1,11 @@
-import { OwnerType, TheInformation } from "silentium";
+import { type OwnerType, TheInformation } from "silentium";
 import { Template } from "silentium-components";
 import { Counter } from "../chunks/Counter";
 import { i18n, titleSrc } from "../store";
 
 export class About extends TheInformation {
   value(o: OwnerType<unknown>): this {
-    const title = i18n.tr('about').value(titleSrc);
+    const title = i18n.tr("about").value(titleSrc);
     const t = new Template();
     t.template(
       `<section class="article">
@@ -14,7 +14,7 @@ export class About extends TheInformation {
           <div>${t.var(new Counter())}</div>
           <div>${t.var(new Counter())}</div>
         </div>
-      </section>`
+      </section>`,
     ).value(o);
 
     return this;

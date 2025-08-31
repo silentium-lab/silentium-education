@@ -1,4 +1,10 @@
-import { FromEvent, InformationType, Of, OwnerType, TheInformation } from "silentium";
+import {
+  FromEvent,
+  type InformationType,
+  Of,
+  type OwnerType,
+  TheInformation,
+} from "silentium";
 
 /**
  * DOM element click even

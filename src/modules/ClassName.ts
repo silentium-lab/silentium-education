@@ -1,4 +1,9 @@
-import { Applied, InformationType, TheInformation, TheOwner } from "silentium";
+import {
+  Applied,
+  type InformationType,
+  TheInformation,
+  type TheOwner,
+} from "silentium";
 
 /**
  * CSS class name representation
@@ -9,7 +14,7 @@ export class ClassName extends TheInformation<string> {
   }
 
   public value(o: TheOwner<string>): this {
-    new Applied(this.s, (s) => "." + s).value(o);
+    new Applied(this.s, (s) => `.${s}`).value(o);
     return this;
   }
 }

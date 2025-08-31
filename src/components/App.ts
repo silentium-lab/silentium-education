@@ -1,10 +1,14 @@
-import { InformationType, Of, OwnerType, TheInformation } from "silentium";
+import {
+  type InformationType,
+  Of,
+  type OwnerType,
+  TheInformation,
+} from "silentium";
 import { First, Template } from "silentium-components";
 import { Render } from "silentium-morphdom";
 import { Elements } from "silentium-web-api";
-import { Link } from "./Link";
-import { Header } from "../chunks/Header";
 import { Footer } from "../chunks/Footer";
+import { Header } from "../chunks/Header";
 
 export class App extends TheInformation {
   constructor(private routeSrc: InformationType<string>) {

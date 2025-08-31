@@ -1,10 +1,10 @@
-import { OwnerType, TheInformation } from "silentium";
-import { i18n, titleSrc } from "../store";
+import { type OwnerType, TheInformation } from "silentium";
 import { Template } from "silentium-components";
+import { i18n, titleSrc } from "../store";
 
 export class Documentation extends TheInformation {
   value(o: OwnerType<unknown>): this {
-    const title = i18n.tr('documentation').value(titleSrc);
+    const title = i18n.tr("documentation").value(titleSrc);
 
     const t = new Template();
     t.template(`<div class="article">

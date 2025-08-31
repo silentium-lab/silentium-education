@@ -1,9 +1,9 @@
 import {
-  InformationType,
+  type InformationType,
   Late,
-  MaybeInformationType,
+  type MaybeInformationType,
   MbInfo,
-  OwnerType,
+  type OwnerType,
   SharedSource,
   TheInformation,
 } from "silentium";
@@ -14,9 +14,7 @@ import { langSrc } from "../store";
 export class Lang extends TheInformation<string> {
   private classSrc: InformationType<string>;
 
-  public constructor(
-    theClassSrc: MaybeInformationType<string> = "",
-  ) {
+  public constructor(theClassSrc: MaybeInformationType<string> = "") {
     super();
     this.classSrc = this.dep(new MbInfo(theClassSrc));
   }

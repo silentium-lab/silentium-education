@@ -1,8 +1,4 @@
-import {
-  Of,
-  OwnerType,
-  TheInformation,
-} from "silentium";
+import { Of, type OwnerType, TheInformation } from "silentium";
 import { Template } from "silentium-components";
 import { logoSrc } from "./Logo";
 

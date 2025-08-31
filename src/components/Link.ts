@@ -1,9 +1,9 @@
 import {
-  InformationType,
+  type InformationType,
+  type MaybeInformationType,
   MbInfo,
-  MaybeInformationType,
   On,
-  OwnerType,
+  type OwnerType,
   Shared,
   TheInformation,
 } from "silentium";
@@ -22,7 +22,7 @@ export class Link extends TheInformation<string> {
   public constructor(
     theUrlSrc: MaybeInformationType<string>,
     theTextSrc: MaybeInformationType<string>,
-    theClassSrc: MaybeInformationType<string> = '',
+    theClassSrc: MaybeInformationType<string> = "",
   ) {
     super();
     this.urlSrc = this.dep(new MbInfo(theUrlSrc));

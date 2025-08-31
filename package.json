@@ -5,11 +5,16 @@
   "source": "public/index.html",
   "scripts": {
     "start": "parcel",
-    "build": "parcel build"
+    "build": "parcel build",
+    "check": "npx @biomejs/biome check --write",
+    "format": "npx @biomejs/biome format --write",
+    "lint": "npx @biomejs/biome lint --write",
+    "prepare": "git config core.hooksPath .git-hooks || echo 'Not in a git repo'"
   },
   "author": "Silentium Lab",
   "license": "MIT",
   "devDependencies": {
+    "@biomejs/biome": "2.2.2",
     "@parcel/transformer-sass": "^2.15.4",
     "@tailwindcss/postcss": "^4.1.12",
     "parcel": "^2.15.4",

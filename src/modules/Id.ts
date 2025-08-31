@@ -1,8 +1,8 @@
 import {
   Applied,
-  InformationType,
+  type InformationType,
   Of,
-  OwnerType,
+  type OwnerType,
   TheInformation,
 } from "silentium";
 import { v4 } from "uuid";
@@ -16,7 +16,7 @@ export class Id extends TheInformation<string> {
   }
 
   public value(o: OwnerType<string>): this {
-    new Applied(this.baseSrc, (base) => base + "_" + v4()).value(o);
+    new Applied(this.baseSrc, (base) => `${base}_${v4()}`).value(o);
     return this;
   }
 }

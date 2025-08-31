@@ -1,4 +1,13 @@
-import { InformationType, MaybeInformationType, MbInfo, On, OwnerType, Shared, TheInformation, Void } from "silentium";
+import {
+  type InformationType,
+  type MaybeInformationType,
+  MbInfo,
+  On,
+  type OwnerType,
+  Shared,
+  TheInformation,
+  Void,
+} from "silentium";
 import { First, Template } from "silentium-components";
 import { Elements } from "silentium-web-api";
 import { ClassName } from "../modules/ClassName";
@@ -12,7 +21,7 @@ export class Button extends TheInformation<string> {
   public constructor(
     theLabel: MaybeInformationType<string>,
     theClass: MaybeInformationType<string> = "",
-    private valueOwner: OwnerType = new Void()
+    private valueOwner: OwnerType = new Void(),
   ) {
     super();
     this.labelSrc = this.dep(new MbInfo(theLabel));
@@ -22,13 +31,10 @@ export class Button extends TheInformation<string> {
   public value(o: OwnerType<string>): this {
     const idSrc = new Shared(new Id());
 
-    new On(
-      new Clicked(new First(new Elements(new ClassName(idSrc)))),
-      (e) => {
-        e.preventDefault();
-        this.valueOwner.give(e);
-      }
-    );
+    new On(new Clicked(new First(new Elements(new ClassName(idSrc)))), (e) => {
+      e.preventDefault();
+      this.valueOwner.give(e);
+    });
 
     const t = new Template();
     t.template(
