@@ -1,7 +1,14 @@
 import http from "node:http";
-import { Destroyable, From, type Lazy, Of, Shared } from "silentium";
+import {
+  From,
+  type Lazy,
+  Of,
+  type OwnerType,
+  Shared,
+  TheInformation,
+} from "silentium";
 
-export class WebServer extends Destroyable {
+export class WebServer extends TheInformation<string> {
   public constructor(
     private processSrc: Lazy<string>,
     private hostname: string = "127.0.0.1",
@@ -10,7 +17,7 @@ export class WebServer extends Destroyable {
     super(processSrc);
   }
 
-  public start() {
+  public value(o: OwnerType<string>) {
     const config = {
       port: this.port,
       hostname: this.hostname,
@@ -27,13 +34,13 @@ export class WebServer extends Destroyable {
     });
 
     server.listen(config.port, config.hostname, () => {
-      console.log(
-        `Server running at http://${config.hostname}:${config.port}/`,
-      );
+      o.give(`Server running at http://${config.hostname}:${config.port}/`);
     });
 
     server.on("error", (error) => {
-      console.error("Server error:", error);
+      o.give(["Server error:", error].join());
     });
+
+    return this;
   }
 }

@@ -7,6 +7,7 @@
   --text-h1: 20px;
 
   --color-primary: var(--color-purple-500);
+  --color-primary-active: var(--color-purple-700);
   --color-fg-inverse: #fff;
 }
 
@@ -25,6 +26,6 @@ body {
   }
 
   .btn {
-    @apply py-1 px-2 bg-primary rounded-sm text-fg-inverse;
+    @apply py-1 px-2 bg-primary rounded-sm text-fg-inverse hover:bg-primary-active transition-colors;
   }
 }
