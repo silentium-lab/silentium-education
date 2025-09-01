@@ -1,10 +1,10 @@
 import { type InformationType, Lazy, Of } from "silentium";
-import { Router } from "silentium-components";
+import { Router, Tick } from "silentium-components";
 import { Health } from "./src/routes/Health";
 
 export const router = new Lazy(
   () =>
-    new Router(
+    new Tick(new Router(
       new Of("/"),
       new Of([
         {
@@ -13,5 +13,5 @@ export const router = new Lazy(
         },
       ]) as InformationType,
       new Of('{"message": "not found"}'),
-    ),
+    )),
 );

@@ -1,10 +1,10 @@
 import http from "node:http";
-import { Destroyable, From, type Lazy, Of } from "silentium";
+import { Destroyable, From, type Lazy, Of, Shared } from "silentium";
 
 export class WebServer extends Destroyable {
   public constructor(
     private processSrc: Lazy<string>,
-    private hostname: string = "http://127.0.0.1",
+    private hostname: string = "127.0.0.1",
     private port: number = 3000,
   ) {
     super(processSrc);
@@ -17,7 +17,12 @@ export class WebServer extends Destroyable {
     };
 
     const server = http.createServer((req, res) => {
-      this.processSrc.get(new Of(req)).value(new From((r) => res.end(r)));
+      const process = new Shared(this.processSrc
+        .get(new Of(req)));
+      process.value(new From((v) => {
+        res.end(v);
+        process?.destroy();
+      }));
     });
 
     server.listen(config.port, config.hostname, () => {
