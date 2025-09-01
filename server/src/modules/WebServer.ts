@@ -17,12 +17,13 @@ export class WebServer extends Destroyable {
     };
 
     const server = http.createServer((req, res) => {
-      const process = new Shared(this.processSrc
-        .get(new Of(req)));
-      process.value(new From((v) => {
-        res.end(v);
-        process?.destroy();
-      }));
+      const process = new Shared(this.processSrc.get(new Of(req)));
+      process.value(
+        new From((v) => {
+          res.end(v);
+          process?.destroy();
+        }),
+      );
     });
 
     server.listen(config.port, config.hostname, () => {
