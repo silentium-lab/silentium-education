@@ -1,6 +1,7 @@
 import type { IncomingMessage } from "node:http";
-import { Applied, type InformationType, Lazy, Of } from "silentium";
+import { type InformationType, Lazy, Of } from "silentium";
 import { Router, Tick } from "silentium-components";
+import { Query } from "./src/modules/string/Query";
 import { Articles } from "./src/routes/Articles";
 import { Auth } from "./src/routes/Auth";
 import { Health } from "./src/routes/Health";
@@ -9,22 +10,22 @@ import { Settings } from "./src/routes/Settings";
 export const router = new Lazy((req: InformationType<IncomingMessage>) => {
   return new Tick(
     new Router(
-      new Applied(req, (r) => r.url),
+      new Query(req),
       new Of([
         {
-          pattern: "^/?$",
+          pattern: "^GET:/?$",
           template: new Lazy(() => new Health()),
         },
         {
-          pattern: "^/auth$",
+          pattern: "^GET:/auth$",
           template: new Lazy(() => new Auth()),
         },
         {
-          pattern: "^/articles$",
+          pattern: "^GET:/articles$",
           template: new Lazy(() => new Articles()),
         },
         {
-          pattern: "^/settings$",
+          pattern: "^GET:/settings$",
           template: new Lazy(() => new Settings()),
         },
       ]) as InformationType,
