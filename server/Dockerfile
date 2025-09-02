@@ -12,7 +12,7 @@ RUN npm install
 COPY . .
 
 # Экспонируем порт
-EXPOSE 3000
+EXPOSE 4000
 
 # Запускаем приложение
 CMD ["npm", "run", "dev:node"]
