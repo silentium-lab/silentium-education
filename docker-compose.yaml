@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  # MongoDB сервис
+  mongodb:
+    image: mongo:6
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: myapp
+    volumes:
+      - mongodb_data:/data/db
+      - ./server/docker/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - app-network
+
+  # Node.js бэкенд сервис
+  backend:
+    build:
+      context: ./server/docker
+      dockerfile: Dockerfile
+    container_name: node-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/myapp?authSource=admin
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # Frontend сервис на Parcel
+  frontend:
+    build:
+      context: ./client/docker
+      dockerfile: Dockerfile
+    container_name: parcel-frontend
+    ports:
+      - "1234:1234"
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+      - /app/.parcel-cache
+    environment:
+      - NODE_ENV=development
+      - API_URL=http://localhost:3000
+    networks:
+      - app-network
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
+
+networks:
+  app-network:
+    driver: bridge
