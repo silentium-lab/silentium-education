@@ -1,9 +1,9 @@
 import {
-  Applied,
-  type InformationType,
-  Of,
-  type OwnerType,
-  TheInformation,
+	Applied,
+	type InformationType,
+	Of,
+	type OwnerType,
+	TheInformation,
 } from "silentium";
 import { v4 } from "uuid";
 
@@ -11,12 +11,12 @@ import { v4 } from "uuid";
  * Representation of a unique id
  */
 export class Id extends TheInformation<string> {
-  public constructor(private baseSrc: InformationType<string> = new Of("id")) {
-    super(baseSrc);
-  }
+	public constructor(private baseSrc: InformationType<string> = new Of("id")) {
+		super(baseSrc);
+	}
 
-  public value(o: OwnerType<string>): this {
-    new Applied(this.baseSrc, (base) => `${base}_${v4()}`).value(o);
-    return this;
-  }
+	public value(o: OwnerType<string>): this {
+		new Applied(this.baseSrc, (base) => `${base}_${v4()}`).value(o);
+		return this;
+	}
 }

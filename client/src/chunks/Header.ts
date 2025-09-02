@@ -6,10 +6,10 @@ import { Lang } from "./Lang";
 import { logoSrc } from "./Logo";
 
 export class Header extends TheInformation<string> {
-  public value(o: OwnerType<string>): this {
-    const t = new Template();
-    t.template(
-      `<header class="mb-2 flex justify-between py-2 gap-2 min-h-10 flex-wrap items-center">
+	public value(o: OwnerType<string>): this {
+		const t = new Template();
+		t.template(
+			`<header class="mb-2 flex justify-between py-2 gap-2 min-h-10 flex-wrap items-center">
         ${t.var(logoSrc)}
         ${t.var(new Lang("mr-auto"))}
         <nav class="flex gap-2 flex-wrap">
@@ -18,8 +18,8 @@ export class Header extends TheInformation<string> {
           ${t.var(new Link("/blog", i18n.tr("blog"), "underline"))}
         </nav>
       </header>`,
-    ).value(o);
+		).value(o);
 
-    return this;
-  }
+		return this;
+	}
 }

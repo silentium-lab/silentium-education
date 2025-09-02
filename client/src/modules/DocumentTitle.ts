@@ -4,19 +4,19 @@ import { Late, type OwnerType, TheInformation } from "silentium";
  * Document header representation
  */
 export class DocumentTitle
-  extends TheInformation<string>
-  implements OwnerType<string>
+	extends TheInformation<string>
+	implements OwnerType<string>
 {
-  private src = new Late(document.title);
+	private src = new Late(document.title);
 
-  value(o: OwnerType<string>): this {
-    this.src.value(o);
-    return this;
-  }
+	value(o: OwnerType<string>): this {
+		this.src.value(o);
+		return this;
+	}
 
-  give(value: string): this {
-    this.src.give(value);
-    document.title = value;
-    return this;
-  }
+	give(value: string): this {
+		this.src.give(value);
+		document.title = value;
+		return this;
+	}
 }

@@ -1,20 +1,20 @@
 import {
-  Applied,
-  type InformationType,
-  TheInformation,
-  type TheOwner,
+	Applied,
+	type InformationType,
+	TheInformation,
+	type TheOwner,
 } from "silentium";
 
 /**
  * CSS class name representation
  */
 export class ClassName extends TheInformation<string> {
-  public constructor(private s: InformationType<string>) {
-    super(s);
-  }
+	public constructor(private s: InformationType<string>) {
+		super(s);
+	}
 
-  public value(o: TheOwner<string>): this {
-    new Applied(this.s, (s) => `.${s}`).value(o);
-    return this;
-  }
+	public value(o: TheOwner<string>): this {
+		new Applied(this.s, (s) => `.${s}`).value(o);
+		return this;
+	}
 }

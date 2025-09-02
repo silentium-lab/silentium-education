@@ -9,28 +9,28 @@ import { NotFound } from "./pages/NotFound";
 import { urlSrc } from "./store";
 
 export const routerSrc = new Router(
-  urlSrc,
-  new Of([
-    {
-      pattern: "^/?$",
-      template: new Lazy(() => new Home()),
-    },
-    {
-      pattern: "/about",
-      template: new Lazy(() => new About()),
-    },
-    {
-      pattern: "/documentation",
-      template: new Lazy(() => new Documentation()),
-    },
-    {
-      pattern: "/blog",
-      template: new Lazy(() => new Blog()),
-    },
-    {
-      pattern: "/admin",
-      template: new Lazy(() => new Admin()),
-    },
-  ]) as InformationType,
-  new NotFound(),
+	urlSrc,
+	new Of([
+		{
+			pattern: "^/?$",
+			template: new Lazy(() => new Home()),
+		},
+		{
+			pattern: "/about",
+			template: new Lazy(() => new About()),
+		},
+		{
+			pattern: "/documentation",
+			template: new Lazy(() => new Documentation()),
+		},
+		{
+			pattern: "/blog",
+			template: new Lazy(() => new Blog()),
+		},
+		{
+			pattern: "/admin",
+			template: new Lazy(() => new Admin()),
+		},
+	]) as InformationType,
+	new NotFound(),
 );
