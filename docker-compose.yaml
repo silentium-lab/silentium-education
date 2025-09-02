@@ -20,11 +20,11 @@ services:
   # Node.js бэкенд сервис
   backend:
     build:
-      context: ./server/docker
+      context: ./server
       dockerfile: Dockerfile
     container_name: node-backend
     ports:
-      - "3000:3000"
+      - "4000:4000"
     environment:
       - NODE_ENV=development
       - MONGODB_URI=mongodb://admin:password@mongodb:27017/myapp?authSource=admin
@@ -40,7 +40,7 @@ services:
   # Frontend сервис на Parcel
   frontend:
     build:
-      context: ./client/docker
+      context: ./client
       dockerfile: Dockerfile
     container_name: parcel-frontend
     ports:

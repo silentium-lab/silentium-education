@@ -11,8 +11,8 @@ import {
 export class WebServer extends TheInformation<string> {
   public constructor(
     private processSrc: Lazy<string>,
-    private hostname: string = "127.0.0.1",
-    private port: number = 3000,
+    private hostname: string = "localhost",
+    private port: number = 4000,
   ) {
     super(processSrc);
   }
