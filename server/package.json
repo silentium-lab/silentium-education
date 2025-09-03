@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start:node": "node --loader ts-node/esm index.ts",
-    "dev:node": "nodemon -x \"node --loader ts-node/esm\" index.ts"
+    "dev:node": "npx nodemon -x \"node --loader ts-node/esm\" index.ts"
   },
   "author": "",
   "license": "MIT",

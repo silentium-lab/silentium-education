@@ -21,16 +21,16 @@ services:
   backend:
     build:
       context: ./server
-      dockerfile: Dockerfile
     container_name: node-backend
-    ports:
-      - "4000:4000"
+    working_dir: /app           # <-- здесь будем выполнять npm install
+    command: sh -c "npm install && npm run dev:node"
+    volumes:
+      - ./server:/app
     environment:
       - NODE_ENV=development
       - MONGODB_URI=mongodb://admin:password@mongodb:27017/myapp?authSource=admin
-    volumes:
-      - ./server:/app
-      - /app/node_modules
+    ports:
+      - "4000:4000"
     depends_on:
       - mongodb
     networks:
@@ -41,17 +41,17 @@ services:
   frontend:
     build:
       context: ./client
-      dockerfile: Dockerfile
     container_name: parcel-frontend
-    ports:
-      - "1234:1234"
+    working_dir: /app
+    command: sh -c "npm install && npm run start"
     volumes:
       - ./client:/app
-      - /app/node_modules
-      - /app/.parcel-cache
+      - ./client/.parcel-cache:/app/.parcel-cache
     environment:
       - NODE_ENV=development
       - API_URL=http://localhost:3000
+    ports:
+      - "1234:1234"
     networks:
       - app-network
     restart: unless-stopped

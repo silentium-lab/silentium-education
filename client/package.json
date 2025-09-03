@@ -4,8 +4,8 @@
   "description": "Silentium education site",
   "source": "public/index.html",
   "scripts": {
-    "start": "parcel",
-    "build": "parcel build",
+    "start": "npx parcel",
+    "build": "npx parcel build",
     "check": "npx @biomejs/biome check --write --unsafe",
     "format": "npx @biomejs/biome format --write",
     "lint": "npx @biomejs/biome lint --write",
