@@ -1,4 +1,4 @@
-import { Of, SharedSource } from "silentium";
+import { Late, Of, SharedSource } from "silentium";
 import { Memo } from "silentium-components";
 import translations from "./data/translations.json";
 import { DocumentTitle } from "./modules/DocumentTitle";
@@ -12,3 +12,5 @@ export const urlSrc = new SharedSource(new HistoryUrl());
 export const titleSrc = new DocumentTitle();
 
 export const i18n = new I18n(new Memo(langSrc), new Of(translations));
+
+export const authenticatedSrc = new Late(false);
