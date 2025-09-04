@@ -11,7 +11,7 @@ export class Admin extends TheInformation {
 	value(o: OwnerType<unknown>): this {
 		titleSrc.give("Админ панель");
 
-		new Router(
+		const r = new Router(
 			urlSrc,
 			new Of([
 				{
@@ -29,6 +29,7 @@ export class Admin extends TheInformation {
 			]) as InformationType,
 			new NotFound(),
 		).value(o);
+		this.addDep(r);
 
 		return this;
 	}
