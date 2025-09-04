@@ -1,18 +1,32 @@
-import { type OwnerType, TheInformation } from "silentium";
-import { Template } from "silentium-components";
-import { Counter } from "../chunks/Counter";
-import { titleSrc } from "../store";
+import { InformationType, Lazy, Of, type OwnerType, TheInformation } from "silentium";
+import { Router } from "silentium-components";
+import { titleSrc, urlSrc } from "../store";
+import { Articles } from "./Admin/Articles";
+import { Auth } from "./Admin/Auth";
+import { NotFound } from "./NotFound";
+import { Article } from "./Admin/Article";
 
 export class Admin extends TheInformation {
 	value(o: OwnerType<unknown>): this {
 		titleSrc.give("Админ панель");
-		const t = new Template();
-		t.template(
-			`<section class="article">
-        <h1 class="title-1">Админ панель</h1>
-        <div>${t.var(new Counter())}</div>
-        <div>${t.var(new Counter())}</div>
-      </section>`,
+
+		new Router(
+			urlSrc,
+			new Of([
+				{
+					pattern: "^/admin?$",
+					template: new Lazy(() => new Auth()),
+				},
+				{
+					pattern: "^/admin/articles?$",
+					template: new Lazy(() => new Articles()),
+				},
+				{
+					pattern: String.raw`^/admin/articles/\d+$`,
+					template: new Lazy(() => new Article()),
+				},
+			]) as InformationType,
+			new NotFound(),
 		).value(o);
 
 		return this;
