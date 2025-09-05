@@ -29,7 +29,7 @@ export const router = new Lazy((req: InformationType<IncomingMessage>) => {
           template: new Lazy(() => new Settings()),
         },
       ]) as InformationType,
-      new Of('{"message": "not found"}'),
+      new Lazy(() => new Of('{"message": "not found"}')) as any,
     ),
   );
 });

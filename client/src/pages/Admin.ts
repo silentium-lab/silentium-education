@@ -15,11 +15,11 @@ export class Admin extends TheInformation {
 			urlSrc,
 			new Of([
 				{
-					pattern: "^/admin?$",
+					pattern: "^/admin$",
 					template: new Lazy(() => new Auth()),
 				},
 				{
-					pattern: "^/admin/articles?$",
+					pattern: "^/admin/articles$",
 					template: new Lazy(() => new RoutePrivate(new Articles())),
 				},
 				{
@@ -27,7 +27,7 @@ export class Admin extends TheInformation {
 					template: new Lazy(() => new RoutePrivate(new Article())),
 				},
 			]) as InformationType,
-			new NotFound(),
+			new Lazy(() => new NotFound()) as any,
 		).value(o);
 		this.addDep(r);
 

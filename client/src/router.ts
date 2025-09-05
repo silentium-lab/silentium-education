@@ -1,4 +1,4 @@
-import { type InformationType, Lazy, Of } from "silentium";
+import { type InformationType, Lazy, Of, Shared } from "silentium";
 import { Router } from "silentium-components";
 import { About } from "./pages/About";
 import { Admin } from "./pages/Admin";
@@ -8,7 +8,7 @@ import { Home } from "./pages/Home";
 import { NotFound } from "./pages/NotFound";
 import { urlSrc } from "./store";
 
-export const routerSrc = new Router(
+export const routerSrc = new Shared(new Router(
 	urlSrc,
 	new Of([
 		{
@@ -32,5 +32,5 @@ export const routerSrc = new Router(
 			template: new Lazy(() => new Admin()),
 		},
 	]) as InformationType,
-	new NotFound(),
-);
+	new Lazy(() => new NotFound()) as any,
+));

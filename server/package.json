@@ -18,6 +18,6 @@
   "dependencies": {
     "mongodb": "^6.19.0",
     "silentium": "^0.0.79",
-    "silentium-components": "^0.0.44"
+    "silentium-components": "^0.0.47"
   }
 }
