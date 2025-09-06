@@ -6,6 +6,9 @@ import { Articles } from "./src/routes/Articles";
 import { Auth } from "./src/routes/Auth";
 import { Health } from "./src/routes/Health";
 import { Settings } from "./src/routes/Settings";
+import { notFoundSrc } from "./store";
+import { CRUDRouter } from "./src/app/CRUDRouter";
+import { mongoTransport } from "./bootstrap";
 
 export const router = new Lazy((req: InformationType<IncomingMessage>) => {
   return new Tick(
@@ -21,15 +24,15 @@ export const router = new Lazy((req: InformationType<IncomingMessage>) => {
           template: new Lazy(() => new Auth()),
         },
         {
-          pattern: "^GET:/articles$",
-          template: new Lazy(() => new Articles()),
+          pattern: "^.+:/articles$",
+          template: new Lazy(() => new CRUDRouter(req, mongoTransport, '/articles')),
         },
         {
           pattern: "^GET:/settings$",
           template: new Lazy(() => new Settings()),
         },
       ]) as InformationType,
-      new Lazy(() => new Of('{"message": "not found"}')) as any,
+      notFoundSrc as any,
     ),
   );
 });
