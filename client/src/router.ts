@@ -28,7 +28,7 @@ export const routerSrc = new Shared(new Router(
 			template: new Lazy(() => new Blog()),
 		},
 		{
-			pattern: "/admin",
+			pattern: "/admin.*",
 			template: new Lazy(() => new Admin()),
 		},
 	]) as InformationType,

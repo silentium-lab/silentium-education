@@ -13,7 +13,9 @@ export class RoutePrivate extends TheInformation {
         new All(authenticatedSrc, this.baseSrc).value(
             new From(([auth, content]) => {
                 if (!auth) {
-                    urlSrc.give(this.loginRoute);
+                    setTimeout(() => {
+                        urlSrc.give(this.loginRoute);
+                    })
                 } else {
                     o.give(content);
                 }

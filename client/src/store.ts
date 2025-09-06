@@ -13,4 +13,4 @@ export const titleSrc = new DocumentTitle();
 
 export const i18n = new I18n(new Memo(langSrc), new Of(translations));
 
-export const authenticatedSrc = new Late(false);
+export const authenticatedSrc = new Late(true);
