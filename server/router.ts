@@ -27,6 +27,10 @@ export const router = new Lazy((req: InformationType<IncomingMessage>) => {
           template: new Lazy(() => new CRUDRouter(req, mongoTransport, '/articles', 'documents')),
         },
         {
+          pattern: "^.+:/categories.*$",
+          template: new Lazy(() => new CRUDRouter(req, mongoTransport, '/categories', 'categories')),
+        },
+        {
           pattern: "^GET:/settings$",
           template: new Lazy(() => new Settings()),
         },
