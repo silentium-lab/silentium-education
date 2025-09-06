@@ -23,7 +23,7 @@ export const router = new Lazy((req: InformationType<IncomingMessage>) => {
           template: new Lazy(() => new Auth()),
         },
         {
-          pattern: "^.+:/articles$",
+          pattern: "^.+:/articles.*$",
           template: new Lazy(() => new CRUDRouter(req, mongoTransport, '/articles', 'documents')),
         },
         {

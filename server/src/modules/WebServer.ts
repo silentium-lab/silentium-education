@@ -27,6 +27,7 @@ export class WebServer extends TheInformation<string> {
       const process = new Shared(this.processSrc.get(new Of(req)));
       process.value(
         new From((v) => {
+          res.setHeader('content-type', 'application/json');
           res.end(v);
           process?.destroy();
         }),
