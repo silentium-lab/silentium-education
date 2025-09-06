@@ -1,11 +1,19 @@
-import { type OwnerType, TheInformation } from "silentium";
+import { From, Of, type OwnerType, TheInformation } from "silentium";
 import { Template } from "silentium-components";
 import { i18n, titleSrc } from "../../store";
 import { Link } from "../../components/Link";
+import { backendTransport } from "../../bootstrap";
 
 export class Articles extends TheInformation {
 	value(o: OwnerType<unknown>): this {
 		const title = i18n.tr("Articles").value(titleSrc);
+
+    const r = backendTransport.get(new Of({
+      baseUrl: 'http://localhost:4000',
+      url: '/articles',
+      method: 'GET',
+    }));
+    r.value(new From(console.log));
 
 		const t = new Template();
 		t.template(`<div class="article">
