@@ -9,7 +9,8 @@ export class CRUDRouter extends TheInformation<string> {
     public constructor(
         private req: InformationType<IncomingMessage>,
         private dbTransport: Lazy<Db>,
-        private baseUrl: string
+        private baseUrl: string,
+        private collectionName: string
     ) {
         super(req, dbTransport);
     }
@@ -22,7 +23,7 @@ export class CRUDRouter extends TheInformation<string> {
                     pattern: `^GET:${this.baseUrl}$`,
                     template: new Lazy(() => new OfFunc((o) => {
                         this.dbTransport.get().value(new From(async (db) => {
-                            const collection = db.collection('documents');
+                            const collection = db.collection(this.collectionName);
                             const all = await collection.find().toArray();
                             new ToJson(new Of({
                                 message: 'ok',

@@ -1,14 +1,13 @@
 import type { IncomingMessage } from "node:http";
 import { type InformationType, Lazy, Of } from "silentium";
 import { Router, Tick } from "silentium-components";
+import { mongoTransport } from "./bootstrap";
+import { CRUDRouter } from "./src/app/CRUDRouter";
 import { Query } from "./src/modules/string/Query";
-import { Articles } from "./src/routes/Articles";
 import { Auth } from "./src/routes/Auth";
 import { Health } from "./src/routes/Health";
 import { Settings } from "./src/routes/Settings";
 import { notFoundSrc } from "./store";
-import { CRUDRouter } from "./src/app/CRUDRouter";
-import { mongoTransport } from "./bootstrap";
 
 export const router = new Lazy((req: InformationType<IncomingMessage>) => {
   return new Tick(
@@ -25,7 +24,7 @@ export const router = new Lazy((req: InformationType<IncomingMessage>) => {
         },
         {
           pattern: "^.+:/articles$",
-          template: new Lazy(() => new CRUDRouter(req, mongoTransport, '/articles')),
+          template: new Lazy(() => new CRUDRouter(req, mongoTransport, '/articles', 'documents')),
         },
         {
           pattern: "^GET:/settings$",
