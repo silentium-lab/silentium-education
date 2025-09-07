@@ -1,4 +1,4 @@
-import { Late, type OwnerType, TheInformation } from "silentium";
+import { Late, type OwnerType, SharedSource, TheInformation } from "silentium";
 
 /**
  * Document header representation
@@ -7,7 +7,7 @@ export class DocumentTitle
 	extends TheInformation<string>
 	implements OwnerType<string>
 {
-	private src = new Late(document.title);
+	private src = new SharedSource(new Late(document.title));
 
 	value(o: OwnerType<string>): this {
 		this.src.value(o);

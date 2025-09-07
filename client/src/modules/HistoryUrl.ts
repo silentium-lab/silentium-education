@@ -1,4 +1,4 @@
-import { Late, type OwnerType, TheInformation } from "silentium";
+import { Late, type OwnerType, SharedSource, TheInformation } from "silentium";
 
 /**
  * URL representation associated with the History API
@@ -7,7 +7,7 @@ export class HistoryUrl
 	extends TheInformation<string>
 	implements OwnerType<string>
 {
-	private urlSrc = new Late(location.pathname);
+	private urlSrc = new SharedSource(new Late(location.pathname));
 
 	give(value: string): this {
 		const state = { page: value, timestamp: Date.now() };

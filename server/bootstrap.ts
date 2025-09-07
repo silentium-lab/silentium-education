@@ -14,4 +14,3 @@ export const mongoTransport = new Lazy(() => {
 
     return dbSrc;
 })
-
