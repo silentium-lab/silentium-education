@@ -8,6 +8,9 @@ export const backendTransport = new Lazy(
         new Applied(r, (r: Record<string, unknown>) => {
             return {
                 baseUrl: 'http://localhost:4000',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 ...r,
             }
         }),

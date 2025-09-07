@@ -23,7 +23,7 @@ export class Admin extends TheInformation {
 					template: new Lazy(() => new RoutePrivate(new Articles())),
 				},
 				{
-					pattern: String.raw`^/admin/articles/\d+$`,
+					pattern: String.raw`^/admin/articles/.+/$`,
 					template: new Lazy(() => new RoutePrivate(new Article())),
 				},
 			]) as InformationType,
