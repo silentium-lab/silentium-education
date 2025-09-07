@@ -28,6 +28,8 @@ export class WebServer extends TheInformation<string> {
       process.value(
         new From((v) => {
           res.setHeader('content-type', 'application/json');
+          res.setHeader('Access-Control-Allow-Origin', '*');
+          res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
           res.end(v);
           process?.destroy();
         }),
