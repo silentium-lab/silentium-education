@@ -1,4 +1,4 @@
-import { Applied, From, Late, Lazy, Map, Of, Once, type OwnerType, Shared, SharedSource, TheInformation } from "silentium";
+import { Any, Applied, Chain, From, Late, Lazy, Map, Of, Once, type OwnerType, Shared, SharedSource, TheInformation } from "silentium";
 import { Const, Path, RecordOf, Shot, Template } from "silentium-components";
 import { backendCrudSrc } from "../../bootstrap";
 import { Mustache } from "../../modules/plugins/mustache/Mustache";
@@ -19,7 +19,7 @@ export class Articles extends TheInformation {
           Создать статью
         </a>
         ${t.var(new Applied(
-          new Map(articlesSrc, new Lazy(
+          new Any<any>(new Chain(articlesSearchSrc, new Of([])), new Map(articlesSrc, new Lazy(
             (article) => {
               const removeTrigger = new Shared(new Late());
               removeTrigger.value(new From(console.log));
@@ -37,7 +37,7 @@ export class Articles extends TheInformation {
                 removeId: new ClickedId(removeTrigger),
               })).addDep(removeTrigger).addDep(removedSrc)
             }
-          )),
+          ))),
           (a) => a.join('')
         ))}
       </div>`).value(o);

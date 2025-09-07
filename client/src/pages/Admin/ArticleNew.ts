@@ -1,4 +1,4 @@
-import { Any, Late, Of, type OwnerType, Shared, SharedSource, TheInformation } from "silentium";
+import { Any, From, Late, Of, type OwnerType, Shared, SharedSource, TheInformation } from "silentium";
 import { Branch, Loading, Part, RecordOf, Shot, Template, ToJson } from "silentium-components";
 import { backendCrudSrc } from "../../bootstrap";
 import { Button } from "../../components/Button";
@@ -17,14 +17,12 @@ export class ArticleNew extends TheInformation {
             content: '',
         }));
 
-        console.log('new router');
-
 		const formUpdatedSrc = new Shared(backendCrudSrc.ofModelName('articles').created(
 			new ToJson(new Shot(formSrc, clickedSrc))
 		));
 		const formUpdateLoadingSrc = new Any(new Loading(clickedSrc, formUpdatedSrc), new Of(false));
 
-		new Any(formSrc, formUpdatedSrc).value(formSrc);
+        formSrc.value(new From(console.log));
 
 		const t = new Template();
 		t.template(`<div class="article">
@@ -33,14 +31,13 @@ export class ArticleNew extends TheInformation {
 		${t.var(new Mustache(`<div class="mb-2">
 			<div class="mb-2">
 				<div class="font-bold">Название: </div>
-				<input class="{{ field.title }} border-1 p-2 rounded-sm w-full" value="{{ form.title }}" />
+				<input class="{{ field.title }} border-1 p-2 rounded-sm w-full" />
 			</div>
 			<div class="mb-2">
 				<div class="font-bold">Содержимое: </div>
-				<textarea rows="20" class="{{ field.content }} border-1 p-2 rounded-sm w-full">{{ form.content }}</textarea>
+				<textarea rows="20" class="{{ field.content }} border-1 p-2 rounded-sm w-full"></textarea>
 			</div>
 		</div>`, new RecordOf({
-			form: formSrc,
 			field: new RecordOf({
 				title: new Input(new Part(formSrc, 'title')),
 				content: new Input(new Part(formSrc, 'content')),
