@@ -6,6 +6,7 @@ import { Auth } from "./Admin/Auth";
 import { NotFound } from "./NotFound";
 import { Article } from "./Admin/Article";
 import { RoutePrivate } from "../modules/RoutePrivate";
+import { ArticleNew } from "./Admin/ArticleNew";
 
 export class Admin extends TheInformation {
 	value(o: OwnerType<unknown>): this {
@@ -21,6 +22,10 @@ export class Admin extends TheInformation {
 				{
 					pattern: "^/admin/articles$",
 					template: new Lazy(() => new RoutePrivate(new Articles())),
+				},
+				{
+					pattern: String.raw`^/admin/articles-new/$`,
+					template: new Lazy(() => new RoutePrivate(new ArticleNew())),
 				},
 				{
 					pattern: String.raw`^/admin/articles/.+/$`,

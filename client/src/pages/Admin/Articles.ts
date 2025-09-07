@@ -15,6 +15,9 @@ export class Articles extends TheInformation {
     const t = new Template();
     t.template(`<div class="article">
         <h1 class="title-1">${t.var(title)}</h1>
+        <a href="/admin/articles-new/" class="block mb-3 underline">
+          Создать статью
+        </a>
         ${t.var(new Applied(
           new Map(articlesSrc, new Lazy(
             (article) => {

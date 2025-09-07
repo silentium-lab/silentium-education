@@ -36,7 +36,7 @@ export class CrudModels {
         }))), this.responsePathSrc);
     }
 
-    public created(formSrc: InformationType<Record<string, unknown>>) {
+    public created(formSrc: InformationType<string>) {
         return new Path(new FromJson(this.modelTransport.get(new RecordOf({
             url: new Template('/$1', new RecordOf({
                 $1: this.modelNameSrc
