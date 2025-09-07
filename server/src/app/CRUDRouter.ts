@@ -18,7 +18,6 @@ export class CRUDRouter extends TheInformation<string> {
     }
 
     public value(o: OwnerType<string>): this {
-        new Query(this.req).value(new From(console.log))
         new Router(
             new Query(this.req),
             new Of([

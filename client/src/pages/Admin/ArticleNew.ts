@@ -22,8 +22,6 @@ export class ArticleNew extends TheInformation {
 		));
 		const formUpdateLoadingSrc = new Any(new Loading(clickedSrc, formUpdatedSrc), new Of(false));
 
-        formSrc.value(new From(console.log));
-
 		const t = new Template();
 		t.template(`<div class="article">
 			${t.var(new Link("/admin/articles", i18n.tr("Articles"), "underline"))}

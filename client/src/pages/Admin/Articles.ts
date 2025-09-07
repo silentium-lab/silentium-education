@@ -22,7 +22,6 @@ export class Articles extends TheInformation {
           new Any<any>(new Chain(articlesSearchSrc, new Of([])), new Map(articlesSrc, new Lazy(
             (article) => {
               const removeTrigger = new Shared(new Late());
-              removeTrigger.value(new From(console.log));
               const removedSrc = backendCrudSrc.ofModelName('articles').deleted(
                 new Shot(new Path(article, new Of('_id')), removeTrigger)
               );

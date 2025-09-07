@@ -26,9 +26,6 @@ export class Article extends TheInformation {
 
 		new Applied(new Any(articleSrc, formUpdatedSrc), partialRight(omit, ['_id'])).value(formSrc);
 
-		formSrc.value(new From(console.log));
-		formUpdatedSrc.value(new From(console.log));
-
 		const t = new Template();
 		t.template(`<div class="article">
 			${t.var(new Link("/admin/articles", i18n.tr("Articles"), "underline"))}

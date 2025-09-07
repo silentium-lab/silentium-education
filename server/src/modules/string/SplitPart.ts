@@ -23,7 +23,6 @@ export class SplitPart extends TheInformation<string> {
             this.indexSrc
         ), ([base, split, index]) => {
             const parts = base.split(split);
-            console.log(parts);
             return parts[index];
         }), r => r !== undefined).value(o);
         return this;
