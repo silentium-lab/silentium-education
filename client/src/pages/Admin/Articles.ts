@@ -1,8 +1,8 @@
-import { From, Of, type OwnerType, TheInformation } from "silentium";
-import { FromJson, Path, Template, ToJson } from "silentium-components";
-import { i18n, titleSrc } from "../../store";
+import { type OwnerType, TheInformation } from "silentium";
+import { Template, ToJson } from "silentium-components";
+import { backendCrudSrc } from "../../bootstrap";
 import { Link } from "../../components/Link";
-import { backendCrudSrc, backendTransport } from "../../bootstrap";
+import { i18n, titleSrc } from "../../store";
 
 export class Articles extends TheInformation {
 	value(o: OwnerType<unknown>): this {
