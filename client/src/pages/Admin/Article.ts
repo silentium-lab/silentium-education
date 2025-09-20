@@ -1,7 +1,7 @@
 import { omit, partialRight } from "lodash-es";
-import { Any, Applied, From, Late, Of, type OwnerType, Shared, SharedSource, TheInformation } from "silentium";
-import { Branch, Loading, Part, RecordOf, Shot, Template, ToJson } from "silentium-components";
-import { backendCrudSrc } from "../../bootstrap";
+import { Any, Applied, Late, Of, type OwnerType, Shared, SharedSource, TheInformation } from "silentium";
+import { Branch, Const, Loading, Part, RecordOf, Shot, Template, ToJson } from "silentium-components";
+import { backendCrudSrc, notificationSrc } from "../../bootstrap";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { Link } from "../../components/Link";
@@ -23,6 +23,11 @@ export class Article extends TheInformation {
 			new ToJson(new Shot(formSrc, clickedSrc))
 		));
 		const formUpdateLoadingSrc = new Any(new Loading(clickedSrc, formUpdatedSrc), new Of(false));
+
+		new Const({
+			type: 'success',
+			content: 'Успешно изменено'
+		}, formUpdatedSrc).value(notificationSrc);
 
 		new Applied(new Any(articleSrc, formUpdatedSrc), partialRight(omit, ['_id'])).value(formSrc);
 

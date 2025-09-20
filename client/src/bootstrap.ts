@@ -1,4 +1,4 @@
-import { Applied, Lazy, Of, OwnerType } from "silentium";
+import { Applied, From, Late, LateShared, Lazy, Of, OwnerType, SharedSource } from "silentium";
 import { FetchedData } from 'silentium-web-api';
 import { errorSrc } from "./store";
 import { CrudModels } from "./modules/app/CrudModels";
@@ -20,3 +20,8 @@ export const backendTransport = new Lazy(
 )
 
 export const backendCrudSrc = new CrudModels(backendTransport, new Of('data'));
+export const notificationSrc = new LateShared<{
+    type: 'error' | 'success' | 'info',
+    content: string
+}>();
+notificationSrc.value(new From(console.log));

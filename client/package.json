@@ -17,6 +17,7 @@
     "@biomejs/biome": "2.2.2",
     "@parcel/transformer-sass": "^2.15.4",
     "@tailwindcss/postcss": "^4.1.12",
+    "@types/lodash-es": "^4.17.12",
     "@types/node": "^24.3.0",
     "parcel": "^2.15.4",
     "tailwindcss": "^4.1.12",
@@ -25,10 +26,10 @@
   "dependencies": {
     "lodash-es": "^4.17.21",
     "mustache": "^4.2.0",
-    "silentium": "^0.0.80",
-    "silentium-components": "^0.0.51",
+    "silentium": "^0.0.82",
+    "silentium-components": "^0.0.52",
     "silentium-morphdom": "^0.0.5",
-    "silentium-web-api": "^0.0.18",
+    "silentium-web-api": "^0.0.19",
     "uuid": "^11.1.0"
   }
 }
