@@ -1,11 +1,11 @@
 import { Any, From, Late, Of, type OwnerType, Shared, SharedSource, TheInformation } from "silentium";
-import { Branch, Loading, Part, RecordOf, Shot, Template, ToJson } from "silentium-components";
-import { backendCrudSrc } from "../../bootstrap";
+import { Branch, Const, Loading, Part, Path, RecordOf, Shot, Template, ToJson } from "silentium-components";
+import { backendCrudSrc, notificationSrc } from "../../bootstrap";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { Link } from "../../components/Link";
 import { Mustache } from "../../modules/plugins/mustache/Mustache";
-import { i18n, titleSrc } from "../../store";
+import { i18n, titleSrc, urlSrc } from "../../store";
 
 export class ArticleNew extends TheInformation {
 	value(o: OwnerType<unknown>): this {
@@ -13,14 +13,26 @@ export class ArticleNew extends TheInformation {
 
 		const clickedSrc = new SharedSource(new Late());
 		const formSrc = new SharedSource(new Late({
-            title: '',
-            content: '',
-        }));
+			title: '',
+			content: '',
+		}));
 
 		const formUpdatedSrc = new Shared(backendCrudSrc.ofModelName('articles').created(
 			new ToJson(new Shot(formSrc, clickedSrc))
 		));
+		this.addDep(formUpdatedSrc);
 		const formUpdateLoadingSrc = new Any(new Loading(clickedSrc, formUpdatedSrc), new Of(false));
+		this.addDep(formUpdateLoadingSrc);
+
+		const insertedIdSrc = new Path(formUpdatedSrc, new Of('insertedId'));
+		this.dep(new Template('/admin/articles/$id/', new RecordOf({
+			$id: insertedIdSrc
+		}))).value(urlSrc);
+
+		new Const({
+			type: 'success',
+			content: 'Успешно создано'
+		}, formUpdatedSrc).value(notificationSrc);
 
 		const t = new Template();
 		t.template(`<div class="article">
