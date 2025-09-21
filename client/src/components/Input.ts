@@ -17,7 +17,9 @@ export class Input extends TheInformation<string> {
         const elSrc = new Shared(new First(new Elements(new ClassName(idSrc))));
 
         new All(elSrc, this.valueSrc).value(new From(([el, value]: [HTMLInputElement, string]) => {
-            el.value = value;
+            if (el) {
+                el.value = value;
+            }
         }));
 
         new On(new KeyPressed(elSrc), (e: InputEvent) => {

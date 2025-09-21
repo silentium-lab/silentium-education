@@ -1,5 +1,5 @@
 import { Any, Late, LateShared, Of, type OwnerType, Shared, SharedSource, TheInformation } from "silentium";
-import { Branch, Const, Loading, Path, RecordOf, Shot, Template, ToJson } from "silentium-components";
+import { Branch, Const, Loading, Path, RecordOf, Shot, Task, Template, Tick, ToJson } from "silentium-components";
 import { backendCrudSrc, notificationSrc } from "../../bootstrap";
 import { Button } from "../../components/Button";
 import { Link } from "../../components/Link";
@@ -10,7 +10,7 @@ export class ArticleNew extends TheInformation {
 	value(o: OwnerType<unknown>): this {
 		const title = i18n.tr("Create Article").value(titleSrc);
 
-		const clickedSrc = new SharedSource(new Late());
+		const clickedSrc = new LateShared();
 		const formSrc = new LateShared({
 			title: '',
 			content: '',
@@ -24,9 +24,9 @@ export class ArticleNew extends TheInformation {
 		this.addDep(formUpdateLoadingSrc);
 
 		const insertedIdSrc = new Path(formUpdatedSrc, new Of('insertedId'));
-		this.dep(new Template('/admin/articles/$id/', new RecordOf({
+		this.dep(new Task(new Template('/admin/articles/$id/', new RecordOf({
 			$id: insertedIdSrc
-		}))).value(urlSrc);
+		})), 900)).value(urlSrc);
 
 		new Const({
 			type: 'success',

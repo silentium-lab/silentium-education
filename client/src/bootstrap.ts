@@ -24,4 +24,3 @@ export const notificationSrc = new LateShared<{
     type: 'error' | 'success' | 'info',
     content: string
 }>();
-notificationSrc.value(new From(console.log));

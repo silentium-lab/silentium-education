@@ -1,4 +1,4 @@
-import { InformationType, Lazy, Of, type OwnerType, TheInformation } from "silentium";
+import { From, InformationType, Lazy, Of, type OwnerType, Shared, TheInformation } from "silentium";
 import { Router } from "silentium-components";
 import { titleSrc, urlSrc } from "../store";
 import { Articles } from "./Admin/Articles";
@@ -12,7 +12,7 @@ export class Admin extends TheInformation {
 	value(o: OwnerType<unknown>): this {
 		titleSrc.give("Админ панель");
 
-		const r = new Router(
+		const r = new Shared(new Router(
 			urlSrc,
 			new Of([
 				{
@@ -33,7 +33,7 @@ export class Admin extends TheInformation {
 				},
 			]) as InformationType,
 			new Lazy(() => new NotFound()) as any,
-		).value(o);
+		)).value(o);
 		this.addDep(r);
 
 		return this;
