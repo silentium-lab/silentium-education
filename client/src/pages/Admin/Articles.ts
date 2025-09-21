@@ -1,9 +1,9 @@
-import { Any, Applied, Chain, From, Late, Lazy, Map, Of, Once, type OwnerType, Shared, SharedSource, TheInformation } from "silentium";
+import { Any, Applied, Chain, Late, Lazy, Map, Of, Once, type OwnerType, Shared, SharedSource, TheInformation } from "silentium";
 import { Const, Path, RecordOf, Shot, Template } from "silentium-components";
 import { backendCrudSrc, notificationSrc } from "../../bootstrap";
+import { ClickedId } from "../../modules/ClickedId";
 import { Mustache } from "../../modules/plugins/mustache/Mustache";
 import { i18n, titleSrc } from "../../store";
-import { ClickedId } from "../../modules/ClickedId";
 
 export class Articles extends TheInformation {
   value(o: OwnerType<unknown>): this {
@@ -15,7 +15,7 @@ export class Articles extends TheInformation {
     const t = new Template();
     t.template(`<div class="article">
         <h1 class="title-1">${t.var(title)}</h1>
-        <a href="/admin/articles-new/" class="block mb-3 underline">
+        <a href="/admin/articles/create" class="block mb-3 underline">
           Создать статью
         </a>
         ${t.var(new Applied(

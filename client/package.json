@@ -26,7 +26,7 @@
   "dependencies": {
     "lodash-es": "^4.17.21",
     "mustache": "^4.2.0",
-    "silentium": "^0.0.82",
+    "silentium": "^0.0.86",
     "silentium-components": "^0.0.52",
     "silentium-morphdom": "^0.0.5",
     "silentium-web-api": "^0.0.19",

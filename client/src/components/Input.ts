@@ -11,18 +11,18 @@ export class Input extends TheInformation<string> {
     }
 
     public value(o: OwnerType<string>): this {
-		const idSrc = new Shared(new Id());
+        const idSrc = new Shared(new Id());
         idSrc.value(o);
 
         const elSrc = new Shared(new First(new Elements(new ClassName(idSrc))));
 
         new All(elSrc, this.valueSrc).value(new From(([el, value]: [HTMLInputElement, string]) => {
             el.value = value;
-        }))
+        }));
 
         new On(new KeyPressed(elSrc), (e: InputEvent) => {
             this.valueSrc.give((e.target as HTMLInputElement).value);
-		});
+        });
 
         return this;
     }

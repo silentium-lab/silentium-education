@@ -1,21 +1,20 @@
-import { Any, From, Late, Of, type OwnerType, Shared, SharedSource, TheInformation } from "silentium";
-import { Branch, Const, Loading, Part, Path, RecordOf, Shot, Template, ToJson } from "silentium-components";
+import { Any, Late, LateShared, Of, type OwnerType, Shared, SharedSource, TheInformation } from "silentium";
+import { Branch, Const, Loading, Path, RecordOf, Shot, Template, ToJson } from "silentium-components";
 import { backendCrudSrc, notificationSrc } from "../../bootstrap";
 import { Button } from "../../components/Button";
-import { Input } from "../../components/Input";
 import { Link } from "../../components/Link";
-import { Mustache } from "../../modules/plugins/mustache/Mustache";
 import { i18n, titleSrc, urlSrc } from "../../store";
+import { ArticleForm } from "./ArticleForm";
 
 export class ArticleNew extends TheInformation {
 	value(o: OwnerType<unknown>): this {
 		const title = i18n.tr("Create Article").value(titleSrc);
 
 		const clickedSrc = new SharedSource(new Late());
-		const formSrc = new SharedSource(new Late({
+		const formSrc = new LateShared({
 			title: '',
 			content: '',
-		}));
+		});
 
 		const formUpdatedSrc = new Shared(backendCrudSrc.ofModelName('articles').created(
 			new ToJson(new Shot(formSrc, clickedSrc))
@@ -38,21 +37,7 @@ export class ArticleNew extends TheInformation {
 		t.template(`<div class="article">
 			${t.var(new Link("/admin/articles", i18n.tr("Articles"), "underline"))}
         <h1 class="title-1">${t.var(title)}</h1>
-		${t.var(new Mustache(`<div class="mb-2">
-			<div class="mb-2">
-				<div class="font-bold">Название: </div>
-				<input class="{{ field.title }} border-1 p-2 rounded-sm w-full" />
-			</div>
-			<div class="mb-2">
-				<div class="font-bold">Содержимое: </div>
-				<textarea rows="20" class="{{ field.content }} border-1 p-2 rounded-sm w-full"></textarea>
-			</div>
-		</div>`, new RecordOf({
-			field: new RecordOf({
-				title: new Input(new Part(formSrc, 'title')),
-				content: new Input(new Part(formSrc, 'content')),
-			}),
-		})))}
+		${t.var(new ArticleForm(formSrc))}
 		${t.var(new Button(
 			new Branch(formUpdateLoadingSrc, new Of("Сохраняем..."), new Of('Сохранить')),
 			"btn",

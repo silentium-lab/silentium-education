@@ -4,7 +4,7 @@ import { titleSrc, urlSrc } from "../store";
 import { Articles } from "./Admin/Articles";
 import { Auth } from "./Admin/Auth";
 import { NotFound } from "./NotFound";
-import { Article } from "./Admin/Article";
+import { ArticleEdit } from "./Admin/ArticleEdit";
 import { RoutePrivate } from "../modules/RoutePrivate";
 import { ArticleNew } from "./Admin/ArticleNew";
 
@@ -24,12 +24,12 @@ export class Admin extends TheInformation {
 					template: new Lazy(() => new RoutePrivate(new Articles())),
 				},
 				{
-					pattern: String.raw`^/admin/articles-new/$`,
+					pattern: "^/admin/articles/create$",
 					template: new Lazy(() => new RoutePrivate(new ArticleNew())),
 				},
 				{
 					pattern: String.raw`^/admin/articles/.+/$`,
-					template: new Lazy(() => new RoutePrivate(new Article())),
+					template: new Lazy(() => new RoutePrivate(new ArticleEdit())),
 				},
 			]) as InformationType,
 			new Lazy(() => new NotFound()) as any,
