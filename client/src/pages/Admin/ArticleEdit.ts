@@ -1,6 +1,6 @@
 import { omit, partialRight } from "lodash-es";
 import { Any, Applied, From, Late, Of, type OwnerType, Shared, SharedSource, TheInformation } from "silentium";
-import { Branch, Const, Loading, Shot, Template, Tick, ToJson } from "silentium-components";
+import { Branch, Const, Loading, Shot, Task, Template, Tick, ToJson } from "silentium-components";
 import { backendCrudSrc, notificationSrc } from "../../bootstrap";
 import { Button } from "../../components/Button";
 import { Link } from "../../components/Link";
@@ -28,7 +28,7 @@ export class ArticleEdit extends TheInformation {
 			content: 'Успешно изменено'
 		}, formUpdatedSrc).value(notificationSrc);
 
-		new Applied(new Any(articleSrc, new Tick(formUpdatedSrc)), partialRight(omit, ['_id'])).value(formSrc);
+		new Applied(new Any(articleSrc, new Task(formUpdatedSrc)), partialRight(omit, ['_id'])).value(formSrc);
 
 		const t = new Template();
 		t.template(`<div class="article">
