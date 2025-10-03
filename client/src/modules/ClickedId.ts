@@ -1,25 +1,19 @@
-import { On, OwnerType, Shared, SourceType, TheInformation } from "silentium";
-import { First } from "silentium-components";
-import { Elements } from "silentium-web-api";
-import { ClassName } from "../modules/ClassName";
-import { Id } from "../modules/Id";
-import { Clicked } from "./Clicked";
+import { DataType, on, shared, SourceType } from "silentium";
+import { first } from "silentium-components";
+import { elements } from "silentium-web-api";
+import { className } from "../modules/ClassName";
+import { id } from "../modules/Id";
+import { clicked } from "./Clicked";
 
-export class ClickedId extends TheInformation<string> {
-    public constructor(private clickSrc: SourceType<unknown>) {
-        super(clickSrc);
-    }
+export const clickedId = (clickSrc: SourceType<unknown>): DataType<string> => {
+    return (u) => {
+		const idSrc = shared(id());
+        idSrc.value(u);
 
-    public value(o: OwnerType<string>): this {
-		const idSrc = new Shared(new Id());
-        idSrc.value(o);
+        const elSrc = shared(first(elements(className(idSrc.value))));
 
-        const elSrc = new Shared(new First(new Elements(new ClassName(idSrc))));
-
-        new On(this.dep(new Clicked(elSrc)), (e: InputEvent) => {
-            this.clickSrc.give(e);
+        on(clicked(elSrc.value), (e: Event) => {
+            clickSrc.give(e);
 		});
-
-        return this;
     }
 }

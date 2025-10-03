@@ -20,3 +20,4 @@ export class About extends TheInformation {
 		return this;
 	}
 }
+

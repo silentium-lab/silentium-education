@@ -1,26 +1,21 @@
-import { All, From, OwnerType, TheInformation } from "silentium";
+import { all, DataType } from "silentium";
 import { authenticatedSrc, urlSrc } from "../store";
 
-export class RoutePrivate extends TheInformation {
-    public constructor(
-        private baseSrc: TheInformation<string>,
-        private loginRoute: string = '/admin'
-    ) {
-        super(baseSrc);
-    }
-
-    public value(o: OwnerType) {
-        new All(authenticatedSrc, this.baseSrc).value(
-            new From(([auth, content]) => {
+export const routePrivate = (
+    baseSrc: DataType<string>,
+    loginRoute: string = '/admin'
+): DataType<string> => {
+    return (u) => {
+        all(authenticatedSrc.value, baseSrc)(
+            ([auth, content]) => {
                 if (!auth) {
                     setTimeout(() => {
-                        urlSrc.give(this.loginRoute);
+                        urlSrc.give(loginRoute);
                     })
                 } else {
-                    o.give(content);
+                    u(content);
                 }
-            })
+            }
         )
-        return this;
     }
 }
