@@ -1,48 +1,37 @@
 import {
-	type InformationType,
-	type MaybeInformationType,
-	MbInfo,
-	On,
-	type OwnerType,
-	Shared,
-	TheInformation,
-	Void,
+	_void,
+	DataType,
+	DataUserType,
+	of,
+	on,
+	shared
 } from "silentium";
-import { First, Template } from "silentium-components";
-import { Elements } from "silentium-web-api";
-import { ClassName } from "../modules/ClassName";
-import { Clicked } from "../modules/Clicked";
-import { Id } from "../modules/Id";
+import { first, template } from "silentium-components";
+import { elements } from "silentium-web-api";
+import { className } from "../modules/ClassName";
+import { clicked } from "../modules/Clicked";
+import { id } from "../modules/Id";
 
-export class Button extends TheInformation<string> {
-	private labelSrc: InformationType<string>;
-	private classSrc: InformationType<string>;
+export const button = (
+	theLabel: DataType<string>,
+	theClass: DataType<string> = of(""),
+	valueOwner: DataUserType = _void(),
+): DataType<string> => {
+	return (u) => {
+		const idSrc = shared(id()).value;
 
-	public constructor(
-		theLabel: MaybeInformationType<string>,
-		theClass: MaybeInformationType<string> = "",
-		private valueOwner: OwnerType = new Void(),
-	) {
-		super();
-		this.labelSrc = this.dep(new MbInfo(theLabel));
-		this.classSrc = this.dep(new MbInfo(theClass));
-	}
-
-	public value(o: OwnerType<string>): this {
-		const idSrc = new Shared(new Id());
-
-		new On(new Clicked(new First(new Elements(new ClassName(idSrc)))), (e) => {
+		on(clicked(first(elements(className(idSrc)))), (e) => {
 			e.preventDefault();
-			this.valueOwner.give(e);
+			valueOwner(e);
 		});
 
-		const t = new Template();
+		const t = template();
 		t.template(
-			`<button class="${t.var(idSrc)} ${t.var(this.classSrc)} cursor-pointer">
-        ${t.var(this.labelSrc)}
+			`<button class="${t.var(idSrc)} ${t.var(theClass)} cursor-pointer">
+        ${t.var(theLabel)}
       </button>`,
-		).value(o);
+		);
 
-		return this;
+		t.value(u);
 	}
 }

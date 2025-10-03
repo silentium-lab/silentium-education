@@ -1,20 +1,20 @@
-import { type OwnerType, TheInformation } from "silentium";
-import { Template } from "silentium-components";
-import { Counter } from "../chunks/Counter";
+import { DataType } from "silentium";
+import { template } from "silentium-components";
+import { counter } from "../chunks/Counter";
 import { i18n, titleSrc } from "../store";
 
-export class Home extends TheInformation<string> {
-	value(o: OwnerType<unknown>): this {
-		i18n.tr("home").value(titleSrc);
-		const t = new Template();
+export const home = (): DataType<string> => {
+	return (u) => {
+		i18n.tr("home")(titleSrc.give);
+		const t = template();
 		t.template(
 			`<section class="article">
-        <h1 class="title-1">
-          Silentium
-        </h1>
-        <div>${t.var(new Counter())}</div>
-      </section>`,
-		).value(o);
-		return this;
+			<h1 class="title-1">
+			Silentium
+			</h1>
+			<div>${t.var(counter())}</div>
+		</section>`,
+		);
+		t.value(u);
 	}
 }

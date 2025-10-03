@@ -1,22 +1,16 @@
 import {
-	Applied,
-	type InformationType,
-	Of,
-	type OwnerType,
-	TheInformation,
+	applied,
+	DataType,
+	of
 } from "silentium";
 import { v4 } from "uuid";
 
 /**
  * Representation of a unique id
  */
-export class Id extends TheInformation<string> {
-	public constructor(private baseSrc: InformationType<string> = new Of("id")) {
-		super(baseSrc);
-	}
-
-	public value(o: OwnerType<string>): this {
-		new Applied(this.baseSrc, (base) => `${base}_${v4()}`).value(o);
-		return this;
-	}
-}
+export const id = (
+	baseSrc: DataType<string> = of("id")
+): DataType<string> => applied(
+	baseSrc,
+	(base) => `${base}_${v4()}`
+);

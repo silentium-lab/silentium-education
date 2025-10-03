@@ -1,36 +1,36 @@
-import { type InformationType, Lazy, Of, Shared } from "silentium";
-import { Router } from "silentium-components";
+import { of, shared } from "silentium";
+import { router } from "silentium-components";
 import { About } from "./pages/About";
 import { Admin } from "./pages/Admin";
 import { Blog } from "./pages/Blog";
 import { Documentation } from "./pages/Documentation";
-import { Home } from "./pages/Home";
+import { home, Home } from "./pages/Home";
 import { NotFound } from "./pages/NotFound";
 import { urlSrc } from "./store";
 
-export const routerSrc = new Shared(new Router(
-	urlSrc,
-	new Of([
+export const routerSrc = shared(router(
+	urlSrc.value,
+	of([
 		{
 			pattern: "^/?$",
-			template: new Lazy(() => new Home()),
+			template: home,
 		},
 		{
 			pattern: "/about",
-			template: new Lazy(() => new About()),
+			template: () => new About(),
 		},
 		{
 			pattern: "/documentation",
-			template: new Lazy(() => new Documentation()),
+			template: () => new Documentation(),
 		},
 		{
 			pattern: "/blog",
-			template: new Lazy(() => new Blog()),
+			template: () => new Blog(),
 		},
 		{
 			pattern: "/admin.*",
-			template: new Lazy(() => new Admin()),
+			template: () => new Admin(),
 		},
-	]) as InformationType,
-	new Lazy(() => new NotFound()) as any,
+	]),
+	() => new NotFound(),
 ));

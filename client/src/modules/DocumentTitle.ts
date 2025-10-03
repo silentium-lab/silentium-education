@@ -1,22 +1,18 @@
-import { Late, type OwnerType, SharedSource, TheInformation } from "silentium";
+import {  lateShared, SourceType } from "silentium";
 
 /**
  * Document header representation
  */
-export class DocumentTitle
-	extends TheInformation<string>
-	implements OwnerType<string>
-{
-	private src = new SharedSource(new Late(document.title));
+export const documentTitle = (): SourceType<string> => {
+	const src = lateShared(document.title);
 
-	value(o: OwnerType<string>): this {
-		this.src.value(o);
-		return this;
-	}
-
-	give(value: string): this {
-		this.src.give(value);
-		document.title = value;
-		return this;
+	return {
+		value: (u) => {
+			src.value(u);
+		},
+		give: (v) => {
+			src.give(v);
+			document.title = v;
+		},
 	}
 }

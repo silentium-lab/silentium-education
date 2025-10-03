@@ -1,10 +1,9 @@
-import { type OwnerType, TheInformation } from "silentium";
+import { DataType } from "silentium";
 import { titleSrc } from "../store";
 
-export class NotFound extends TheInformation<string> {
-	value(o: OwnerType<string>): this {
+export const notFound = (): DataType<string> => {
+	return (u) => {
 		titleSrc.give("Не найдено");
-		o.give("<div>Not found</div>");
-		return this;
+		u("<div>Not found</div>");
 	}
 }

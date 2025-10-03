@@ -1,55 +1,51 @@
 import {
-	Applied,
-	From,
-	Late,
-	Of,
-	Once,
-	type OwnerType,
-	SharedSource,
-	TheInformation,
+	applied,
+	DataType,
+	lateShared,
+	of,
+	once
 } from "silentium";
-import { Concatenated, Template } from "silentium-components";
-import { Button } from "../components/Button";
+import { concatenated, template } from "silentium-components";
+import { button } from "../components/Button";
 
-export class Counter extends TheInformation<string> {
-	public value(o: OwnerType<string>): this {
-		const countSrc = new SharedSource(new Late(1));
-		const clickedSrc = new SharedSource(new Late());
-		const resetSrc = new SharedSource(new Late());
+export const counter = (): DataType<string> => {
+	return (u) => {
+		const countSrc = lateShared(1);
+		const clickedSrc = lateShared();
+		const resetSrc = lateShared();
 
 		clickedSrc.value(
-			new From(() => {
-				new Once(countSrc).value(
-					new From((v) => {
+			() => {
+				once(countSrc.value)(
+					(v) => {
 						countSrc.give(v + 1);
-					}),
+					}
 				);
-			}),
+			}
 		);
 
 		resetSrc.value(
-			new From(() => {
+			() => {
 				countSrc.give(1);
-			}),
+			}
 		);
 
-		const t = new Template();
+		const t = template();
 		t.template(
 			`<div class="flex gap-1">
         ${t.var(
-					new Button(
-						new Concatenated([
-							new Of("clicked "),
-							new Applied(countSrc, String),
-						]),
-						"btn",
-						clickedSrc,
-					),
-				)}
-        ${t.var(new Button("reset", "btn", resetSrc))}
+				button(
+					concatenated([
+						of("clicked "),
+						applied(countSrc.value, String),
+					]),
+					of("btn"),
+					clickedSrc.give,
+				),
+			)}
+        ${t.var(button(of("reset"), of("btn"), resetSrc.give))}
       </div>`,
-		).value(o);
-
-		return this;
+		)
+		t.value(u);
 	}
-}
+};

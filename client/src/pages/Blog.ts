@@ -1,18 +1,18 @@
-import { type OwnerType, TheInformation } from "silentium";
-import { Template } from "silentium-components";
+import { DataType } from "silentium";
+import { template } from "silentium-components";
 import { i18n, titleSrc } from "../store";
 
-export class Blog extends TheInformation {
-	value(o: OwnerType<unknown>): this {
-		const title = i18n.tr("blog").value(titleSrc);
+export const blog = (): DataType<string> => {
+	return (u) => {
+		const title = i18n.tr("blog");
+		title(titleSrc.give);
 
-		const t = new Template();
+		const t = template();
 		t.template(
 			`<div class='article'>
         <h1 class="title-1">${t.var(title)}</h1>
       </div>`,
-		).value(o);
-
-		return this;
+		)
+		t.value(u);
 	}
 }

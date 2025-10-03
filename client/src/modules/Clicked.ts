@@ -1,27 +1,17 @@
 import {
-	FromEvent,
-	type InformationType,
-	Of,
-	type OwnerType,
-	TheInformation,
+	DataType,
+	fromEvent,
+	of
 } from "silentium";
 
 /**
  * DOM element click even
  */
-export class Clicked extends TheInformation<Event> {
-	public constructor(private elSrc: InformationType<HTMLElement>) {
-		super(elSrc);
-	}
-
-	public value(o: OwnerType<Event>): this {
-		const eventSrc = new FromEvent(
-			this.elSrc,
-			new Of("click"),
-			new Of("addEventListener"),
-			new Of("removeEventListener"),
-		).value(o);
-		this.addDep(eventSrc);
-		return this;
-	}
-}
+export const clicked = (
+	elSrc: DataType<HTMLElement>
+): DataType<Event> => fromEvent(
+	elSrc,
+	of('click'),
+	of('addEventListener'),
+	of('removeEventListener'),
+)

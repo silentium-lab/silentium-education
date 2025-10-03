@@ -26,10 +26,10 @@
   "dependencies": {
     "lodash-es": "^4.17.21",
     "mustache": "^4.2.0",
-    "silentium": "^0.0.86",
-    "silentium-components": "^0.0.53",
+    "silentium": "^0.0.92",
+    "silentium-components": "^0.0.54",
     "silentium-morphdom": "^0.0.5",
-    "silentium-web-api": "^0.0.19",
+    "silentium-web-api": "^0.0.20",
     "uuid": "^11.1.0"
   }
 }

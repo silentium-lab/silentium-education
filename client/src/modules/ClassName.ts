@@ -1,20 +1,12 @@
 import {
-	Applied,
-	type InformationType,
-	TheInformation,
-	type TheOwner,
+	applied,
+	DataType
 } from "silentium";
 
 /**
  * CSS class name representation
  */
-export class ClassName extends TheInformation<string> {
-	public constructor(private s: InformationType<string>) {
-		super(s);
-	}
-
-	public value(o: TheOwner<string>): this {
-		new Applied(this.s, (s) => `.${s}`).value(o);
-		return this;
-	}
-}
+export const className = (
+	s: DataType<string>
+): DataType<string> =>
+	applied(s, (s) => `.${s}`)
