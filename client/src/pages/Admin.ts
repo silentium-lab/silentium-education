@@ -1,41 +1,36 @@
-import { From, InformationType, Lazy, Of, type OwnerType, Shared, TheInformation } from "silentium";
-import { Router } from "silentium-components";
+import { DataType, of, shared } from "silentium";
+import { router } from "silentium-components";
+import { routePrivate } from "../modules/RoutePrivate";
 import { titleSrc, urlSrc } from "../store";
-import { Articles } from "./Admin/Articles";
-import { Auth } from "./Admin/Auth";
-import { NotFound } from "./NotFound";
-import { ArticleEdit } from "./Admin/ArticleEdit";
-import { RoutePrivate } from "../modules/RoutePrivate";
-import { ArticleNew } from "./Admin/ArticleNew";
+import { articleEdit } from "./Admin/ArticleEdit";
+import { articleNew } from "./Admin/ArticleNew";
+import { articles } from "./Admin/Articles";
+import { auth } from "./Admin/Auth";
+import { notFound } from "./NotFound";
 
-export class Admin extends TheInformation {
-	value(o: OwnerType<unknown>): this {
-		titleSrc.give("Админ панель");
+export const admin = (): DataType<string> => (user) => {
+	titleSrc.give("Админ панель");
 
-		const r = new Shared(new Router(
-			urlSrc,
-			new Of([
-				{
-					pattern: "^/admin$",
-					template: new Lazy(() => new Auth()),
-				},
-				{
-					pattern: "^/admin/articles$",
-					template: new Lazy(() => new RoutePrivate(new Articles())),
-				},
-				{
-					pattern: "^/admin/articles/create$",
-					template: new Lazy(() => new RoutePrivate(new ArticleNew())),
-				},
-				{
-					pattern: String.raw`^/admin/articles/.+/$`,
-					template: new Lazy(() => new RoutePrivate(new ArticleEdit())),
-				},
-			]) as InformationType,
-			new Lazy(() => new NotFound()) as any,
-		)).value(o);
-		this.addDep(r);
-
-		return this;
-	}
+	shared(router(
+		urlSrc.value,
+		of([
+			{
+				pattern: "^/admin$",
+				template: auth,
+			},
+			{
+				pattern: "^/admin/articles$",
+				template: () => routePrivate(articles()),
+			},
+			{
+				pattern: "^/admin/articles/create$",
+				template: () => routePrivate(articleNew()),
+			},
+			{
+				pattern: String.raw`^/admin/articles/.+/$`,
+				template: () => routePrivate(articleEdit()),
+			},
+		]),
+		notFound,
+	)).value(user);
 }

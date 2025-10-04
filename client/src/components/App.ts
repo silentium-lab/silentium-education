@@ -1,46 +1,39 @@
 import {
-	Applied,
-	type InformationType,
-	LateShared,
-	Of,
-	type OwnerType,
-	PrimitiveSource,
-	TheInformation
+	applied,
+	DataType,
+	lateShared,
+	of,
+	primitive
 } from "silentium";
-import { Const, First, Path, Polling, Template, Tick } from "silentium-components";
-import { Render } from "silentium-morphdom";
-import { Elements, Timer } from "silentium-web-api";
+import { constant, first, path, polling, template, tick } from "silentium-components";
+import { render } from "silentium-morphdom";
+import { elements, timer } from "silentium-web-api";
 import { notificationSrc } from "../bootstrap";
-import { Footer } from "../chunks/Footer";
-import { Header } from "../chunks/Header";
+import { footer } from "../chunks/Footer";
+import { header } from "../chunks/Header";
 
-export class App extends TheInformation {
-	constructor(private routeSrc: InformationType<string>) {
-		super(routeSrc);
-	}
-
-	value(o: OwnerType): this {
-		const t = new Template();
-		const showNotificationSrc = new LateShared(false);
-		new Const(true, new Tick(notificationSrc)).value(showNotificationSrc);
-		new Const(false, new Polling<unknown>(new Timer(5000), notificationSrc)).value(showNotificationSrc);
-		new Render(
-			new First(new Elements(new Of("body .app"))),
-			t.template(
-				`<div class="container mx-auto px-3 h-full flex flex-col">
-				${t.var(new Header())}
+export const app = (routeSrc: DataType<string>): DataType<string> => (user) => {
+	const t = template();
+	const showNotificationSrc = lateShared(false);
+	constant(true, tick(notificationSrc.value))(showNotificationSrc.give);
+	constant(false, polling<unknown>(timer(5000), notificationSrc.value))(showNotificationSrc.give);
+	t.template(
+			`<div class="container mx-auto px-3 h-full flex flex-col">
+				${t.var(header())}
 				<section class="content">
-				${t.var(this.routeSrc)}
+				${t.var(routeSrc)}
 				</section>
-				${t.var(new Footer())}
-				<div class="fixed top-2 right-2 p-2 rounded-md bg-${t.var(new Of<unknown>(new PrimitiveSource(new Path(notificationSrc, new Of('type')))))} ${t.var(new Applied(showNotificationSrc, show => show ? 'visible' : 'hidden'))}">
-				${t.var(new Of<unknown>(new PrimitiveSource(new Path(notificationSrc, new Of('content')))))}
+				${t.var(footer())}
+				<div class="fixed top-2 right-2 p-2 rounded-md bg-${t.var(of(primitive(path(notificationSrc.value, of('type'))) as unknown as string))} ${t.var(applied(showNotificationSrc.value, show => show ? 'visible' : 'hidden'))}">
+				${t.var(of(primitive(path(notificationSrc.value, of('content'))) as unknown as string))}
 				</div>
 				</div>`,
-			),
-		).value(o);
-		return this;
-	}
+		);
+	render(
+		first(elements(of("body .app"))),
+		t.value,
+	);
+	t.value(user);
 }
 
 // bg-success

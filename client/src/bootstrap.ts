@@ -1,26 +1,28 @@
-import { Applied, From, Late, LateShared, Lazy, Of, OwnerType, SharedSource } from "silentium";
-import { FetchedData } from 'silentium-web-api';
+import { applied, DataType, DataUserType, lateShared, of } from "silentium";
+import { fetchedData } from 'silentium-web-api';
+import { crudModels } from "./modules/app/CrudModels";
 import { errorSrc } from "./store";
-import { CrudModels } from "./modules/app/CrudModels";
 
-export const backendTransport = new Lazy(
-    (r, e, a) => new FetchedData(
-        new Applied(r, (r: Record<string, unknown>) => {
-            return {
-                baseUrl: 'http://localhost:4000',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                ...r,
-            }
-        }),
-        (e ?? errorSrc) as unknown as OwnerType,
-        a
-    )
+export const backendTransport = (
+    r: unknown,
+    e: unknown,
+    a: unknown
+) => fetchedData(
+    applied(r as DataType<Record<string, unknown>>, (r: Record<string, unknown>) => {
+        return {
+            baseUrl: 'http://localhost:4000',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            ...r,
+        }
+    }),
+    (e as DataUserType ?? errorSrc),
+    a as DataType
 )
 
-export const backendCrudSrc = new CrudModels(backendTransport, new Of('data'));
-export const notificationSrc = new LateShared<{
+export const backendCrudSrc = crudModels(backendTransport, of('data'));
+export const notificationSrc = lateShared<{
     type: 'error' | 'success' | 'info',
     content: string
 }>();

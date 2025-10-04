@@ -1,44 +1,28 @@
 import {
-	Applied,
-	type InformationType,
-	Late,
-	type MaybeInformationType,
-	MbInfo,
-	type OwnerType,
-	SharedSource,
-	TheInformation,
+	applied,
+	DataType,
+	lateShared,
+	of
 } from "silentium";
-import { Const, Template } from "silentium-components";
-import { Button } from "../components/Button";
+import { constant, template } from "silentium-components";
+import { button } from "../components/Button";
 import { langSrc } from "../store";
 
-export class Lang extends TheInformation<string> {
-	private classSrc: InformationType<string>;
+const active = (lang: string) => applied(langSrc.value, (l) => (l === lang ? "font-bold" : ""));
 
-	public constructor(theClassSrc: MaybeInformationType<string> = "") {
-		super();
-		this.classSrc = this.dep(new MbInfo(theClassSrc));
-	}
+export const lang = (classSrc: DataType<string>): DataType<string> => (user) => {
+	const selectRu = lateShared();
+	const selectEn = lateShared();
 
-	public value(o: OwnerType<string>): this {
-		const selectRu = new SharedSource(new Late());
-		const selectEn = new SharedSource(new Late());
+	constant("ru", selectRu.value)(langSrc.give);
+	constant("en", selectEn.value)(langSrc.give);
 
-		new Const("ru", selectRu).value(langSrc);
-		new Const("en", selectEn).value(langSrc);
-
-		const t = new Template();
-		t.template(
-			`<nav class="px-2 ${t.var(this.classSrc)}">
-        ${t.var(new Button("ru", this.active("ru"), selectRu))}
-        ${t.var(new Button("en", this.active("en"), selectEn))}
+	const t = template();
+	t.template(
+		`<nav class="px-2 ${t.var(classSrc)}">
+        ${t.var(button(of("ru"), active("ru"), selectRu.give))}
+        ${t.var(button(of("en"), active("en"), selectEn.give))}
       </nav>`,
-		).value(o);
-
-		return this;
-	}
-
-	private active(lang: string) {
-		return new Applied(langSrc, (l) => (l === lang ? "font-bold" : ""));
-	}
+	);
+	t.value(user);
 }

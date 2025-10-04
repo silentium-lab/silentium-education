@@ -1,6 +1,7 @@
-import { Link } from "../components/Link";
+import { of } from "silentium";
+import { link } from "../components/Link";
 
-export const logoSrc = new Link(
-	"/",
-	'<span class="text-logo no-underline">SILENTIUM</span>',
+export const logoSrc = link(
+	of("/"),
+	of('<span class="text-logo no-underline">SILENTIUM</span>'),
 );

@@ -1,40 +1,23 @@
 import {
-	type InformationType,
-	type MaybeInformationType,
-	MbInfo,
-	type OwnerType,
-	TheInformation,
+	DataType,
+	of
 } from "silentium";
-import { Template } from "silentium-components";
+import { template } from "silentium-components";
 
-export class LinkExternal extends TheInformation<string> {
-	private urlSrc: InformationType<string>;
-	private textSrc: InformationType<string>;
-	private classSrc: InformationType<string>;
-
-	public constructor(
-		theUrlSrc: MaybeInformationType<string>,
-		theTextSrc: MaybeInformationType<string>,
-		theClassSrc: MaybeInformationType<string> = "",
-	) {
-		super();
-		this.urlSrc = this.dep(new MbInfo(theUrlSrc));
-		this.textSrc = this.dep(new MbInfo(theTextSrc));
-		this.classSrc = this.dep(new MbInfo(theClassSrc));
-	}
-
-	public value(o: OwnerType<string>): this {
-		const t = new Template();
-		t.template(
-			`<a
-        href="${t.var(this.urlSrc)}"
+export const linkExternal = (
+	urlSrc: DataType<string>,
+	textSrc: DataType<string>,
+	classSrc: DataType<string> = of('')
+): DataType<string> => (user) => {
+	const t = template();
+	t.template(
+		`<a
+        href="${t.var(urlSrc)}"
         target="_blank"
-        class="${t.var(this.classSrc)}"
+        class="${t.var(classSrc)}"
       >
-        ${t.var(this.textSrc)}
+        ${t.var(textSrc)}
       </a>`,
-		).value(o);
-
-		return this;
-	}
+	);
+	t.value(user);
 }

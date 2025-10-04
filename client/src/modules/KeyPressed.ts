@@ -7,7 +7,7 @@ import {
 /**
  * DOM element keypress even
  */
-export const keyPressed = (elSrc: DataType<HTMLElement>): DataType<Event> => {
+export const keyPressed = <T extends Event>(elSrc: DataType<HTMLElement>): DataType<T> => {
 	return (u) => {
 		fromEvent(
 			elSrc,

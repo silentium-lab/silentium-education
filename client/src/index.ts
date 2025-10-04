@@ -1,5 +1,5 @@
-import { On } from "silentium";
-import { App } from "./components/App";
+import { _void } from "silentium";
+import { app } from "./components/App";
 import { routerSrc } from "./router";
 
-new On(new App(routerSrc));
+app(routerSrc.value)(_void);

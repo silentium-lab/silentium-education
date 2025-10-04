@@ -1,52 +1,53 @@
-import { Any, Applied, Chain, Late, Lazy, Map, Of, Once, type OwnerType, Shared, SharedSource, TheInformation } from "silentium";
-import { Const, Path, RecordOf, Shot, Template } from "silentium-components";
+import { any, applied, chain, DataType, lateShared, map, of, once } from "silentium";
+import { constant, path, recordOf, shot, template } from "silentium-components";
 import { backendCrudSrc, notificationSrc } from "../../bootstrap";
-import { ClickedId } from "../../modules/ClickedId";
-import { Mustache } from "../../modules/plugins/mustache/Mustache";
+import { clickedId } from "../../modules/ClickedId";
+import { mustache } from "../../modules/plugins/mustache/Mustache";
 import { i18n, titleSrc } from "../../store";
 
-export class Articles extends TheInformation {
-  value(o: OwnerType<unknown>): this {
-    const title = i18n.tr("Articles").value(titleSrc);
+export const articles = (): DataType<string> => {
+  return (user) => {
+    const title = i18n.tr("Articles")
+    title(titleSrc.give);
 
-    const articlesSearchSrc = new SharedSource(new Late({}));
-    const articlesSrc = backendCrudSrc.ofModelName('articles').list(articlesSearchSrc);
+    const articlesSearchSrc = lateShared({});
+    const articlesSrc = backendCrudSrc.ofModelName(of('articles')).list(articlesSearchSrc.value);
 
-    const t = new Template();
+    const t = template();
     t.template(`<div class="article">
         <h1 class="title-1">${t.var(title)}</h1>
         <a href="/admin/articles/create" class="block mb-3 underline">
           Создать статью
         </a>
-        ${t.var(new Applied(
-      new Any<any>(new Chain(articlesSearchSrc, new Of([])), new Map(articlesSrc, new Lazy(
+        ${t.var(applied(
+      any<any>(chain(articlesSearchSrc.value, of([])), map(
+        articlesSrc,
         (article) => {
-          const removeTrigger = new Shared(new Late());
-          const removedSrc = backendCrudSrc.ofModelName('articles').deleted(
-            new Shot(new Path(article, new Of('_id')), removeTrigger)
+          const removeTrigger = lateShared();
+          const removedSrc = backendCrudSrc.ofModelName(of('articles')).deleted(
+            shot(path(article, of('_id')), removeTrigger.value)
           );
-          new Const({}, new Once(removedSrc)).value(articlesSearchSrc);
+          constant({}, once(removedSrc))(articlesSearchSrc.give);
 
-          new Const({
+          constant({
             type: 'success',
             content: 'Успешно удалено'
-          }, removedSrc).value(notificationSrc);
+          } as const, removedSrc)(notificationSrc.give);
 
-          return new Mustache(`<div class="flex gap-2">
+          return mustache(of(`<div class="flex gap-2">
                 <a href="/admin/articles/{{ article._id }}/" class="underline">
                   {{ article.title }}
                 </a>
                 <div class="cursor-pointer {{ removeId }}">&times;</div>
-              </div>`, new RecordOf({
+              </div>`), recordOf({
             article,
-            removeId: new ClickedId(removeTrigger),
-          })).addDep(removeTrigger).addDep(removedSrc)
+            removeId: clickedId(removeTrigger),
+          }))
         }
-      ))),
+      )),
       (a) => a.join('')
     ))}
-      </div>`).value(o);
-
-    return this;
+      </div>`);
+      t.value(user);
   }
 }

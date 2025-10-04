@@ -1,31 +1,23 @@
-import { All, From, On, OwnerType, Shared, SourceType, TheInformation } from "silentium";
-import { Id } from "../modules/Id";
-import { First } from "silentium-components";
-import { Elements } from "silentium-web-api";
-import { ClassName } from "../modules/ClassName";
-import { KeyPressed } from "../modules/KeyPressed";
+import { all, DataType, on, shared, SourceType } from "silentium";
+import { first } from "silentium-components";
+import { elements } from "silentium-web-api";
+import { className } from "../modules/ClassName";
+import { id } from "../modules/Id";
+import { keyPressed } from "../modules/KeyPressed";
 
-export class Input extends TheInformation<string> {
-    public constructor(private valueSrc: SourceType<string>) {
-        super(valueSrc);
-    }
+export const input = (valueSrc: SourceType<string>): DataType<string> => (user) => {
+    const idSrc = shared(id());
+    idSrc.value(user);
 
-    public value(o: OwnerType<string>): this {
-        const idSrc = new Shared(new Id());
-        idSrc.value(o);
+    const elSrc = shared(first(elements<HTMLInputElement>(className(idSrc.value))));
 
-        const elSrc = new Shared(new First(new Elements(new ClassName(idSrc))));
+    all(elSrc.value, valueSrc.value)(([el, value]) => {
+        if (el) {
+            el.value = value;
+        }
+    });
 
-        new All(elSrc, this.valueSrc).value(new From(([el, value]: [HTMLInputElement, string]) => {
-            if (el) {
-                el.value = value;
-            }
-        }));
-
-        new On(new KeyPressed(elSrc), (e: InputEvent) => {
-            this.valueSrc.give((e.target as HTMLInputElement).value);
-        });
-
-        return this;
-    }
+    on(keyPressed<InputEvent>(elSrc.value), (e: InputEvent) => {
+        valueSrc.give((e.target as HTMLInputElement).value);
+    });
 }

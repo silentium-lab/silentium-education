@@ -1,69 +1,81 @@
-import { InformationType, MaybeInformationType, MbInfo, Of } from "silentium";
-import { FromJson, Path, RecordOf, Template } from "silentium-components";
+import { DataType, of, ValueType } from "silentium";
+import { fromJson, path, recordOf, template } from "silentium-components";
 
-export class CrudModels {
+class CrudModels {
     public constructor(
-        private modelTransport,
-        private responsePathSrc: InformationType<string>,
-        private modelNameSrc: InformationType<string> = new Of('any'),
+        private modelTransport: ValueType<[any], any>,
+        private responsePathSrc: DataType<string>,
+        private modelNameSrc: DataType<string> = of('any'),
     ) { }
 
-    public ofModelName(modelNameSrc: MaybeInformationType<string>) {
+    public ofModelName(modelNameSrc: DataType<string>) {
         return new CrudModels(
             this.modelTransport,
             this.responsePathSrc,
-            new MbInfo(modelNameSrc)
+            modelNameSrc
         )
     }
 
-    public list(searchSrc?: InformationType<Record<string, unknown>>) {
-        return new Path(new FromJson(this.modelTransport.get(new RecordOf({
-            url: new Template('/$1', new RecordOf({
-                $1: this.modelNameSrc
-            })),
-            method: new Of('GET'),
-            query: searchSrc ?? new Of({})
-        }))), this.responsePathSrc);
+    public list(searchSrc?: DataType<Record<string, unknown>>) {
+        return path<unknown[]>(fromJson(
+            this.modelTransport(
+                recordOf({
+                    url: template(of('/$1'), recordOf({
+                        $1: this.modelNameSrc
+                    })).value,
+                    method: of('GET'),
+                    query: searchSrc ?? of({})
+                })
+            )
+        ), this.responsePathSrc);
     }
 
-    public entity(idSrc: InformationType<string>) {
-        return new Path(new FromJson(this.modelTransport.get(new RecordOf({
-            url: new Template('/$1/$2/', new RecordOf({
+    public entity(idSrc: DataType<string>) {
+        return path(fromJson(this.modelTransport(recordOf({
+            url: template(of('/$1/$2/'), recordOf({
                 $1: this.modelNameSrc,
                 $2: idSrc
-            })),
-            method: new Of('GET'),
+            })).value,
+            method: of('GET'),
         }))), this.responsePathSrc);
     }
 
-    public created(formSrc: InformationType<string>) {
-        return new Path(new FromJson(this.modelTransport.get(new RecordOf({
-            url: new Template('/$1', new RecordOf({
+    public created(formSrc: DataType<string>): DataType<Record<string, unknown>> {
+        return path(fromJson(this.modelTransport(recordOf({
+            url: template(of('/$1'), recordOf({
                 $1: this.modelNameSrc
-            })),
-            method: new Of('POST'),
+            })).value,
+            method: of('POST'),
             body: formSrc,
         }))), this.responsePathSrc);
     }
 
-    public updated(idSrc: InformationType<string>, formSrc: InformationType<string>) {
-        return new Path(new FromJson(this.modelTransport.get(new RecordOf({
-            url: new Template('/$1/$2/', new RecordOf({
+    public updated(idSrc: DataType<string>, formSrc: DataType<string>) {
+        return path(fromJson(this.modelTransport(recordOf({
+            url: template(of('/$1/$2/'), recordOf({
                 $1: this.modelNameSrc,
                 $2: idSrc
-            })),
-            method: new Of('PUT'),
+            })).value,
+            method: of('PUT'),
             body: formSrc,
         }))), this.responsePathSrc);
-     }
+    }
 
-    public deleted(idSrc: InformationType<string>) {
-        return new Path(new FromJson(this.modelTransport.get(new RecordOf({
-            url: new Template('/$1/$2/', new RecordOf({
+    public deleted(idSrc: DataType<string>) {
+        return path(fromJson(this.modelTransport(recordOf({
+            url: template(of('/$1/$2/'), recordOf({
                 $1: this.modelNameSrc,
                 $2: idSrc
-            })),
-            method: new Of('DELETE'),
+            })).value,
+            method: of('DELETE'),
         }))), this.responsePathSrc);
-     }
+    }
+}
+
+export const crudModels = (
+    modelTransport: ValueType,
+    responsePathSrc: DataType<string>,
+    modelNameSrc: DataType<string> = of('any'),
+) => {
+    return new CrudModels(modelTransport, responsePathSrc, modelNameSrc);
 }

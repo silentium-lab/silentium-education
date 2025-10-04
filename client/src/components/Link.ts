@@ -1,56 +1,38 @@
 import {
-	type InformationType,
-	type MaybeInformationType,
-	MbInfo,
-	On,
-	type OwnerType,
-	Shared,
-	TheInformation,
+	DataType,
+	of,
+	on,
+	primitive,
+	shared
 } from "silentium";
-import { First, Sync, Template } from "silentium-components";
-import { Elements } from "silentium-web-api";
-import { ClassName } from "../modules/ClassName";
-import { Clicked } from "../modules/Clicked";
-import { Id } from "../modules/Id";
-import { urlSrc } from "../store";
+import { first, template } from "silentium-components";
+import { elements } from "silentium-web-api";
+import { className } from "../modules/ClassName";
+import { clicked } from "../modules/Clicked";
+import { id } from "../modules/Id";
 
-export class Link extends TheInformation<string> {
-	private urlSrc: InformationType<string>;
-	private textSrc: InformationType<string>;
-	private classSrc: InformationType<string>;
+export const link = (
+	urlSrc: DataType<string>,
+	textSrc: DataType<string>,
+	classSrc: DataType<string> = of(""),
+): DataType<string> => (user) => {
+	const idSrc = shared(id());
+	const sharedUrlSrc = shared(urlSrc);
+	const urlSync = primitive(urlSrc);
 
-	public constructor(
-		theUrlSrc: MaybeInformationType<string>,
-		theTextSrc: MaybeInformationType<string>,
-		theClassSrc: MaybeInformationType<string> = "",
-	) {
-		super();
-		this.urlSrc = this.dep(new MbInfo(theUrlSrc));
-		this.textSrc = this.dep(new MbInfo(theTextSrc));
-		this.classSrc = this.dep(new MbInfo(theClassSrc));
-	}
+	on(clicked(first(elements(className(idSrc.value)))), (e) => {
+		e.preventDefault();
+		sharedUrlSrc.give(urlSync.primitive() as string);
+	});
 
-	public value(o: OwnerType<string>): this {
-		const idSrc = new Shared(new Id());
-		this.addDep(idSrc);
-		const sharedUrlSrc = new Shared(this.urlSrc);
-		const urlSync = new Sync(sharedUrlSrc);
-
-		new On(new Clicked(new First(new Elements(new ClassName(idSrc)))), (e) => {
-			e.preventDefault();
-			urlSrc.give(urlSync.valueSync());
-		});
-
-		const t = new Template();
-		t.template(
-			`<a
-        href="${t.var(sharedUrlSrc)}"
-        class="${t.var(idSrc)} ${t.var(this.classSrc)}"
+	const t = template();
+	t.template(
+		`<a
+        href="${t.var(sharedUrlSrc.value)}"
+        class="${t.var(idSrc.value)} ${t.var(classSrc)}"
       >
-        ${t.var(this.textSrc)}
+        ${t.var(textSrc)}
       </a>`,
-		).value(o);
-
-		return this;
-	}
+	)
+	t.value(user);
 }
