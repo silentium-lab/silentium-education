@@ -15,7 +15,7 @@ export const storageRecord = <T = string>(
 ): SourceType<T> => {
 	const nameSync = primitive(nameSrc);
 	const resultSrc = lateShared<T>();
-	const result = {
+	const result: SourceType<T> = {
 		value: (u) => {
 			const storage = window[storageType];
 			nameSrc((name) => {
@@ -42,7 +42,7 @@ export const storageRecord = <T = string>(
 				}
 			}
 			);
-			resultSrc.value(o);
+			resultSrc.value(u);
 		},
 		give: (v) => {
 			const storage = window[storageType];

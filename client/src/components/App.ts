@@ -12,7 +12,7 @@ import { notificationSrc } from "../bootstrap";
 import { footer } from "../chunks/Footer";
 import { header } from "../chunks/Header";
 
-export const app = (routeSrc: DataType<string>): DataType<string> => (user) => {
+export const app = (routeSrc: DataType<string>): DataType<HTMLElement> => (user) => {
 	const t = template();
 	const showNotificationSrc = lateShared(false);
 	constant(true, tick(notificationSrc.value))(showNotificationSrc.give);
@@ -29,11 +29,11 @@ export const app = (routeSrc: DataType<string>): DataType<string> => (user) => {
 				</div>
 				</div>`,
 		);
+	const elSrc = first(elements(of("body .app")));
 	render(
-		first(elements(of("body .app"))),
+		elSrc,
 		t.value,
-	);
-	t.value(user);
+	)(user);
 }
 
 // bg-success
