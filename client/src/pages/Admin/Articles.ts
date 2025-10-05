@@ -1,8 +1,8 @@
 import { any, applied, chain, DataType, lateShared, map, of, once } from "silentium";
 import { constant, path, recordOf, shot, template } from "silentium-components";
 import { backendCrudSrc, notificationSrc } from "../../bootstrap";
+import { link } from "../../components/Link";
 import { clickedId } from "../../modules/ClickedId";
-import { mustache } from "../../modules/plugins/mustache/Mustache";
 import { i18n, titleSrc } from "../../store";
 
 export const articles = (): DataType<string> => {
@@ -16,9 +16,7 @@ export const articles = (): DataType<string> => {
     const t = template();
     t.template(`<div class="article">
         <h1 class="title-1">${t.var(title)}</h1>
-        <a href="/admin/articles/create" class="block mb-3 underline">
-          Создать статью
-        </a>
+        ${t.var(link(of('/admin/articles/create'), of('Создать статью'), of('block mb-3 underline')))}
         ${t.var(applied(
       any<any>(chain(articlesSearchSrc.value, of([])), map(
         articlesSrc,
@@ -34,15 +32,18 @@ export const articles = (): DataType<string> => {
             content: 'Успешно удалено'
           } as const, removedSrc)(notificationSrc.give);
 
-          return mustache(of(`<div class="flex gap-2">
-                <a href="/admin/articles/{{ article._id }}/" class="underline">
-                  {{ article.title }}
-                </a>
-                <div class="cursor-pointer {{ removeId }}">&times;</div>
-              </div>`), recordOf({
-            article,
-            removeId: clickedId(removeTrigger),
-          }))
+          return template(of(`<div class="flex gap-2">
+                $link
+                <div class="cursor-pointer $removeId">&times;</div>
+              </div>`),
+            recordOf({
+              $link: link(
+                template(of('/admin/articles/$id/'), recordOf({ $id: path(article, of('_id')) })).value,
+                path(article, of('title')),
+                of('underline')
+              ),
+              $removeId: clickedId(removeTrigger),
+          })).value
         }
       )),
       (a) => a.join('')

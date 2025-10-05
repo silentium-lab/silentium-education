@@ -21,14 +21,17 @@ export const admin = (): DataType<string> => function Admin(user) {
 			},
 			{
 				pattern: "^/admin/articles$",
+				name: 'list',
 				template: () => routePrivate(articles()),
 			},
 			{
 				pattern: "^/admin/articles/create$",
+				name: 'create',
 				template: () => routePrivate(articleNew()),
 			},
 			{
 				pattern: String.raw`^/admin/articles/.+/$`,
+				name: 'edit',
 				template: () => routePrivate(articleEdit()),
 			},
 		]),
