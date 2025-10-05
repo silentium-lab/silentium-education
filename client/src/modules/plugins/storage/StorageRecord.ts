@@ -17,6 +17,7 @@ export const storageRecord = <T = string>(
 	const resultSrc = lateShared<T>();
 	const result: SourceType<T> = {
 		value: (u) => {
+			resultSrc.value(u);
 			const storage = window[storageType];
 			nameSrc((name) => {
 				window.addEventListener("storage", (e) => {
@@ -40,9 +41,7 @@ export const storageRecord = <T = string>(
 				} else if (defaultValue !== undefined) {
 					result.give(defaultValue as T);
 				}
-			}
-			);
-			resultSrc.value(u);
+			});
 		},
 		give: (v) => {
 			const storage = window[storageType];
