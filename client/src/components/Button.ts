@@ -20,7 +20,7 @@ export const button = (
 	return (u) => {
 		const idSrc = shared(id()).value;
 
-		on(clicked(first(elements(className(idSrc)))), (e) => {
+		const clickDestructor = on(clicked(first(elements(className(idSrc)))), (e) => {
 			e.preventDefault();
 			valueOwner(e);
 		});
@@ -33,5 +33,10 @@ export const button = (
 		);
 
 		t.value(u);
+
+		return () => {
+			clickDestructor?.();
+			t.destroy();
+		}
 	}
 }

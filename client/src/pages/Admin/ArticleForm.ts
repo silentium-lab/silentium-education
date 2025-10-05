@@ -24,4 +24,8 @@ export const articleForm = (
 		</div>
 	`);
 	t.value(user);
+
+	return () => {
+		t.destroy();
+	}
 }

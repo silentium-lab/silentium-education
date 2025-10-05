@@ -49,4 +49,8 @@ export const articleEdit = (): DataType<string> => (user) => {
 	))}
       </div>`)
 	t.value(user);
+
+	return () => {
+		t.destroy();
+	}
 }

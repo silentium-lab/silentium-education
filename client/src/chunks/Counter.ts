@@ -47,5 +47,9 @@ export const counter = (): DataType<string> => {
       </div>`,
 		)
 		t.value(u);
+
+		return () => {
+			t.destroy();
+		}
 	}
 };

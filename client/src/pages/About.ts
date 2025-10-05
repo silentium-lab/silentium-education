@@ -4,7 +4,7 @@ import { i18n, titleSrc } from "../store";
 import { counter } from "../chunks/Counter";
 
 export const about = (): DataType<string> => {
-	return (u) => {
+	return function About(u) {
 		const title = i18n.tr("about")
 		title(titleSrc.give);
 		const t = template();
@@ -18,5 +18,8 @@ export const about = (): DataType<string> => {
       </section>`,
 		);
 		t.value(u);
+		return function AboutDestroy () {
+			t.destroy();
+		}
 	}
 };

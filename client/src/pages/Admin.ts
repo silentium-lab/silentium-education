@@ -1,4 +1,4 @@
-import { DataType, of, shared } from "silentium";
+import { DataType, destructor, local, of, shared } from "silentium";
 import { router } from "silentium-components";
 import { routePrivate } from "../modules/RoutePrivate";
 import { titleSrc, urlSrc } from "../store";
@@ -6,13 +6,14 @@ import { articleEdit } from "./Admin/ArticleEdit";
 import { articleNew } from "./Admin/ArticleNew";
 import { articles } from "./Admin/Articles";
 import { auth } from "./Admin/Auth";
-import { notFound } from "./NotFound";
 
-export const admin = (): DataType<string> => (user) => {
+export const admin = (): DataType<string> => function Admin(user) {
 	titleSrc.give("Админ панель");
 
-	shared(router(
-		urlSrc.value,
+	const localUrlSrc = destructor(local(urlSrc.value));
+
+	const r = router(
+		localUrlSrc.value,
 		of([
 			{
 				pattern: "^/admin$",
@@ -31,6 +32,12 @@ export const admin = (): DataType<string> => (user) => {
 				template: () => routePrivate(articleEdit()),
 			},
 		]),
-		notFound,
-	)).value(user);
+		() => of('Admin not found'),
+	);
+	const rDestructor = r(user);
+
+	return function AdminDestroy () {
+		localUrlSrc.destroy();
+		rDestructor?.();
+	}
 }

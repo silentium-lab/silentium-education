@@ -49,5 +49,9 @@ export const articles = (): DataType<string> => {
     ))}
       </div>`);
       t.value(user);
+
+      return () => {
+        t.destroy();
+      }
   }
 }

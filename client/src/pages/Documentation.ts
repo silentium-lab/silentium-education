@@ -3,7 +3,7 @@ import { template } from "silentium-components";
 import { i18n, titleSrc } from "../store";
 
 export const documentation = (): DataType<string> => {
-	return (u) => {
+	return function Documentation(u) {
 		const title = i18n.tr("documentation");
 		title(titleSrc.give);
 
