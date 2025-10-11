@@ -1,6 +1,6 @@
-import { any, EventType, lateShared, of, shared } from "silentium";
+import { any, constructorDestroyable, EventType, lateShared, of, shared } from "silentium";
 import { branch, constant, loading, path, recordOf, shot, task, template, toJson } from "silentium-components";
-import { backendCrudSrc, notificationSrc } from "../../bootstrap";
+import { backendCrudSrc, backendTransport, notificationSrc } from "../../bootstrap";
 import { button } from "../../components/Button";
 import { link } from "../../components/Link";
 import { i18n, titleSrc, urlSrc } from "../../store";
@@ -16,7 +16,9 @@ export const articleNew = (): EventType<string> => (user) => {
 		content: '',
 	});
 
+    const transport = constructorDestroyable(backendTransport);
 	const formUpdatedSrc = shared(backendCrudSrc.ofModelName(of('articles')).created(
+		transport.get,
 		toJson(shot(formSrc.event, clickedSrc.event))
 	));
 	const formUpdateLoadingSrc = any(loading(clickedSrc.event, formUpdatedSrc.event), of(false));
@@ -45,6 +47,7 @@ export const articleNew = (): EventType<string> => (user) => {
 	t.value(user);
 
 	return () => {
+		transport.destroy();
 		t.destroy();
 	}
 }

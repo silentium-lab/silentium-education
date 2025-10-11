@@ -21,7 +21,7 @@ export const backendTransport = (
     a as EventType
 )
 
-export const backendCrudSrc = crudModels(backendTransport, of('data'));
+export const backendCrudSrc = crudModels(of('data'));
 export const notificationSrc = lateShared<{
     type: 'error' | 'success' | 'info',
     content: string

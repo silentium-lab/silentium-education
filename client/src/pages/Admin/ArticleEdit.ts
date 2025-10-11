@@ -1,7 +1,7 @@
 import { omit, partialRight } from "lodash-es";
-import { any, applied, EventType, lateShared, of, shared, EventUserType } from "silentium";
+import { any, applied, EventType, lateShared, of, shared, EventUserType, constructorDestroyable } from "silentium";
 import { branch, constant, loading, shot, task, template, toJson } from "silentium-components";
-import { backendCrudSrc, notificationSrc } from "../../bootstrap";
+import { backendCrudSrc, backendTransport, notificationSrc } from "../../bootstrap";
 import { button } from "../../components/Button";
 import { link } from "../../components/Link";
 import { splitPart } from "../../modules/string/SplitPart";
@@ -13,12 +13,18 @@ export const articleEdit = (): EventType<string> => (user) => {
 	const title = i18n.tr("Article")
 	title(titleSrc.use);
 
+    const transport = constructorDestroyable(backendTransport);
+
 	const idSrc = shared(splitPart(urlSrc.event, of("/"), of(3)));
-	const articleSrc = shared(backendCrudSrc.ofModelName(of('articles')).entity(idSrc.event));
+	const articleSrc = shared(backendCrudSrc.ofModelName(of('articles')).entity(
+		transport.get,
+		idSrc.event
+	));
 	const clickedSrc = lateShared();
 	const formSrc = lateShared<ArticleType>();
 
 	const formUpdatedSrc = shared(backendCrudSrc.ofModelName(of('articles')).updated(
+		transport.get,
 		idSrc.event,
 		toJson(shot(formSrc.event, clickedSrc.event))
 	));
@@ -51,6 +57,7 @@ export const articleEdit = (): EventType<string> => (user) => {
 	t.value(user);
 
 	return () => {
+		transport.destroy();
 		t.destroy();
 	}
 }

@@ -1,6 +1,6 @@
-import { any, applied, chain, EventType, lateShared, map, of, once } from "silentium";
+import { any, applied, chain, constructorDestroyable, destructor, EventType, lateShared, map, of, once } from "silentium";
 import { constant, path, recordOf, shot, template } from "silentium-components";
-import { backendCrudSrc, notificationSrc } from "../../bootstrap";
+import { backendCrudSrc, backendTransport, notificationSrc } from "../../bootstrap";
 import { link } from "../../components/Link";
 import { clickedId } from "../../modules/ClickedId";
 import { i18n, titleSrc } from "../../store";
@@ -10,8 +10,13 @@ export const articles = (): EventType<string> => {
     const title = i18n.tr("Articles")
     title(titleSrc.use);
 
+    const transport = constructorDestroyable(backendTransport);
+
     const articlesSearchSrc = lateShared({});
-    const articlesSrc = backendCrudSrc.ofModelName(of('articles')).list(articlesSearchSrc.event);
+    const articlesSrc = backendCrudSrc.ofModelName(of('articles')).list(
+      transport.get,
+      articlesSearchSrc.event
+    );
 
     const t = template();
     t.template(`<div class="article">
@@ -23,6 +28,7 @@ export const articles = (): EventType<string> => {
         (article) => {
           const removeTrigger = lateShared();
           const removedSrc = backendCrudSrc.ofModelName(of('articles')).deleted(
+            transport.get,
             shot(path(article, of('_id')), removeTrigger.event)
           );
           constant({}, once(removedSrc))(articlesSearchSrc.use);
@@ -52,6 +58,7 @@ export const articles = (): EventType<string> => {
       t.value(user);
 
       return () => {
+        transport.destroy();
         t.destroy();
       }
   }
