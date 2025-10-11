@@ -1,5 +1,5 @@
 import {
-	DataType,
+	EventType,
 	of,
 	on,
 	primitive,
@@ -13,24 +13,24 @@ import { id } from "../modules/Id";
 import { urlSrc } from "../store";
 
 export const link = (
-	linkUrlSrc: DataType<string>,
-	textSrc: DataType<string>,
-	classSrc: DataType<string> = of(""),
-): DataType<string> => (user) => {
+	linkUrlSrc: EventType<string>,
+	textSrc: EventType<string>,
+	classSrc: EventType<string> = of(""),
+): EventType<string> => (user) => {
 	const idSrc = shared(id());
 	const sharedUrlSrc = shared(linkUrlSrc);
 	const urlSync = primitive(linkUrlSrc);
 
-	on(clicked(first(elements(className(idSrc.value)))), (e) => {
+	on(clicked(first(elements(className(idSrc.event)))), (e) => {
 		e.preventDefault();
-		urlSrc.give(urlSync.primitive() as string);
+		urlSrc.use(urlSync.primitive() as string);
 	});
 
 	const t = template();
 	t.template(
 		`<a
-        href="${t.var(sharedUrlSrc.value)}"
-        class="${t.var(idSrc.value)} ${t.var(classSrc)}"
+        href="${t.var(sharedUrlSrc.event)}"
+        class="${t.var(idSrc.event)} ${t.var(classSrc)}"
       >
         ${t.var(textSrc)}
       </a>`,

@@ -7,11 +7,9 @@ export const documentTitle = (): SourceType<string> => {
 	const src = lateShared(document.title);
 
 	return {
-		value: (u) => {
-			src.value(u);
-		},
-		give: (v) => {
-			src.give(v);
+		event: src.event,
+		use: (v) => {
+			src.use(v);
 			document.title = v;
 		},
 	}

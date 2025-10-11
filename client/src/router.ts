@@ -9,7 +9,7 @@ import { notFound } from "./pages/NotFound";
 import { urlSrc } from "./store";
 
 export const routerSrc = shared(router(
-	urlSrc.value,
+	urlSrc.event,
 	of([
 		{
 			pattern: "^/?$",

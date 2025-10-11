@@ -1,11 +1,11 @@
-import { DataType } from "silentium";
+import { EventType } from "silentium";
 import { template } from "silentium-components";
 import { i18n, titleSrc } from "../store";
 
-export const blog = (): DataType<string> => {
+export const blog = (): EventType<string> => {
 	return function Blog(u) {
 		const title = i18n.tr("blog");
-		title(titleSrc.give);
+		title(titleSrc.use);
 
 		const t = template();
 		t.template(

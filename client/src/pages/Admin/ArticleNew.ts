@@ -1,4 +1,4 @@
-import { any, DataType, lateShared, of, shared } from "silentium";
+import { any, EventType, lateShared, of, shared } from "silentium";
 import { branch, constant, loading, path, recordOf, shot, task, template, toJson } from "silentium-components";
 import { backendCrudSrc, notificationSrc } from "../../bootstrap";
 import { button } from "../../components/Button";
@@ -6,9 +6,9 @@ import { link } from "../../components/Link";
 import { i18n, titleSrc, urlSrc } from "../../store";
 import { articleForm } from "./ArticleForm";
 
-export const articleNew = (): DataType<string> => (user) => {
+export const articleNew = (): EventType<string> => (user) => {
 	const title = i18n.tr("Create Article");
-	title(titleSrc.give);
+	title(titleSrc.use);
 
 	const clickedSrc = lateShared();
 	const formSrc = lateShared({
@@ -17,19 +17,19 @@ export const articleNew = (): DataType<string> => (user) => {
 	});
 
 	const formUpdatedSrc = shared(backendCrudSrc.ofModelName(of('articles')).created(
-		toJson(shot(formSrc.value, clickedSrc.value))
+		toJson(shot(formSrc.event, clickedSrc.event))
 	));
-	const formUpdateLoadingSrc = any(loading(clickedSrc.value, formUpdatedSrc.value), of(false));
+	const formUpdateLoadingSrc = any(loading(clickedSrc.event, formUpdatedSrc.event), of(false));
 
-	const insertedIdSrc = path(formUpdatedSrc.value, of('insertedId'));
+	const insertedIdSrc = path(formUpdatedSrc.event, of('insertedId'));
 	task(template(of('/admin/articles/$id/'), recordOf({
 		$id: insertedIdSrc
-	})).value, 900)(urlSrc.give);
+	})).value, 900)(urlSrc.use);
 
 	constant({
 		type: 'success',
 		content: 'Успешно создано'
-	} as const, formUpdatedSrc.value)(notificationSrc.give);
+	} as const, formUpdatedSrc.event)(notificationSrc.use);
 
 	const t = template();
 	t.template(`<div class="article">
@@ -39,7 +39,7 @@ export const articleNew = (): DataType<string> => (user) => {
 		${t.var(button(
 		branch(formUpdateLoadingSrc, of("Сохраняем..."), of('Сохранить')),
 		of("btn"),
-		clickedSrc.give,
+		clickedSrc.use,
 	))}
       </div>`);
 	t.value(user);

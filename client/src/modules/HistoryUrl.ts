@@ -6,16 +6,16 @@ import { lateShared, SourceType } from "silentium";
 export const historyUrl = (): SourceType<string> => {
 	const urlSrc = lateShared(location.pathname);
 	return {
-		give: (value) => {
+		use: (value) => {
 			const state = { page: value, timestamp: Date.now() };
 			const title = `Page ${value}`;
 			const url = `${value}`;
 
 			history.pushState(state, title, url);
-			urlSrc.give(value);
+			urlSrc.use(value);
 		},
-		value: (u) => {
-			urlSrc.value(u);
+		event: (u) => {
+			urlSrc.event(u);
 		},
 	}
 }

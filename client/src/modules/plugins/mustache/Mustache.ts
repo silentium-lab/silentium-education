@@ -1,10 +1,10 @@
 import MustacheTemplate from 'mustache';
-import { all, DataType } from "silentium";
+import { all, EventType } from "silentium";
 
 export const mustache = (
-    templateSrc: DataType<string>,
-    valuesSrc: DataType<Record<string, unknown>>
-): DataType<string> => (user) => {
+    templateSrc: EventType<string>,
+    valuesSrc: EventType<Record<string, unknown>>
+): EventType<string> => (user) => {
     all(
         templateSrc,
         valuesSrc

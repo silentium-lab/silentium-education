@@ -1,14 +1,14 @@
-import { DataType, of, ValueType } from "silentium";
+import { ConstructorType, EventType, of } from "silentium";
 import { fromJson, path, recordOf, template } from "silentium-components";
 
 class CrudModels {
     public constructor(
-        private modelTransport: ValueType<[any], any>,
-        private responsePathSrc: DataType<string>,
-        private modelNameSrc: DataType<string> = of('any'),
+        private modelTransport: ConstructorType<[any], any>,
+        private responsePathSrc: EventType<string>,
+        private modelNameSrc: EventType<string> = of('any'),
     ) { }
 
-    public ofModelName(modelNameSrc: DataType<string>) {
+    public ofModelName(modelNameSrc: EventType<string>) {
         return new CrudModels(
             this.modelTransport,
             this.responsePathSrc,
@@ -16,7 +16,7 @@ class CrudModels {
         )
     }
 
-    public list(searchSrc?: DataType<Record<string, unknown>>) {
+    public list(searchSrc?: EventType<Record<string, unknown>>) {
         return path<unknown[]>(fromJson(
             this.modelTransport(
                 recordOf({
@@ -30,7 +30,7 @@ class CrudModels {
         ), this.responsePathSrc);
     }
 
-    public entity(idSrc: DataType<string>) {
+    public entity(idSrc: EventType<string>) {
         return path(fromJson(this.modelTransport(recordOf({
             url: template(of('/$1/$2/'), recordOf({
                 $1: this.modelNameSrc,
@@ -40,7 +40,7 @@ class CrudModels {
         }))), this.responsePathSrc);
     }
 
-    public created(formSrc: DataType<string>): DataType<Record<string, unknown>> {
+    public created(formSrc: EventType<string>): EventType<Record<string, unknown>> {
         return path(fromJson(this.modelTransport(recordOf({
             url: template(of('/$1'), recordOf({
                 $1: this.modelNameSrc
@@ -50,7 +50,7 @@ class CrudModels {
         }))), this.responsePathSrc);
     }
 
-    public updated(idSrc: DataType<string>, formSrc: DataType<string>) {
+    public updated(idSrc: EventType<string>, formSrc: EventType<string>) {
         return path(fromJson(this.modelTransport(recordOf({
             url: template(of('/$1/$2/'), recordOf({
                 $1: this.modelNameSrc,
@@ -61,7 +61,7 @@ class CrudModels {
         }))), this.responsePathSrc);
     }
 
-    public deleted(idSrc: DataType<string>) {
+    public deleted(idSrc: EventType<string>) {
         return path(fromJson(this.modelTransport(recordOf({
             url: template(of('/$1/$2/'), recordOf({
                 $1: this.modelNameSrc,
@@ -73,9 +73,9 @@ class CrudModels {
 }
 
 export const crudModels = (
-    modelTransport: ValueType,
-    responsePathSrc: DataType<string>,
-    modelNameSrc: DataType<string> = of('any'),
+    modelTransport: ConstructorType,
+    responsePathSrc: EventType<string>,
+    modelNameSrc: EventType<string> = of('any'),
 ) => {
     return new CrudModels(modelTransport, responsePathSrc, modelNameSrc);
 }

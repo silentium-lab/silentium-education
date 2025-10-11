@@ -1,11 +1,11 @@
-import { all, applied, DataType } from "silentium";
+import { all, applied, EventType } from "silentium";
 
 /**
  * Representation of static translation texts
  */
 export const i18n = (
-	langSrc: DataType<string>,
-	translationsSrc: DataType<
+	langSrc: EventType<string>,
+	translationsSrc: EventType<
 		Record<string, Record<string, string>>
 	>,
 ) => ({

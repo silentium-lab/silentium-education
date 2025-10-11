@@ -1,11 +1,11 @@
-import { DataType, of } from "silentium";
+import { EventType, of } from "silentium";
 import { template } from "silentium-components";
 import { link } from "../components/Link";
 import { i18n } from "../store";
 import { lang } from "./Lang";
 import { logoSrc } from "./Logo";
 
-export const header = (): DataType<string> => (user) => {
+export const header = (): EventType<string> => (user) => {
 		const t = template();
 		t.template(
 			`<header class="mb-2 flex justify-between py-2 gap-2 min-h-10 flex-wrap items-center">

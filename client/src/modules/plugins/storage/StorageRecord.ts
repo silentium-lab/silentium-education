@@ -1,5 +1,5 @@
 import {
-	DataType,
+	EventType,
 	lateShared,
 	primitive,
 	SourceType
@@ -9,15 +9,15 @@ import {
  * Data representation from Storage API
  */
 export const storageRecord = <T = string>(
-	nameSrc: DataType<string>,
+	nameSrc: EventType<string>,
 	defaultValue?: unknown,
 	storageType = "localStorage",
 ): SourceType<T> => {
 	const nameSync = primitive(nameSrc);
 	const resultSrc = lateShared<T>();
 	const result: SourceType<T> = {
-		value: (u) => {
-			resultSrc.value(u);
+		event: (u) => {
+			resultSrc.event(u);
 			const storage = window[storageType];
 			nameSrc((name) => {
 				window.addEventListener("storage", (e) => {
@@ -27,25 +27,25 @@ export const storageRecord = <T = string>(
 								? JSON.parse(e.newValue)
 								: defaultValue;
 							if (newValue !== undefined && newValue !== null) {
-								result.give(newValue as T);
+								result.use(newValue as T);
 							}
 						}
 					}
 				});
 				if (storage[name]) {
 					try {
-						resultSrc.give(JSON.parse(storage[name]));
+						resultSrc.use(JSON.parse(storage[name]));
 					} catch {
 						console.warn(`LocalStorageRecord cant parse value ${name}`);
 					}
 				} else if (defaultValue !== undefined) {
-					result.give(defaultValue as T);
+					result.use(defaultValue as T);
 				}
 			});
 		},
-		give: (v) => {
+		use: (v) => {
 			const storage = window[storageType];
-			resultSrc.give(v);
+			resultSrc.use(v);
 
 			try {
 				storage[nameSync.primitive()] = JSON.stringify(v);

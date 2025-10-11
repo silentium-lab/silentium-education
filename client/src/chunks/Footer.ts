@@ -1,10 +1,10 @@
-import { DataType, of } from "silentium";
+import { EventType, of } from "silentium";
 import { template } from "silentium-components";
 import { linkExternal } from "../components/LinkExternal";
 import { i18n } from "../store";
 import { logoSrc } from "./Logo";
 
-export const footer = (): DataType<string> => (user) => {
+export const footer = (): EventType<string> => (user) => {
   const t = template();
   t.template(
     `<footer class="mt-auto py-2 flex justify-between items-center gap-2 flex-wrap">

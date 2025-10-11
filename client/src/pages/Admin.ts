@@ -1,5 +1,5 @@
-import { DataType, destructor, local, of, shared } from "silentium";
-import { router } from "silentium-components";
+import { EventType, of } from "silentium";
+import { detached, router } from "silentium-components";
 import { routePrivate } from "../modules/RoutePrivate";
 import { titleSrc, urlSrc } from "../store";
 import { articleEdit } from "./Admin/ArticleEdit";
@@ -7,13 +7,13 @@ import { articleNew } from "./Admin/ArticleNew";
 import { articles } from "./Admin/Articles";
 import { auth } from "./Admin/Auth";
 
-export const admin = (): DataType<string> => function Admin(user) {
-	titleSrc.give("Админ панель");
+export const admin = (): EventType<string> => function Admin(user) {
+	titleSrc.use("Админ панель");
 
-	const localUrlSrc = destructor(local(urlSrc.value));
+	const localUrlSrc = detached(urlSrc.event);
 
 	const r = router(
-		localUrlSrc.value,
+		localUrlSrc,
 		of([
 			{
 				pattern: "^/admin$",
@@ -40,7 +40,6 @@ export const admin = (): DataType<string> => function Admin(user) {
 	const rDestructor = r(user);
 
 	return function AdminDestroy () {
-		localUrlSrc.destroy();
 		rDestructor?.();
 	}
 }

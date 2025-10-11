@@ -1,11 +1,11 @@
-import { DataType, of, SourceType } from "silentium";
+import { EventType, of, SourceType } from "silentium";
 import { part, template } from "silentium-components";
 import { input } from "../../components/Input";
 import { ArticleType } from "../../types/ArticleType";
 
 export const articleForm = (
 	formSrc: SourceType<ArticleType>
-): DataType<string> => (user) => {
+): EventType<string> => (user) => {
 	const formModels = {
 		title: part<string>(formSrc, of('title')),
 		content: part<string>(formSrc, of('content'))

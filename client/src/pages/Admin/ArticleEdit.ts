@@ -1,5 +1,5 @@
 import { omit, partialRight } from "lodash-es";
-import { any, applied, DataType, DataUserType, lateShared, of, shared } from "silentium";
+import { any, applied, EventType, lateShared, of, shared, EventUserType } from "silentium";
 import { branch, constant, loading, shot, task, template, toJson } from "silentium-components";
 import { backendCrudSrc, notificationSrc } from "../../bootstrap";
 import { button } from "../../components/Button";
@@ -9,27 +9,27 @@ import { i18n, titleSrc, urlSrc } from "../../store";
 import { ArticleType } from "../../types/ArticleType";
 import { articleForm } from "./ArticleForm";
 
-export const articleEdit = (): DataType<string> => (user) => {
+export const articleEdit = (): EventType<string> => (user) => {
 	const title = i18n.tr("Article")
-	title(titleSrc.give);
+	title(titleSrc.use);
 
-	const idSrc = shared(splitPart(urlSrc.value, of("/"), of(3)));
-	const articleSrc = shared(backendCrudSrc.ofModelName(of('articles')).entity(idSrc.value));
+	const idSrc = shared(splitPart(urlSrc.event, of("/"), of(3)));
+	const articleSrc = shared(backendCrudSrc.ofModelName(of('articles')).entity(idSrc.event));
 	const clickedSrc = lateShared();
 	const formSrc = lateShared<ArticleType>();
 
 	const formUpdatedSrc = shared(backendCrudSrc.ofModelName(of('articles')).updated(
-		idSrc.value,
-		toJson(shot(formSrc.value, clickedSrc.value))
+		idSrc.event,
+		toJson(shot(formSrc.event, clickedSrc.event))
 	));
-	const formUpdateLoadingSrc = any(loading(clickedSrc.value, formUpdatedSrc.value), of(false));
+	const formUpdateLoadingSrc = any(loading(clickedSrc.event, formUpdatedSrc.event), of(false));
 
 	constant({
 		type: 'success',
 		content: 'Успешно изменено'
-	} as const, formUpdatedSrc.value)(notificationSrc.give);
+	} as const, formUpdatedSrc.event)(notificationSrc.use);
 
-	applied(any(articleSrc.value, task(formUpdatedSrc.value)), partialRight(omit, ['_id']))(formSrc.give as DataUserType);
+	applied(any(articleSrc.event, task(formUpdatedSrc.event)), partialRight(omit, ['_id']))(formSrc.use as EventUserType);
 
 	const t = template();
 	t.template(`<div class="article">
@@ -38,14 +38,14 @@ export const articleEdit = (): DataType<string> => (user) => {
 		<div class="mb-2">
 			<div>
 				<b>id: </b>
-				${t.var(idSrc.value)}
+				${t.var(idSrc.event)}
 			</div>
 			${t.var(articleForm(formSrc))}
 		</div>
 		${t.var(button(
 		branch(formUpdateLoadingSrc, of("Сохраняем..."), of('Сохранить')),
 		of("btn"),
-		clickedSrc.give,
+		clickedSrc.use,
 	))}
       </div>`)
 	t.value(user);

@@ -1,14 +1,14 @@
 import {
-	DataType,
+	EventType,
 	of
 } from "silentium";
 import { template } from "silentium-components";
 
 export const linkExternal = (
-	urlSrc: DataType<string>,
-	textSrc: DataType<string>,
-	classSrc: DataType<string> = of('')
-): DataType<string> => (user) => {
+	urlSrc: EventType<string>,
+	textSrc: EventType<string>,
+	classSrc: EventType<string> = of('')
+): EventType<string> => (user) => {
 	const t = template();
 	t.template(
 		`<a

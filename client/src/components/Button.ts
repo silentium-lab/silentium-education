@@ -1,10 +1,10 @@
 import {
 	_void,
-	DataType,
-	DataUserType,
+	EventType,
 	of,
 	on,
-	shared
+	shared,
+	EventUserType
 } from "silentium";
 import { first, template } from "silentium-components";
 import { elements } from "silentium-web-api";
@@ -13,12 +13,12 @@ import { clicked } from "../modules/Clicked";
 import { id } from "../modules/Id";
 
 export const button = (
-	theLabel: DataType<string>,
-	theClass: DataType<string> = of(""),
-	valueOwner: DataUserType = _void(),
-): DataType<string> => {
+	theLabel: EventType<string>,
+	theClass: EventType<string> = of(""),
+	valueOwner: EventUserType = _void(),
+): EventType<string> => {
 	return (u) => {
-		const idSrc = shared(id()).value;
+		const idSrc = shared(id()).event;
 
 		const clickDestructor = on(clicked(first(elements(className(idSrc)))), (e) => {
 			e.preventDefault();

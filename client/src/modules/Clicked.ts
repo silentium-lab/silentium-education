@@ -1,5 +1,5 @@
 import {
-	DataType,
+	EventType,
 	fromEvent,
 	of
 } from "silentium";
@@ -8,8 +8,8 @@ import {
  * DOM element click even
  */
 export const clicked = (
-	elSrc: DataType<HTMLElement>
-): DataType<Event> => fromEvent(
+	elSrc: EventType<HTMLElement>
+): EventType<Event> => fromEvent(
 	elSrc,
 	of('click'),
 	of('addEventListener'),

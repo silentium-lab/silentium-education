@@ -1,4 +1,4 @@
-import { applied, DataType, DataUserType, lateShared, of } from "silentium";
+import { applied, EventType, lateShared, of, EventUserType } from "silentium";
 import { fetchedData } from 'silentium-web-api';
 import { crudModels } from "./modules/app/CrudModels";
 import { errorSrc } from "./store";
@@ -8,7 +8,7 @@ export const backendTransport = (
     e: unknown,
     a: unknown
 ) => fetchedData(
-    applied(r as DataType<Record<string, unknown>>, (r: Record<string, unknown>) => {
+    applied(r as EventType<Record<string, unknown>>, (r: Record<string, unknown>) => {
         return {
             baseUrl: 'http://localhost:4000',
             headers: {
@@ -17,8 +17,8 @@ export const backendTransport = (
             ...r,
         }
     }),
-    (e as DataUserType ?? errorSrc),
-    a as DataType
+    (e as EventUserType ?? errorSrc),
+    a as EventType
 )
 
 export const backendCrudSrc = crudModels(backendTransport, of('data'));

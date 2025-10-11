@@ -1,4 +1,4 @@
-import { applied, DataType, lateShared, of, sharedSource } from "silentium";
+import { applied, EventType, lateShared, of, sharedSource } from "silentium";
 import { memo, recordOf } from "silentium-components";
 import translations from "./data/translations.json";
 import { documentTitle } from "./modules/DocumentTitle";
@@ -6,7 +6,7 @@ import { historyUrl } from "./modules/HistoryUrl";
 import { i18n as I18N } from "./modules/I18n";
 import { storageRecord } from "./modules/plugins/storage/StorageRecord";
 
-(window as any).debug = (name: string, record: Record<string, DataType>) => {
+(window as any).debug = (name: string, record: Record<string, EventType>) => {
     applied(recordOf(record), (r) => ({ name, ...r }))(console.table)
 }
 
@@ -16,7 +16,7 @@ export const urlSrc = sharedSource(historyUrl());
 
 export const titleSrc = documentTitle();
 
-export const i18n = I18N(memo(langSrc.value), of(translations));
+export const i18n = I18N(memo(langSrc.event), of(translations));
 
 export const authenticatedSrc = lateShared(true);
 

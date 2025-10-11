@@ -1,6 +1,6 @@
 import {
 	applied,
-	DataType,
+	EventType,
 	lateShared,
 	of,
 	once
@@ -8,25 +8,25 @@ import {
 import { concatenated, template } from "silentium-components";
 import { button } from "../components/Button";
 
-export const counter = (): DataType<string> => {
+export const counter = (): EventType<string> => {
 	return (u) => {
 		const countSrc = lateShared(1);
 		const clickedSrc = lateShared();
 		const resetSrc = lateShared();
 
-		clickedSrc.value(
+		clickedSrc.event(
 			() => {
-				once(countSrc.value)(
+				once(countSrc.event)(
 					(v) => {
-						countSrc.give(v + 1);
+						countSrc.use(v + 1);
 					}
 				);
 			}
 		);
 
-		resetSrc.value(
+		resetSrc.event(
 			() => {
-				countSrc.give(1);
+				countSrc.use(1);
 			}
 		);
 
@@ -37,13 +37,13 @@ export const counter = (): DataType<string> => {
 				button(
 					concatenated([
 						of("clicked "),
-						applied(countSrc.value, String),
+						applied(countSrc.event, String),
 					]),
 					of("btn"),
-					clickedSrc.give,
+					clickedSrc.use,
 				),
 			)}
-        ${t.var(button(of("reset"), of("btn"), resetSrc.give))}
+        ${t.var(button(of("reset"), of("btn"), resetSrc.use))}
       </div>`,
 		)
 		t.value(u);

@@ -1,12 +1,12 @@
-import { DataType, of } from "silentium";
+import { EventType, of } from "silentium";
 import { template } from "silentium-components";
 import { counter } from "../chunks/Counter";
 import { i18n, titleSrc } from "../store";
 import { link } from "../components/Link";
 
-export const home = (): DataType<string> => {
+export const home = (): EventType<string> => {
 	return function Home(u) {
-		i18n.tr("home")(titleSrc.give);
+		i18n.tr("home")(titleSrc.use);
 		const t = template();
 		t.template(
 			`<section class="article">

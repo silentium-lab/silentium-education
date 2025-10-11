@@ -1,16 +1,16 @@
-import { all, DataType } from "silentium";
+import { all, EventType } from "silentium";
 import { authenticatedSrc, urlSrc } from "../store";
 
 export const routePrivate = (
-    baseSrc: DataType<string>,
+    baseSrc: EventType<string>,
     loginRoute: string = '/admin'
-): DataType<string> => {
+): EventType<string> => {
     return (u) => {
-        all(authenticatedSrc.value, baseSrc)(
+        all(authenticatedSrc.event, baseSrc)(
             ([auth, content]) => {
                 if (!auth) {
                     setTimeout(() => {
-                        urlSrc.give(loginRoute);
+                        urlSrc.use(loginRoute);
                     })
                 } else {
                     u(content);

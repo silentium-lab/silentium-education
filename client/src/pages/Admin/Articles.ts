@@ -1,36 +1,36 @@
-import { any, applied, chain, DataType, lateShared, map, of, once } from "silentium";
+import { any, applied, chain, EventType, lateShared, map, of, once } from "silentium";
 import { constant, path, recordOf, shot, template } from "silentium-components";
 import { backendCrudSrc, notificationSrc } from "../../bootstrap";
 import { link } from "../../components/Link";
 import { clickedId } from "../../modules/ClickedId";
 import { i18n, titleSrc } from "../../store";
 
-export const articles = (): DataType<string> => {
+export const articles = (): EventType<string> => {
   return (user) => {
     const title = i18n.tr("Articles")
-    title(titleSrc.give);
+    title(titleSrc.use);
 
     const articlesSearchSrc = lateShared({});
-    const articlesSrc = backendCrudSrc.ofModelName(of('articles')).list(articlesSearchSrc.value);
+    const articlesSrc = backendCrudSrc.ofModelName(of('articles')).list(articlesSearchSrc.event);
 
     const t = template();
     t.template(`<div class="article">
         <h1 class="title-1">${t.var(title)}</h1>
         ${t.var(link(of('/admin/articles/create'), of('Создать статью'), of('block mb-3 underline')))}
         ${t.var(applied(
-      any<any>(chain(articlesSearchSrc.value, of([])), map(
+      any<any>(chain(articlesSearchSrc.event, of([])), map(
         articlesSrc,
         (article) => {
           const removeTrigger = lateShared();
           const removedSrc = backendCrudSrc.ofModelName(of('articles')).deleted(
-            shot(path(article, of('_id')), removeTrigger.value)
+            shot(path(article, of('_id')), removeTrigger.event)
           );
-          constant({}, once(removedSrc))(articlesSearchSrc.give);
+          constant({}, once(removedSrc))(articlesSearchSrc.use);
 
           constant({
             type: 'success',
             content: 'Успешно удалено'
-          } as const, removedSrc)(notificationSrc.give);
+          } as const, removedSrc)(notificationSrc.use);
 
           return template(of(`<div class="flex gap-2">
                 $link
