@@ -1,9 +1,10 @@
-import { any, applied, chain, constructorDestroyable, destructor, EventType, lateShared, map, of, once } from "silentium";
-import { constant, path, recordOf, shot, template } from "silentium-components";
+import { any, applied, chain, constructorDestroyable, destroyContainer, destructor, EventType, lateShared, map, of, once, shared } from "silentium";
+import { constant, detached, path, recordOf, shot, template } from "silentium-components";
 import { backendCrudSrc, backendTransport, notificationSrc } from "../../bootstrap";
 import { link } from "../../components/Link";
 import { clickedId } from "../../modules/ClickedId";
 import { i18n, titleSrc } from "../../store";
+import { ArticleType } from "../../types/ArticleType";
 
 export const articles = (): EventType<string> => {
   return (user) => {
@@ -13,10 +14,12 @@ export const articles = (): EventType<string> => {
     const transport = constructorDestroyable(backendTransport);
 
     const articlesSearchSrc = lateShared({});
-    const articlesSrc = backendCrudSrc.ofModelName(of('articles')).list(
+    const articlesSrc = shared(backendCrudSrc.ofModelName(of('articles')).list(
       transport.get,
       articlesSearchSrc.event
-    );
+    ));
+
+    const dc = destroyContainer();
 
     const t = template();
     t.template(`<div class="article">
@@ -24,19 +27,21 @@ export const articles = (): EventType<string> => {
         ${t.var(link(of('/admin/articles/create'), of('Создать статью'), of('block mb-3 underline')))}
         ${t.var(applied(
       any<any>(chain(articlesSearchSrc.event, of([])), map(
-        articlesSrc,
+        articlesSrc.event,
         (article) => {
           const removeTrigger = lateShared();
-          const removedSrc = backendCrudSrc.ofModelName(of('articles')).deleted(
+          removeTrigger.event(console.log);
+          const localArticle = detached<ArticleType>(article);
+          const removedSrc = shared(dc.add(backendCrudSrc.ofModelName(of('articles')).deleted(
             transport.get,
-            shot(path(article, of('_id')), removeTrigger.event)
-          );
-          constant({}, once(removedSrc))(articlesSearchSrc.use);
+            shot(once(path(localArticle, of('_id'))), once(removeTrigger.event))
+          )));
+          constant({}, once(removedSrc.event))(articlesSearchSrc.use);
 
           constant({
             type: 'success',
             content: 'Успешно удалено'
-          } as const, removedSrc)(notificationSrc.use);
+          } as const, removedSrc.event)(notificationSrc.use);
 
           return template(of(`<div class="flex gap-2">
                 $link
@@ -48,7 +53,7 @@ export const articles = (): EventType<string> => {
                 path(article, of('title')),
                 of('underline')
               ),
-              $removeId: clickedId(removeTrigger),
+              $removeId: dc.add(clickedId(removeTrigger)),
           })).value
         }
       )),
@@ -58,6 +63,8 @@ export const articles = (): EventType<string> => {
       t.value(user);
 
       return () => {
+        dc.destroy();
+        articlesSrc.destroy();
         transport.destroy();
         t.destroy();
       }

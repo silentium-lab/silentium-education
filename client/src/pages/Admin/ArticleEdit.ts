@@ -1,6 +1,6 @@
 import { omit, partialRight } from "lodash-es";
 import { any, applied, EventType, lateShared, of, shared, EventUserType, constructorDestroyable } from "silentium";
-import { branch, constant, loading, shot, task, template, toJson } from "silentium-components";
+import { branch, constant, detached, loading, shot, task, template, toJson } from "silentium-components";
 import { backendCrudSrc, backendTransport, notificationSrc } from "../../bootstrap";
 import { button } from "../../components/Button";
 import { link } from "../../components/Link";
@@ -15,7 +15,8 @@ export const articleEdit = (): EventType<string> => (user) => {
 
     const transport = constructorDestroyable(backendTransport);
 
-	const idSrc = shared(splitPart(urlSrc.event, of("/"), of(3)));
+	const localUrlSrc = detached(urlSrc.event);
+	const idSrc = shared(splitPart(localUrlSrc, of("/"), of(3)));
 	const articleSrc = shared(backendCrudSrc.ofModelName(of('articles')).entity(
 		transport.get,
 		idSrc.event
