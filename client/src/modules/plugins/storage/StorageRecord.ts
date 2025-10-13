@@ -1,8 +1,8 @@
 import {
-	EventType,
+	type EventType,
 	lateShared,
 	primitive,
-	SourceType
+	type SourceType,
 } from "silentium";
 
 /**
@@ -52,8 +52,8 @@ export const storageRecord = <T = string>(
 			} catch {
 				console.warn(`LocalStorageRecord cant stringify value`);
 			}
-		}
-	}
+		},
+	};
 
 	return result;
 };

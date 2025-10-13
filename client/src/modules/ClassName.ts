@@ -1,12 +1,7 @@
-import {
-	applied,
-	EventType
-} from "silentium";
+import { applied, type EventType } from "silentium";
 
 /**
  * CSS class name representation
  */
-export const className = (
-	s: EventType<string>
-): EventType<string> =>
-	applied(s, (s) => `.${s}`)
+export const className = (s: EventType<string>): EventType<string> =>
+	applied(s, (s) => `.${s}`);

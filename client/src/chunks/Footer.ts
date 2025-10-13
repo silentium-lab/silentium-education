@@ -1,13 +1,13 @@
-import { EventType, of } from "silentium";
+import { type EventType, of } from "silentium";
 import { template } from "silentium-components";
 import { linkExternal } from "../components/LinkExternal";
 import { i18n } from "../store";
 import { logoSrc } from "./Logo";
 
 export const footer = (): EventType<string> => (user) => {
-  const t = template();
-  t.template(
-    `<footer class="mt-auto py-2 flex justify-between items-center gap-2 flex-wrap">
+	const t = template();
+	t.template(
+		`<footer class="mt-auto py-2 flex justify-between items-center gap-2 flex-wrap">
         <span>
           ${t.var(of(new Date().getFullYear().toString()))}
           &copy;
@@ -17,6 +17,6 @@ export const footer = (): EventType<string> => (user) => {
         </div>
         ${t.var(logoSrc)}
       </footer>`,
-  )
-  t.value(user);
-}
+	);
+	t.value(user);
+};

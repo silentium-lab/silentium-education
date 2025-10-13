@@ -1,13 +1,11 @@
-import {
-	EventType,
-	fromEvent,
-	of
-} from "silentium";
+import { type EventType, fromEvent, of } from "silentium";
 
 /**
  * DOM element keypress even
  */
-export const keyPressed = <T extends Event>(elSrc: EventType<HTMLElement>): EventType<T> => {
+export const keyPressed = <T extends Event>(
+	elSrc: EventType<HTMLElement>,
+): EventType<T> => {
 	return (u) => {
 		fromEvent<T>(
 			elSrc,
@@ -15,5 +13,5 @@ export const keyPressed = <T extends Event>(elSrc: EventType<HTMLElement>): Even
 			of("addEventListener"),
 			of("removeEventListener"),
 		)(u);
-	}
-}
+	};
+};

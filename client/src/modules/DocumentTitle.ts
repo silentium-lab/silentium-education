@@ -1,4 +1,4 @@
-import {  lateShared, SourceType } from "silentium";
+import { lateShared, type SourceType } from "silentium";
 
 /**
  * Document header representation
@@ -12,5 +12,5 @@ export const documentTitle = (): SourceType<string> => {
 			src.use(v);
 			document.title = v;
 		},
-	}
-}
+	};
+};

@@ -1,4 +1,4 @@
-import { lateShared, SourceType } from "silentium";
+import { lateShared, type SourceType } from "silentium";
 
 /**
  * URL representation associated with the History API
@@ -17,5 +17,5 @@ export const historyUrl = (): SourceType<string> => {
 		event: (u) => {
 			urlSrc.event(u);
 		},
-	}
-}
+	};
+};

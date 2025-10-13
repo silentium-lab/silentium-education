@@ -1,8 +1,8 @@
-import { EventType, of } from "silentium";
+import { type EventType, of } from "silentium";
 import { template } from "silentium-components";
 import { counter } from "../chunks/Counter";
-import { i18n, titleSrc } from "../store";
 import { link } from "../components/Link";
+import { i18n, titleSrc } from "../store";
 
 export const home = (): EventType<string> => {
 	return function Home(u) {
@@ -15,13 +15,13 @@ export const home = (): EventType<string> => {
 			</h1>
 			<div class="mb-3">${t.var(counter())}</div>
 			<div>
-				${t.var(link(of('/admin/articles'), of('Статьи'), of('underline')))}
+				${t.var(link(of("/admin/articles"), of("Статьи"), of("underline")))}
 			</div>
 		</section>`,
 		);
 		t.value(u);
 		return function homeDestroy() {
 			t.destroy();
-		}
-	}
-}
+		};
+	};
+};

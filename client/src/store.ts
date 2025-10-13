@@ -1,4 +1,10 @@
-import { applied, EventType, lateShared, of, sharedSource } from "silentium";
+import {
+	applied,
+	type EventType,
+	lateShared,
+	of,
+	sharedSource,
+} from "silentium";
 import { memo, recordOf } from "silentium-components";
 import translations from "./data/translations.json";
 import { documentTitle } from "./modules/DocumentTitle";
@@ -7,8 +13,8 @@ import { i18n as I18N } from "./modules/I18n";
 import { storageRecord } from "./modules/plugins/storage/StorageRecord";
 
 (window as any).debug = (name: string, record: Record<string, EventType>) => {
-    applied(recordOf(record), (r) => ({ name, ...r }))(console.table)
-}
+	applied(recordOf(record), (r) => ({ name, ...r }))(console.table);
+};
 
 export const langSrc = sharedSource(storageRecord(of("lang"), "ru"));
 

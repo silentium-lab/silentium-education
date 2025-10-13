@@ -31,8 +31,8 @@ export const router = (req: EventType<IncomingMessage>) => {
           template: () => CRUDRouter(req, mongoTransport, '/categories', 'categories'),
         },
         {
-          pattern: "^GET:/settings$",
-          template: settings,
+          pattern: "^.+:/settings.*$",
+          template: () => CRUDRouter(req, mongoTransport, '/settings', 'settings'),
         },
       ]),
       notFoundSrc,

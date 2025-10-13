@@ -1,10 +1,10 @@
 import {
 	_void,
-	EventType,
+	type EventType,
+	type EventUserType,
 	of,
 	on,
 	shared,
-	EventUserType
 } from "silentium";
 import { first, template } from "silentium-components";
 import { elements } from "silentium-web-api";
@@ -20,10 +20,13 @@ export const button = (
 	return (u) => {
 		const idSrc = shared(id()).event;
 
-		const clickDestructor = on(clicked(first(elements(className(idSrc)))), (e) => {
-			e.preventDefault();
-			valueOwner(e);
-		});
+		const clickDestructor = on(
+			clicked(first(elements(className(idSrc)))),
+			(e) => {
+				e.preventDefault();
+				valueOwner(e);
+			},
+		);
 
 		const t = template();
 		t.template(
@@ -37,6 +40,6 @@ export const button = (
 		return () => {
 			clickDestructor?.();
 			t.destroy();
-		}
-	}
-}
+		};
+	};
+};

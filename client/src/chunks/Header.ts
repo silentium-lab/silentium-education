@@ -1,4 +1,4 @@
-import { EventType, of } from "silentium";
+import { type EventType, of } from "silentium";
 import { template } from "silentium-components";
 import { link } from "../components/Link";
 import { i18n } from "../store";
@@ -6,9 +6,9 @@ import { lang } from "./Lang";
 import { logoSrc } from "./Logo";
 
 export const header = (): EventType<string> => (user) => {
-		const t = template();
-		t.template(
-			`<header class="mb-2 flex justify-between py-2 gap-2 min-h-10 flex-wrap items-center">
+	const t = template();
+	t.template(
+		`<header class="mb-2 flex justify-between py-2 gap-2 min-h-10 flex-wrap items-center">
         ${t.var(logoSrc)}
         ${t.var(lang(of("mr-auto")))}
         <nav class="flex gap-2 flex-wrap">
@@ -17,6 +17,6 @@ export const header = (): EventType<string> => (user) => {
           ${t.var(link(of("/blog"), i18n.tr("blog"), of("underline")))}
         </nav>
       </header>`,
-		)
-    t.value(user);
-}
+	);
+	t.value(user);
+};
