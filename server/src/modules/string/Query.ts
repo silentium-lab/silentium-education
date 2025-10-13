@@ -1,9 +1,9 @@
 import type { IncomingMessage } from "node:http";
 import {
-  applied,
+  Applied,
   EventType
 } from "silentium";
 
-export const query = (req: EventType<IncomingMessage>): EventType<string> => {
-  return applied(req, (r) => `${r.method}:${r.url}`);
+export const Query = (req: EventType<IncomingMessage>): EventType<string> => {
+  return Applied(req, (r) => `${r.method}:${r.url}`);
 }

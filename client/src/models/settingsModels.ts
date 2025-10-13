@@ -1,4 +1,4 @@
-import { applied, type ConstructorType, type EventType, of } from "silentium";
+import { Applied, type ConstructorType, type EventType, Of } from "silentium";
 import { backendCrudSrc } from "../bootstrap";
 
 export const settingsModels = {
@@ -7,9 +7,9 @@ export const settingsModels = {
 	 */
 	hasSettings(transport: ConstructorType): EventType<boolean> {
 		const settingsSrc = backendCrudSrc
-			.ofModelName(of("settings"))
-			.list(transport, of({}));
+			.OfModelName(Of("settings"))
+			.list(transport, Of({}));
 
-		return applied(settingsSrc, (s) => s.length > 0);
+		return Applied(settingsSrc, (s) => s.length > 0);
 	},
 };

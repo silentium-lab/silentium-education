@@ -26,7 +26,7 @@ import {
 } from "../../bootstrap";
 import { button } from "../../components/Button";
 import { link } from "../../components/Link";
-import { splitPart } from "../../modules/string/SplitPart";
+import { SplitPart } from "../../modules/string/SplitPart";
 import { i18n, titleSrc, urlSrc } from "../../store";
 import type { ArticleType } from "../../types/ArticleType";
 import { articleForm } from "./ArticleForm";
@@ -38,7 +38,7 @@ export const articleEdit = (): EventType<string> => (user) => {
 	const transport = constructorDestroyable(backendTransport);
 
 	const localUrlSrc = detached(urlSrc.event);
-	const idSrc = shared(splitPart(localUrlSrc, of("/"), of(3)));
+	const idSrc = shared(SplitPart(localUrlSrc, of("/"), of(3)));
 	const articleSrc = shared(
 		backendCrudSrc
 			.ofModelName(of("articles"))

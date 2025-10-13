@@ -1,19 +1,19 @@
 import {
-	applied,
+	Applied,
 	type EventType,
 	type EventUserType,
-	lateShared,
-	of,
-	shared,
+	LateShared,
+	Of,
+	Shared,
 } from "silentium";
-import { fetchedData } from "silentium-web-api";
-import { crudModels } from "./modules/app/CrudModels";
+import { FetchedData } from "silentium-web-api";
+import { CrudModels } from "./modules/app/CrudModels";
 import { errorSrc } from "./store";
 import { settingsModels } from "./models/settingsModels";
 
 export const backendTransport = (r: unknown, e: unknown, a: unknown) =>
-	fetchedData(
-		applied(
+	FetchedData(
+		Applied(
 			r as EventType<Record<string, unknown>>,
 			(r: Record<string, unknown>) => {
 				return {
@@ -29,11 +29,10 @@ export const backendTransport = (r: unknown, e: unknown, a: unknown) =>
 		a as EventType,
 	);
 
-export const backendCrudSrc = crudModels(of("data"));
-export const notificationSrc = lateShared<{
+export const backendCrudSrc = CrudModels(Of("data"));
+export const notificationSrc = LateShared<{
 	type: "error" | "success" | "info";
 	content: string;
 }>();
 
-
-export const hasSettingsSrc = shared(settingsModels.hasSettings(backendTransport));
+export const hasSettingsSrc = Shared(settingsModels.hasSettings(backendTransport));

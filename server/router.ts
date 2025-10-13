@@ -1,26 +1,25 @@
 import type { IncomingMessage } from "node:http";
-import { EventType, of } from "silentium";
-import { router as Router, tick } from "silentium-components";
+import { EventType, Of } from "silentium";
+import { Router, Tick } from "silentium-components";
 import { mongoTransport } from "./bootstrap";
 import { CRUDRouter } from "./src/app/CRUDRouter";
-import { query } from "./src/modules/string/Query";
-import { auth } from "./src/routes/Auth";
-import { health } from "./src/routes/Health";
-import { settings } from "./src/routes/Settings";
-import { notFoundSrc } from "./store";
+import { Query } from "./src/modules/string/Query";
+import { Auth } from "./src/routes/Auth";
+import { Health } from "./src/routes/Health";
+import { NotFoundSrc } from "./store";
 
 export const router = (req: EventType<IncomingMessage>) => {
-  return tick(
+  return Tick(
     Router(
-      query(req),
-      of([
+      Query(req),
+      Of([
         {
           pattern: "^GET:/?$",
-          template: health,
+          template: Health,
         },
         {
           pattern: "^GET:/auth$",
-          template: auth,
+          template: Auth,
         },
         {
           pattern: "^.+:/articles.*$",
@@ -35,7 +34,7 @@ export const router = (req: EventType<IncomingMessage>) => {
           template: () => CRUDRouter(req, mongoTransport, '/settings', 'settings'),
         },
       ]),
-      notFoundSrc,
+      NotFoundSrc,
     ),
   );
 };

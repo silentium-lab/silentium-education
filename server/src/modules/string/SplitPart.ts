@@ -1,11 +1,11 @@
-import { all, applied, EventType, filtered } from "silentium";
+import { All, Applied, EventType, Filtered } from "silentium";
 
-export const splitPart = (
+export const SplitPart = (
     baseSrc: EventType<string>,
     splitSrc: EventType<string>,
     indexSrc: EventType<number>
 ): EventType<string> => {
-    return filtered(applied(all(
+    return Filtered(Applied(All(
         baseSrc,
         splitSrc,
         indexSrc

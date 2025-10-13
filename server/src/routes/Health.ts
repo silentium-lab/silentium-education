@@ -1,9 +1,9 @@
-import { EventType, of } from "silentium";
-import { toJson } from "silentium-components";
+import { EventType, Of } from "silentium";
+import { ToJson } from "silentium-components";
 
-export const health = (): EventType<string> => {
-  return toJson(
-      of({
+export const Health = (): EventType<string> => {
+  return ToJson(
+      Of({
         time: Date.now(),
       }),
     );

@@ -1,11 +1,11 @@
 import { IncomingMessage } from "http";
 import { Db, ObjectId } from "mongodb";
 import getRawBody from 'raw-body';
-import { ConstructorType, EventType, of, primitive } from "silentium";
-import { detached, path, router, toJson } from "silentium-components";
-import { notFoundSrc } from "../../store";
-import { query } from "../modules/string/Query";
-import { splitPart } from "../modules/string/SplitPart";
+import { ConstructorType, EventType, Of, Primitive } from "silentium";
+import { Detached, Path, Router, ToJson } from "silentium-components";
+import { NotFoundSrc } from "../../store";
+import { Query } from "../modules/string/Query";
+import { SplitPart } from "../modules/string/SplitPart";
 
 export const CRUDRouter = (
     req: EventType<IncomingMessage>,
@@ -13,17 +13,17 @@ export const CRUDRouter = (
     baseUrl: string,
     collectionName: string
 ): EventType<string> => {
-    const detachedReq = detached<any>(req);
-    return router<string>(
-            query(detachedReq),
-            of([
+    const detachedReq = Detached<any>(req);
+    return Router<string>(
+            Query(detachedReq),
+            Of([
                 {
                     pattern: `^GET:${baseUrl}$`,
                     template: (): EventType<string> => (o) => {
                         dbTransport()(async (db) => {
                             const collection = db.collection(collectionName);
                             const all = await collection.find().toArray();
-                            toJson(of({
+                            ToJson(Of({
                                 message: 'ok',
                                 data: all
                             }))(o)
@@ -35,11 +35,11 @@ export const CRUDRouter = (
                     template: (): EventType<string> => (o) => {
                         dbTransport()(async (db) => {
                             try {
-                                const idSync = primitive(
-                                    splitPart(
-                                        path(detachedReq as EventType<any>, of('url')),
-                                        of("/"),
-                                        of(2)
+                                const idSync = Primitive(
+                                    SplitPart(
+                                        Path(detachedReq as EventType<any>, Of('url')),
+                                        Of("/"),
+                                        Of(2)
                                     )
                                 );
                                 const collection = db.collection(collectionName);
@@ -48,12 +48,12 @@ export const CRUDRouter = (
                                         idSync.primitiveWithException()
                                     )
                                 });
-                                toJson(of({
+                                ToJson(Of({
                                     message: 'ok',
                                     data: all
                                 }))(o)
                             } catch {
-                                toJson(of({
+                                ToJson(Of({
                                     message: 'unable to find entity'
                                 }))(o);
                             }
@@ -66,18 +66,18 @@ export const CRUDRouter = (
                         dbTransport()(async (db) => {
                             try {
                                 const collection = db.collection(collectionName);
-                                const reqSync = primitive(detachedReq);
+                                const reqSync = Primitive(detachedReq);
                                 const body = await getRawBody(reqSync.primitiveWithException());
                                 const bodyText = body.toString('utf8');
                                 const result = await collection.insertOne(
                                     JSON.parse(bodyText)
                                 )
-                                toJson(of({
+                                ToJson(Of({
                                     message: 'created',
                                     data: result
                                 }))(o);
                             } catch {
-                                toJson(of({
+                                ToJson(Of({
                                     message: 'unable to create'
                                 }))(o);
                             }
@@ -89,15 +89,15 @@ export const CRUDRouter = (
                     template: (): EventType<string> => (o) => {
                         dbTransport()(async (db) => {
                             try {
-                                const idSync = primitive(
-                                    splitPart(
-                                        path(detachedReq, of('url')),
-                                        of("/"),
-                                        of(2)
+                                const idSync = Primitive(
+                                    SplitPart(
+                                        Path(detachedReq, Of('url')),
+                                        Of("/"),
+                                        Of(2)
                                     )
                                 );
                                 const collection = db.collection(collectionName);
-                                const reqSync = primitive(detachedReq);
+                                const reqSync = Primitive(detachedReq);
                                 const body = await getRawBody(reqSync.primitiveWithException());
                                 const bodyText = body.toString('utf8');
                                 const all = await collection.findOneAndUpdate(
@@ -105,12 +105,12 @@ export const CRUDRouter = (
                                     { $set: JSON.parse(bodyText) },
                                     { returnDocument: 'after' }
                                 );
-                                toJson(of({
+                                ToJson(Of({
                                     message: 'ok',
                                     data: all
                                 }))(o)
                             } catch {
-                                toJson(of({
+                                ToJson(Of({
                                     message: 'unable to find entity'
                                 }))(o);
                             }
@@ -122,21 +122,21 @@ export const CRUDRouter = (
                     template: (): EventType<string> => (o) => {
                         dbTransport()(async (db) => {
                             try {
-                                const idSync = primitive(
-                                    splitPart(
-                                        path(detachedReq, of('url')),
-                                        of("/"),
-                                        of(2)
+                                const idSync = Primitive(
+                                    SplitPart(
+                                        Path(detachedReq, Of('url')),
+                                        Of("/"),
+                                        Of(2)
                                     )
                                 );
                                 const collection = db.collection(collectionName);
                                 const all = await collection.deleteOne({ _id: new ObjectId(idSync.primitiveWithException()) });
-                                toJson(of({
+                                ToJson(Of({
                                     message: 'ok',
                                     data: all
                                 }))(o)
                             } catch {
-                                toJson(of({
+                                ToJson(Of({
                                     message: 'unable to delete'
                                 }))(o);
                             }
@@ -144,6 +144,6 @@ export const CRUDRouter = (
                     },
                 },
             ]),
-            notFoundSrc,
+            NotFoundSrc,
         );
 }

@@ -1,16 +1,17 @@
 import MustacheTemplate from "mustache";
-import { all, type EventType } from "silentium";
+import { All, type EventType } from "silentium";
 
-export const mustache =
+export function Mustache
 	(
 		templateSrc: EventType<string>,
 		valuesSrc: EventType<Record<string, unknown>>,
-	): EventType<string> =>
-	(user) => {
-		all(
+	): EventType<string> {
+		return (user) => {
+		All(
 			templateSrc,
 			valuesSrc,
 		)(([template, values]) => {
 			user(MustacheTemplate.render(template, values));
 		});
 	};
+}

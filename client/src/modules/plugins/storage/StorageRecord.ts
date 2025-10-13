@@ -1,20 +1,20 @@
 import {
 	type EventType,
-	lateShared,
-	primitive,
+	LateShared,
+	Primitive,
 	type SourceType,
 } from "silentium";
 
 /**
  * Data representation from Storage API
  */
-export const storageRecord = <T = string>(
+export function StorageRecord<T = string>(
 	nameSrc: EventType<string>,
 	defaultValue?: unknown,
-	storageType = "localStorage",
-): SourceType<T> => {
-	const nameSync = primitive(nameSrc);
-	const resultSrc = lateShared<T>();
+	storageType: "localStorage" | "sessionStorage" = "localStorage",
+): SourceType<T> {
+	const nameSync = Primitive(nameSrc);
+	const resultSrc = LateShared<T>();
 	const result: SourceType<T> = {
 		event: (u) => {
 			resultSrc.event(u);
@@ -48,7 +48,7 @@ export const storageRecord = <T = string>(
 			resultSrc.use(v);
 
 			try {
-				storage[nameSync.primitive()] = JSON.stringify(v);
+				storage[nameSync.primitiveWithException()] = JSON.stringify(v);
 			} catch {
 				console.warn(`LocalStorageRecord cant stringify value`);
 			}
@@ -56,4 +56,4 @@ export const storageRecord = <T = string>(
 	};
 
 	return result;
-};
+}

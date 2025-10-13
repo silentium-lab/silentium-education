@@ -1,3 +1,3 @@
-import { of } from "silentium";
+import { Of } from "silentium";
 
-export const notFoundSrc = () => of('{"message": "not found"}')
+export const NotFoundSrc = () => Of('{"message": "not found"}')

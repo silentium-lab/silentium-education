@@ -2,11 +2,11 @@ import http, { IncomingMessage } from "node:http";
 import {
   ConstructorType,
   EventType,
-  of,
-  shared
+  Of,
+  Shared
 } from "silentium";
 
-export const webServer = (
+export const WebServer = (
     processSrc: ConstructorType<[EventType<IncomingMessage>], EventType<string>>,
     hostname: string = "0.0.0.0",
     port: number = 4000,
@@ -18,7 +18,7 @@ export const webServer = (
     };
 
     const server = http.createServer((req, res) => {
-      const process = shared(processSrc(of(req)));
+      const process = Shared(processSrc(Of(req)));
       process.event(
         (v) => {
           res.setHeader('content-type', 'application/json');

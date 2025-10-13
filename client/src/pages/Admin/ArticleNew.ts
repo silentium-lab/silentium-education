@@ -27,7 +27,7 @@ import { link } from "../../components/Link";
 import { i18n, titleSrc, urlSrc } from "../../store";
 import { articleForm } from "./ArticleForm";
 
-export const articleNew = (): EventType<string> => (user) => {
+export const ArticleNew = (): EventType<string> => (user) => {
 	const title = i18n.tr("Create Article");
 	title(titleSrc.use);
 

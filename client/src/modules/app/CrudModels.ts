@@ -1,32 +1,32 @@
-import { type ConstructorType, type EventType, of } from "silentium";
-import { fromJson, path, recordOf, template } from "silentium-components";
+import { type ConstructorType, type EventType, Of } from "silentium";
+import { FromJson, Path, RecordOf, Template } from "silentium-components";
 
-class CrudModels {
+class ModuleCrudModels {
 	public constructor(
 		private responsePathSrc: EventType<string>,
-		private modelNameSrc: EventType<string> = of("any"),
+		private modelNameSrc: EventType<string> = Of("any"),
 	) {}
 
-	public ofModelName(modelNameSrc: EventType<string>) {
-		return new CrudModels(this.responsePathSrc, modelNameSrc);
+	public OfModelName(modelNameSrc: EventType<string>) {
+		return new ModuleCrudModels(this.responsePathSrc, modelNameSrc);
 	}
 
 	public list(
 		modelTransport: ConstructorType<any, any>,
 		searchSrc?: EventType<Record<string, unknown>>,
 	) {
-		return path<unknown[]>(
-			fromJson(
+		return Path<unknown[]>(
+			FromJson(
 				modelTransport(
-					recordOf({
-						url: template(
-							of("/$1"),
-							recordOf({
+					RecordOf({
+						url: Template(
+							Of("/$1"),
+							RecordOf({
 								$1: this.modelNameSrc,
 							}),
 						).value,
-						method: of("GET"),
-						query: searchSrc ?? of({}),
+						method: Of("GET"),
+						query: searchSrc ?? Of({}),
 					}),
 				),
 			),
@@ -38,18 +38,18 @@ class CrudModels {
 		modelTransport: ConstructorType<any, any>,
 		idSrc: EventType<string>,
 	) {
-		return path(
-			fromJson(
+		return Path(
+			FromJson(
 				modelTransport(
-					recordOf({
-						url: template(
-							of("/$1/$2/"),
-							recordOf({
+					RecordOf({
+						url: Template(
+							Of("/$1/$2/"),
+							RecordOf({
 								$1: this.modelNameSrc,
 								$2: idSrc,
 							}),
 						).value,
-						method: of("GET"),
+						method: Of("GET"),
 					}),
 				),
 			),
@@ -61,17 +61,17 @@ class CrudModels {
 		modelTransport: ConstructorType<any, any>,
 		formSrc: EventType<string>,
 	): EventType<Record<string, unknown>> {
-		return path(
-			fromJson(
+		return Path(
+			FromJson(
 				modelTransport(
-					recordOf({
-						url: template(
-							of("/$1"),
-							recordOf({
+					RecordOf({
+						url: Template(
+							Of("/$1"),
+							RecordOf({
 								$1: this.modelNameSrc,
 							}),
 						).value,
-						method: of("POST"),
+						method: Of("POST"),
 						body: formSrc,
 					}),
 				),
@@ -85,18 +85,18 @@ class CrudModels {
 		idSrc: EventType<string>,
 		formSrc: EventType<string>,
 	) {
-		return path(
-			fromJson(
+		return Path(
+			FromJson(
 				modelTransport(
-					recordOf({
-						url: template(
-							of("/$1/$2/"),
-							recordOf({
+					RecordOf({
+						url: Template(
+							Of("/$1/$2/"),
+							RecordOf({
 								$1: this.modelNameSrc,
 								$2: idSrc,
 							}),
 						).value,
-						method: of("PUT"),
+						method: Of("PUT"),
 						body: formSrc,
 					}),
 				),
@@ -109,18 +109,18 @@ class CrudModels {
 		modelTransport: ConstructorType<any, any>,
 		idSrc: EventType<string>,
 	) {
-		return path(
-			fromJson(
+		return Path(
+			FromJson(
 				modelTransport(
-					recordOf({
-						url: template(
-							of("/$1/$2/"),
-							recordOf({
+					RecordOf({
+						url: Template(
+							Of("/$1/$2/"),
+							RecordOf({
 								$1: this.modelNameSrc,
 								$2: idSrc,
 							}),
 						).value,
-						method: of("DELETE"),
+						method: Of("DELETE"),
 					}),
 				),
 			),
@@ -129,9 +129,9 @@ class CrudModels {
 	}
 }
 
-export const crudModels = (
+export function CrudModels(
 	responsePathSrc: EventType<string>,
-	modelNameSrc: EventType<string> = of("any"),
-) => {
-	return new CrudModels(responsePathSrc, modelNameSrc);
-};
+	modelNameSrc: EventType<string> = Of("any"),
+) {
+	return new ModuleCrudModels(responsePathSrc, modelNameSrc);
+}

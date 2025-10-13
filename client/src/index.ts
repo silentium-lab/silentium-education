@@ -1,5 +1,5 @@
-import { _void } from "silentium";
+import { Void } from "silentium";
 import { app } from "./components/App";
 import { routerSrc } from "./router";
 
-app(routerSrc.event)(_void);
+app(routerSrc.event)(Void);

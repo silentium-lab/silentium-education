@@ -1,4 +1,4 @@
 import { router } from "./router";
-import { webServer } from "./src/modules/WebServer";
+import { WebServer } from "./src/modules/WebServer";
 
-webServer(router)(console.log);
+WebServer(router)(console.log);

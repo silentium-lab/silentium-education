@@ -1,34 +1,34 @@
-import { type EventType, of } from "silentium";
-import { detached, router } from "silentium-components";
+import { type EventType, Of } from "silentium";
+import { Detached, Router } from "silentium-components";
 import { routePrivate } from "../modules/RoutePrivate";
 import { titleSrc, urlSrc } from "../store";
 import { articleEdit } from "./Admin/ArticleEdit";
-import { articleNew } from "./Admin/ArticleNew";
-import { articles } from "./Admin/Articles";
-import { auth } from "./Admin/Auth";
+import { ArticleNew } from "./Admin/ArticleNew";
+import { Articles } from "./Admin/Articles";
+import { Auth } from "./Admin/Auth";
 
-export const admin = (): EventType<string> =>
-	function Admin(user) {
+export const Admin = (): EventType<string> =>
+	function AdminEvent(user) {
 		titleSrc.use("Админ панель");
 
-		const localUrlSrc = detached(urlSrc.event);
+		const localUrlSrc = Detached(urlSrc.event);
 
-		const r = router(
+		const r = Router(
 			localUrlSrc,
-			of([
+			Of([
 				{
 					pattern: "^/admin$",
-					template: auth,
+					template: Auth,
 				},
 				{
 					pattern: "^/admin/articles$",
 					name: "list",
-					template: () => routePrivate(articles()),
+					template: () => routePrivate(Articles()),
 				},
 				{
 					pattern: "^/admin/articles/create$",
 					name: "create",
-					template: () => routePrivate(articleNew()),
+					template: () => routePrivate(ArticleNew()),
 				},
 				{
 					pattern: String.raw`^/admin/articles/.+/$`,
@@ -36,7 +36,7 @@ export const admin = (): EventType<string> =>
 					template: () => routePrivate(articleEdit()),
 				},
 			]),
-			() => of("Admin not found"),
+			() => Of("Admin not found"),
 		);
 		const rDestructor = r(user);
 

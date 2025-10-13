@@ -1,9 +1,9 @@
-import { constructorDestroyable, EventType, late, lateShared, of, shared, type SourceType } from "silentium";
-import { i18n } from "../../store";
-import { recordOf, shot, template, toJson } from "silentium-components";
+import { ConstructorDestroyable, EventType, LateShared, Of, Shared } from "silentium";
+import { RecordOf, Shot, Template, ToJson } from "silentium-components";
+import { backendCrudSrc, backendTransport } from "../../bootstrap";
 import { button } from "../../components/Button";
 import { input } from "../../components/Input";
-import { backendCrudSrc, backendTransport } from "../../bootstrap";
+import { i18n } from "../../store";
 
 /**
  * Configuration page
@@ -12,27 +12,27 @@ export function Configuration(): EventType<string> {
     return (user) => {
         i18n.tr("Configuration");
 
-        const username = lateShared('');
-        const password = lateShared('');
-        const formSrc = recordOf({
+        const username = LateShared('');
+        const password = LateShared('');
+        const formSrc = RecordOf({
             username: username.event,
             password: password.event,
         });
 
-        const savedSrc = lateShared();
+        const savedSrc = LateShared();
 
-        const savedFormSrc = shot(formSrc, savedSrc.event);
+        const savedFormSrc = Shot(formSrc, savedSrc.event);
 
-	    const transport = constructorDestroyable(backendTransport);
-        const formUpdatedSrc = shared(
+	    const transport = ConstructorDestroyable(backendTransport);
+        const formUpdatedSrc = Shared(
             backendCrudSrc
-                .ofModelName(of("settings"))
-                .created(transport.get, toJson(savedFormSrc)),
+                .OfModelName(Of("settings"))
+                .created(transport.get, ToJson(savedFormSrc)),
         );
 
         formUpdatedSrc.event(() => location.reload());
 
-		const t = template();
+		const t = Template();
 		t.template(`<div class="article">
 			<h1 class="title-1">Конфигурирование системы</h1>
             <p class="mb-2">
@@ -49,8 +49,8 @@ export function Configuration(): EventType<string> {
                 <input class="${t.var(input(password))} border-1 p-2 rounded-sm w-full" />
             </div>
             ${t.var(button(
-                of('Сохранить'),
-                of("btn"),
+                Of('Сохранить'),
+                Of("btn"),
                 savedSrc.use,
             ))}
 		</div>`);
