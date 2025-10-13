@@ -1,151 +1,149 @@
 import { IncomingMessage } from "http";
-import { From, InformationType, Lazy, Of, OfFunc, OwnerType, TheInformation } from "silentium";
-import { Path, Router, Sync, ToJson } from "silentium-components";
-import { Query } from "../modules/string/Query";
-import { notFoundSrc } from "../../store";
 import { Db, ObjectId } from "mongodb";
-import { SplitPart } from "../modules/string/SplitPart";
 import getRawBody from 'raw-body';
+import { ConstructorType, EventType, of, primitive } from "silentium";
+import { detached, path, router, toJson } from "silentium-components";
+import { notFoundSrc } from "../../store";
+import { query } from "../modules/string/Query";
+import { splitPart } from "../modules/string/SplitPart";
 
-export class CRUDRouter extends TheInformation<string> {
-    public constructor(
-        private req: InformationType<IncomingMessage>,
-        private dbTransport: Lazy<Db>,
-        private baseUrl: string,
-        private collectionName: string
-    ) {
-        super(req, dbTransport);
-    }
-
-    public value(o: OwnerType<string>): this {
-        new Router(
-            new Query(this.req),
-            new Of([
+export const CRUDRouter = (
+    req: EventType<IncomingMessage>,
+    dbTransport: ConstructorType<[], EventType<Db>>,
+    baseUrl: string,
+    collectionName: string
+): EventType<string> => {
+    const detachedReq = detached<any>(req);
+    return router<string>(
+            query(detachedReq),
+            of([
                 {
-                    pattern: `^GET:${this.baseUrl}$`,
-                    template: new Lazy(() => new OfFunc((o) => {
-                        this.dbTransport.get().value(new From(async (db) => {
-                            const collection = db.collection(this.collectionName);
+                    pattern: `^GET:${baseUrl}$`,
+                    template: (): EventType<string> => (o) => {
+                        dbTransport()(async (db) => {
+                            const collection = db.collection(collectionName);
                             const all = await collection.find().toArray();
-                            new ToJson(new Of({
+                            toJson(of({
                                 message: 'ok',
                                 data: all
-                            })).value(o)
-                        }))
-                    })),
+                            }))(o)
+                        })
+                    },
                 },
                 {
-                    pattern: `^GET:${this.baseUrl}/.+/$`,
-                    template: new Lazy(() => new OfFunc((o) => {
-                        this.dbTransport.get().value(new From(async (db) => {
+                    pattern: `^GET:${baseUrl}/.+/$`,
+                    template: (): EventType<string> => (o) => {
+                        dbTransport()(async (db) => {
                             try {
-                                const idSync = new Sync(
-                                    new SplitPart(
-                                        new Path(this.req as InformationType, new Of('url')),
-                                        "/",
-                                        2
+                                const idSync = primitive(
+                                    splitPart(
+                                        path(detachedReq as EventType<any>, of('url')),
+                                        of("/"),
+                                        of(2)
                                     )
                                 );
-                                const collection = db.collection(this.collectionName);
-                                const all = await collection.findOne({ _id: new ObjectId(idSync.valueSync()) });
-                                new ToJson(new Of({
+                                const collection = db.collection(collectionName);
+                                const all = await collection.findOne({
+                                    _id: new ObjectId(
+                                        idSync.primitiveWithException()
+                                    )
+                                });
+                                toJson(of({
                                     message: 'ok',
                                     data: all
-                                })).value(o)
+                                }))(o)
                             } catch {
-                                new ToJson(new Of({
+                                toJson(of({
                                     message: 'unable to find entity'
-                                })).value(o);
+                                }))(o);
                             }
-                        }))
-                    })),
+                        })
+                    },
                 },
                 {
-                    pattern: `^POST:${this.baseUrl}$`,
-                    template: new Lazy(() => new OfFunc((o) => {
-                        this.dbTransport.get().value(new From(async (db) => {
+                    pattern: `^POST:${baseUrl}$`,
+                    template: (): EventType<string> => (o) => {
+                        dbTransport()(async (db) => {
                             try {
-                                const collection = db.collection(this.collectionName);
-                                const reqSync = new Sync(this.req);
-                                const body = await getRawBody(reqSync.valueSync());
+                                const collection = db.collection(collectionName);
+                                const reqSync = primitive(detachedReq);
+                                const body = await getRawBody(reqSync.primitiveWithException());
                                 const bodyText = body.toString('utf8');
                                 const result = await collection.insertOne(
                                     JSON.parse(bodyText)
                                 )
-                                new ToJson(new Of({
+                                toJson(of({
                                     message: 'created',
                                     data: result
-                                })).value(o);
+                                }))(o);
                             } catch {
-                                new ToJson(new Of({
+                                toJson(of({
                                     message: 'unable to create'
-                                })).value(o);
+                                }))(o);
                             }
-                        }));
-                    })),
+                        });
+                    },
                 },
                 {
-                    pattern: `^PUT:${this.baseUrl}/.+/$`,
-                    template: new Lazy(() => new OfFunc((o) => {
-                        this.dbTransport.get().value(new From(async (db) => {
+                    pattern: `^PUT:${baseUrl}/.+/$`,
+                    template: (): EventType<string> => (o) => {
+                        dbTransport()(async (db) => {
                             try {
-                                const idSync = new Sync(
-                                    new SplitPart(
-                                        new Path(this.req as InformationType, new Of('url')),
-                                        "/",
-                                        2
+                                const idSync = primitive(
+                                    splitPart(
+                                        path(detachedReq, of('url')),
+                                        of("/"),
+                                        of(2)
                                     )
                                 );
-                                const collection = db.collection(this.collectionName);
-                                const reqSync = new Sync(this.req);
-                                const body = await getRawBody(reqSync.valueSync());
+                                const collection = db.collection(collectionName);
+                                const reqSync = primitive(detachedReq);
+                                const body = await getRawBody(reqSync.primitiveWithException());
                                 const bodyText = body.toString('utf8');
                                 const all = await collection.findOneAndUpdate(
-                                    { _id: new ObjectId(idSync.valueSync()) },
+                                    { _id: new ObjectId(idSync.primitiveWithException()) },
                                     { $set: JSON.parse(bodyText) },
                                     { returnDocument: 'after' }
                                 );
-                                new ToJson(new Of({
+                                toJson(of({
                                     message: 'ok',
                                     data: all
-                                })).value(o)
+                                }))(o)
                             } catch {
-                                new ToJson(new Of({
+                                toJson(of({
                                     message: 'unable to find entity'
-                                })).value(o);
+                                }))(o);
                             }
-                        }))
-                    })),
+                        })
+                    },
                 },
                 {
-                    pattern: `^DELETE:${this.baseUrl}/.+/$`,
-                    template: new Lazy(() => new OfFunc((o) => {
-                        this.dbTransport.get().value(new From(async (db) => {
+                    pattern: `^DELETE:${baseUrl}/.+/$`,
+                    template: (): EventType<string> => (o) => {
+                        dbTransport()(async (db) => {
                             try {
-                                const idSync = new Sync(
-                                    new SplitPart(
-                                        new Path(this.req as InformationType, new Of('url')),
-                                        "/",
-                                        2
+                                const idSync = primitive(
+                                    splitPart(
+                                        path(detachedReq, of('url')),
+                                        of("/"),
+                                        of(2)
                                     )
                                 );
-                                const collection = db.collection(this.collectionName);
-                                const all = await collection.deleteOne({ _id: new ObjectId(idSync.valueSync()) });
-                                new ToJson(new Of({
+                                const collection = db.collection(collectionName);
+                                const all = await collection.deleteOne({ _id: new ObjectId(idSync.primitiveWithException()) });
+                                toJson(of({
                                     message: 'ok',
                                     data: all
-                                })).value(o)
+                                }))(o)
                             } catch {
-                                new ToJson(new Of({
+                                toJson(of({
                                     message: 'unable to delete'
-                                })).value(o);
+                                }))(o);
                             }
-                        }))
-                    })),
+                        })
+                    },
                 },
-            ]) as InformationType,
-            notFoundSrc as any,
-        ).value(o);
-        return this;
-    }
+            ]),
+            notFoundSrc,
+        );
 }

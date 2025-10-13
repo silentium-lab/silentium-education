@@ -1,50 +1,42 @@
-import http from "node:http";
+import http, { IncomingMessage } from "node:http";
 import {
-  From,
-  type Lazy,
-  Of,
-  type OwnerType,
-  Shared,
-  TheInformation,
+  ConstructorType,
+  EventType,
+  of,
+  shared
 } from "silentium";
 
-export class WebServer extends TheInformation<string> {
-  public constructor(
-    private processSrc: Lazy<string>,
-    private hostname: string = "0.0.0.0",
-    private port: number = 4000,
-  ) {
-    super(processSrc);
-  }
-
-  public value(o: OwnerType<string>) {
+export const webServer = (
+    processSrc: ConstructorType<[EventType<IncomingMessage>], EventType<string>>,
+    hostname: string = "0.0.0.0",
+    port: number = 4000,
+): EventType<string> => {
+  return (user) => {
     const config = {
-      port: this.port,
-      hostname: this.hostname,
+      port,
+      hostname,
     };
 
     const server = http.createServer((req, res) => {
-      const process = new Shared(this.processSrc.get(new Of(req)));
-      process.value(
-        new From((v) => {
+      const process = shared(processSrc(of(req)));
+      process.event(
+        (v) => {
           res.setHeader('content-type', 'application/json');
           res.setHeader('Access-Control-Allow-Origin', '*');
           res.setHeader('Access-Control-Allow-Headers', '*');
           res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
           res.end(v);
           process?.destroy();
-        }),
+        }
       );
     });
 
     server.listen(config.port, config.hostname, () => {
-      o.give(`Server running at http://${config.hostname}:${config.port}/`);
+      user(`Server running at http://${config.hostname}:${config.port}/`);
     });
 
     server.on("error", (error) => {
-      o.give(["Server error:", error].join());
+      user(["Server error:", error].join());
     });
-
-    return this;
   }
 }

@@ -1,13 +1,10 @@
-import { Of, type OwnerType, TheInformation } from "silentium";
-import { ToJson } from "silentium-components";
+import { EventType, of } from "silentium";
+import { toJson } from "silentium-components";
 
-export class Auth extends TheInformation<string> {
-  value(o: OwnerType<string>): this {
-    new ToJson(
-      new Of({
+export const auth = (): EventType<string> => {
+  return toJson(
+      of({
         message: "do auth",
       }),
-    ).value(o);
-    return this;
-  }
+    );
 }

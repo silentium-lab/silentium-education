@@ -1,41 +1,41 @@
 import type { IncomingMessage } from "node:http";
-import { type InformationType, Lazy, Of } from "silentium";
-import { Router, Tick } from "silentium-components";
+import { EventType, of } from "silentium";
+import { router as Router, tick } from "silentium-components";
 import { mongoTransport } from "./bootstrap";
 import { CRUDRouter } from "./src/app/CRUDRouter";
-import { Query } from "./src/modules/string/Query";
-import { Auth } from "./src/routes/Auth";
-import { Health } from "./src/routes/Health";
-import { Settings } from "./src/routes/Settings";
+import { query } from "./src/modules/string/Query";
+import { auth } from "./src/routes/Auth";
+import { health } from "./src/routes/Health";
+import { settings } from "./src/routes/Settings";
 import { notFoundSrc } from "./store";
 
-export const router = new Lazy((req: InformationType<IncomingMessage>) => {
-  return new Tick(
-    new Router(
-      new Query(req),
-      new Of([
+export const router = (req: EventType<IncomingMessage>) => {
+  return tick(
+    Router(
+      query(req),
+      of([
         {
           pattern: "^GET:/?$",
-          template: new Lazy(() => new Health()),
+          template: health,
         },
         {
           pattern: "^GET:/auth$",
-          template: new Lazy(() => new Auth()),
+          template: auth,
         },
         {
           pattern: "^.+:/articles.*$",
-          template: new Lazy(() => new CRUDRouter(req, mongoTransport, '/articles', 'documents')),
+          template: () => CRUDRouter(req, mongoTransport, '/articles', 'documents'),
         },
         {
           pattern: "^.+:/categories.*$",
-          template: new Lazy(() => new CRUDRouter(req, mongoTransport, '/categories', 'categories')),
+          template: () => CRUDRouter(req, mongoTransport, '/categories', 'categories'),
         },
         {
           pattern: "^GET:/settings$",
-          template: new Lazy(() => new Settings()),
+          template: settings,
         },
-      ]) as InformationType,
-      notFoundSrc as any,
+      ]),
+      notFoundSrc,
     ),
   );
-});
+};

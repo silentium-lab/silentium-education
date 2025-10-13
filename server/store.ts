@@ -1,3 +1,3 @@
-import { Lazy, Of } from "silentium";
+import { of } from "silentium";
 
-export const notFoundSrc = new Lazy(() => new Of('{"message": "not found"}'));
+export const notFoundSrc = () => of('{"message": "not found"}')
