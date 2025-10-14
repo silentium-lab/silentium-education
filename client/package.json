@@ -29,7 +29,7 @@
     "mustache": "^4.2.0",
     "silentium": "^0.0.106",
     "silentium-components": "^0.0.66",
-    "silentium-morphdom": "^0.0.7",
+    "silentium-morphdom": "^0.0.8",
     "silentium-web-api": "^0.0.23",
     "uuid": "^11.1.0"
   }

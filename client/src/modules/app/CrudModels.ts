@@ -7,7 +7,7 @@ class ModuleCrudModels {
 		private modelNameSrc: EventType<string> = Of("any"),
 	) {}
 
-	public OfModelName(modelNameSrc: EventType<string>) {
+	public ofModelName(modelNameSrc: EventType<string>) {
 		return new ModuleCrudModels(this.responsePathSrc, modelNameSrc);
 	}
 

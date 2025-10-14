@@ -1,4 +1,4 @@
-import { all, applied, type EventType } from "silentium";
+import { All, Applied, type EventType } from "silentium";
 
 /**
  * Representation of static translation texts
@@ -8,7 +8,7 @@ export const i18n = (
 	translationsSrc: EventType<Record<string, Record<string, string>>>,
 ) => ({
 	tr: (field: string) => {
-		return applied(all(langSrc, translationsSrc), ([l, translations]) => {
+		return Applied(All(langSrc, translationsSrc), ([l, translations]) => {
 			return translations?.[l]?.[field] ?? field;
 		});
 	},

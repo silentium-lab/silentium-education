@@ -7,8 +7,8 @@ import {
 } from "silentium";
 import { Memo, RecordOf } from "silentium-components";
 import translations from "./data/translations.json";
-import { documentTitle } from "./modules/DocumentTitle";
-import { historyUrl } from "./modules/HistoryUrl";
+import { DocumentTitle } from "./modules/DocumentTitle";
+import { HistoryUrl } from "./modules/HistoryUrl";
 import { i18n as I18N } from "./modules/I18n";
 import { StorageRecord } from "./modules/plugins/storage/StorageRecord";
 
@@ -18,9 +18,9 @@ import { StorageRecord } from "./modules/plugins/storage/StorageRecord";
 
 export const langSrc = SharedSource(StorageRecord(Of("lang"), "ru"));
 
-export const urlSrc = SharedSource(historyUrl());
+export const urlSrc = SharedSource(HistoryUrl());
 
-export const titleSrc = documentTitle();
+export const titleSrc = DocumentTitle();
 
 export const i18n = I18N(Memo(langSrc.event), Of(translations));
 

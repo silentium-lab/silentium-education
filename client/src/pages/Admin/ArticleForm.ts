@@ -1,25 +1,25 @@
-import { type EventType, of, type SourceType } from "silentium";
-import { part, template } from "silentium-components";
-import { input } from "../../components/Input";
+import { type EventType, Of, type SourceType } from "silentium";
+import { Part, Template } from "silentium-components";
+import { Input } from "../../components/Input";
 import type { ArticleType } from "../../types/ArticleType";
 
-export const articleForm =
+export const ArticleForm =
 	(formSrc: SourceType<ArticleType>): EventType<string> =>
 	(user) => {
 		const formModels = {
-			title: part<string>(formSrc, of("title")),
-			content: part<string>(formSrc, of("content")),
+			title: Part<string>(formSrc, Of("title")),
+			content: Part<string>(formSrc, Of("content")),
 		};
 
-		const t = template();
+		const t = Template();
 		t.template(`<div class="mb-2">
 			<div class="mb-2">
 				<div class="font-bold">Название: </div>
-				<input class="${t.var(input(formModels.title))} border-1 p-2 rounded-sm w-full" />
+				<input class="${t.var(Input(formModels.title))} border-1 p-2 rounded-sm w-full" />
 			</div>
 			<div class="mb-2">
 				<div class="font-bold">Содержимое: </div>
-				<textarea rows="20" class="${t.var(input(formModels.content))} border-1 p-2 rounded-sm w-full"></textarea>
+				<textarea rows="20" class="${t.var(Input(formModels.content))} border-1 p-2 rounded-sm w-full"></textarea>
 			</div>
 		</div>
 	`);

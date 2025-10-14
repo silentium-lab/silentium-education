@@ -1,8 +1,8 @@
-import { applied, type EventType, of } from "silentium";
+import { Applied, type EventType, Of } from "silentium";
 import { v4 } from "uuid";
 
 /**
  * Representation of a unique id
  */
-export const id = (baseSrc: EventType<string> = of("id")): EventType<string> =>
-	applied(baseSrc, (base) => `${base}_${v4()}`);
+export const Id = (baseSrc: EventType<string> = Of("id")): EventType<string> =>
+	Applied(baseSrc, (base) => `${base}_${v4()}`);

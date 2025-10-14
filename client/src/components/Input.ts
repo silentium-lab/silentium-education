@@ -1,21 +1,21 @@
-import { all, type EventType, on, type SourceType, shared } from "silentium";
-import { first } from "silentium-components";
-import { elements } from "silentium-web-api";
-import { className } from "../modules/ClassName";
-import { id } from "../modules/Id";
-import { keyPressed } from "../modules/KeyPressed";
+import { All, type EventType, On, Shared, type SourceType } from "silentium";
+import { First } from "silentium-components";
+import { Elements } from "silentium-web-api";
+import { ClassName } from "../modules/ClassName";
+import { Id } from "../modules/Id";
+import { KeyPressed } from "../modules/KeyPressed";
 
-export const input =
+export const Input =
 	(valueSrc: SourceType<string>): EventType<string> =>
 	(user) => {
-		const idSrc = shared(id());
+		const idSrc = Shared(Id());
 		idSrc.event(user);
 
-		const elSrc = shared(
-			first(elements<HTMLInputElement>(className(idSrc.event))),
+		const elSrc = Shared(
+			First(Elements<HTMLInputElement>(ClassName(idSrc.event))),
 		);
 
-		all(
+		All(
 			elSrc.event,
 			valueSrc.event,
 		)(([el, value]) => {
@@ -24,7 +24,7 @@ export const input =
 			}
 		});
 
-		on(keyPressed<InputEvent>(elSrc.event), (e: InputEvent) => {
+		On(KeyPressed<InputEvent>(elSrc.event), (e: InputEvent) => {
 			valueSrc.use((e.target as HTMLInputElement).value);
 		});
 	};

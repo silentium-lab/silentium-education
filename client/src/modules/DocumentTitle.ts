@@ -1,10 +1,10 @@
-import { lateShared, type SourceType } from "silentium";
+import { LateShared, type SourceType } from "silentium";
 
 /**
  * Document header representation
  */
-export const documentTitle = (): SourceType<string> => {
-	const src = lateShared(document.title);
+export const DocumentTitle = (): SourceType<string> => {
+	const src = LateShared(document.title);
 
 	return {
 		event: src.event,

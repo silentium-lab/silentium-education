@@ -1,17 +1,22 @@
-import { type EventType, on, type SourceType, shared } from "silentium";
-import { first } from "silentium-components";
-import { elements } from "silentium-web-api";
-import { className } from "../modules/ClassName";
-import { id } from "../modules/Id";
-import { clicked } from "./Clicked";
+import { Destructor, type EventType, On, Shared, type SourceType } from "silentium";
+import { First } from "silentium-components";
+import { Elements } from "silentium-web-api";
+import { ClassName } from "../modules/ClassName";
+import { Id } from "../modules/Id";
+import { Clicked } from "./Clicked";
 
-export const clickedId = (clickSrc: SourceType<unknown>): EventType<string> => {
+export const ClickedId = (clickSrc: SourceType<unknown>): EventType<string> => {
 	return (u) => {
-		const idSrc = shared(id());
+		const idSrc = Shared(Id());
 		idSrc.event(u);
 
-		const elSrc = shared(first(elements(className(idSrc.event))));
+		const elSrc = Shared(First(Elements(ClassName(idSrc.event))));
 
-		on(clicked(elSrc.event), clickSrc.use);
+		const d = Destructor(Clicked(elSrc.event))
+		On(d.event, clickSrc.use);
+
+		return () => {
+			d.destroy();
+		}
 	};
 };

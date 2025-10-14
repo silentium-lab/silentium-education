@@ -7,7 +7,7 @@ export const settingsModels = {
 	 */
 	hasSettings(transport: ConstructorType): EventType<boolean> {
 		const settingsSrc = backendCrudSrc
-			.OfModelName(Of("settings"))
+			.ofModelName(Of("settings"))
 			.list(transport, Of({}));
 
 		return Applied(settingsSrc, (s) => s.length > 0);

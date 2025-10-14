@@ -1,12 +1,12 @@
-import { type EventType, fromEvent, of } from "silentium";
+import { type EventType, FromEvent, Of } from "silentium";
 
 /**
  * DOM element click even
  */
-export const clicked = (elSrc: EventType<HTMLElement>): EventType<Event> =>
-	fromEvent(
+export const Clicked = (elSrc: EventType<HTMLElement>): EventType<Event> =>
+	FromEvent(
 		elSrc,
-		of("click"),
-		of("addEventListener"),
-		of("removeEventListener"),
+		Of("click"),
+		Of("addEventListener"),
+		Of("removeEventListener"),
 	);

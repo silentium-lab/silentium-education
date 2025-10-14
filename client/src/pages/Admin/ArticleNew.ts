@@ -1,65 +1,65 @@
 import {
-	any,
-	constructorDestroyable,
+	Any,
+	ConstructorDestroyable,
 	type EventType,
-	lateShared,
-	of,
-	shared,
+	LateShared,
+	Of,
+	Shared
 } from "silentium";
 import {
-	branch,
-	constant,
-	loading,
-	path,
-	recordOf,
-	shot,
-	task,
-	template,
-	toJson,
+	Branch,
+	Constant,
+	Loading,
+	Path,
+	RecordOf,
+	Shot,
+	Task,
+	Template,
+	ToJson
 } from "silentium-components";
 import {
 	backendCrudSrc,
 	backendTransport,
 	notificationSrc,
 } from "../../bootstrap";
-import { button } from "../../components/Button";
-import { link } from "../../components/Link";
+import { Button } from "../../components/Button";
+import { Link } from "../../components/Link";
 import { i18n, titleSrc, urlSrc } from "../../store";
-import { articleForm } from "./ArticleForm";
+import { ArticleForm } from "./ArticleForm";
 
 export const ArticleNew = (): EventType<string> => (user) => {
 	const title = i18n.tr("Create Article");
 	title(titleSrc.use);
 
-	const clickedSrc = lateShared();
-	const formSrc = lateShared({
+	const clickedSrc = LateShared();
+	const formSrc = LateShared({
 		title: "",
 		content: "",
 	});
 
-	const transport = constructorDestroyable(backendTransport);
-	const formUpdatedSrc = shared(
+	const transport = ConstructorDestroyable(backendTransport);
+	const formUpdatedSrc = Shared(
 		backendCrudSrc
-			.ofModelName(of("articles"))
-			.created(transport.get, toJson(shot(formSrc.event, clickedSrc.event))),
+			.ofModelName(Of("articles"))
+			.created(transport.get, ToJson(Shot(formSrc.event, clickedSrc.event))),
 	);
-	const formUpdateLoadingSrc = any(
-		loading(clickedSrc.event, formUpdatedSrc.event),
-		of(false),
+	const formUpdateLoadingSrc = Any(
+		Loading(clickedSrc.event, formUpdatedSrc.event),
+		Of(false),
 	);
 
-	const insertedIdSrc = path(formUpdatedSrc.event, of("insertedId"));
-	task(
-		template(
-			of("/admin/articles/$id/"),
-			recordOf({
+	const insertedIdSrc = Path(formUpdatedSrc.event, Of("insertedId"));
+	Task(
+		Template(
+			Of("/admin/articles/$id/"),
+			RecordOf({
 				$id: insertedIdSrc,
 			}),
 		).value,
 		900,
 	)(urlSrc.use);
 
-	constant(
+	Constant(
 		{
 			type: "success",
 			content: "Успешно создано",
@@ -67,15 +67,15 @@ export const ArticleNew = (): EventType<string> => (user) => {
 		formUpdatedSrc.event,
 	)(notificationSrc.use);
 
-	const t = template();
+	const t = Template();
 	t.template(`<div class="article">
-			${t.var(link(of("/admin/articles"), i18n.tr("Articles"), of("underline")))}
+			${t.var(Link(Of("/admin/articles"), i18n.tr("Articles"), Of("underline")))}
         <h1 class="title-1">${t.var(title)}</h1>
-		${t.var(articleForm(formSrc))}
+		${t.var(ArticleForm(formSrc))}
 		${t.var(
-			button(
-				branch(formUpdateLoadingSrc, of("Сохраняем..."), of("Сохранить")),
-				of("btn"),
+			Button(
+				Branch(formUpdateLoadingSrc, Of("Сохраняем..."), Of("Сохранить")),
+				Of("btn"),
 				clickedSrc.use,
 			),
 		)}

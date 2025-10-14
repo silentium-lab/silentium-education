@@ -1,34 +1,34 @@
 import {
-	_void,
 	type EventType,
 	type EventUserType,
-	of,
-	on,
-	shared,
+	Of,
+	On,
+	Shared,
+	Void
 } from "silentium";
-import { first, template } from "silentium-components";
-import { elements } from "silentium-web-api";
-import { className } from "../modules/ClassName";
-import { clicked } from "../modules/Clicked";
-import { id } from "../modules/Id";
+import { First, Template } from "silentium-components";
+import { Elements } from "silentium-web-api";
+import { ClassName } from "../modules/ClassName";
+import { Clicked } from "../modules/Clicked";
+import { Id } from "../modules/Id";
 
-export const button = (
+export const Button = (
 	theLabel: EventType<string>,
-	theClass: EventType<string> = of(""),
-	valueOwner: EventUserType = _void(),
+	theClass: EventType<string> = Of(""),
+	valueOwner: EventUserType = Void(),
 ): EventType<string> => {
 	return (u) => {
-		const idSrc = shared(id()).event;
+		const idSrc = Shared(Id()).event;
 
-		const clickDestructor = on(
-			clicked(first(elements(className(idSrc)))),
+		const clickDestructor = On(
+			Clicked(First(Elements(ClassName(idSrc)))),
 			(e) => {
 				e.preventDefault();
 				valueOwner(e);
 			},
 		);
 
-		const t = template();
+		const t = Template();
 		t.template(
 			`<button class="${t.var(idSrc)} ${t.var(theClass)} cursor-pointer">
         ${t.var(theLabel)}
