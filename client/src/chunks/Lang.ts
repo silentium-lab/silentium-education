@@ -1,26 +1,26 @@
-import { applied, type EventType, lateShared, of } from "silentium";
-import { constant, template } from "silentium-components";
-import { button } from "../components/Button";
+import { Applied, EventType, LateShared, Of } from "silentium";
 import { langSrc } from "../store";
+import { Constant, Template } from "silentium-components";
+import { Button } from "../components/Button";
 
-const active = (lang: string) =>
-	applied(langSrc.event, (l) => (l === lang ? "font-bold" : ""));
+const Active = (lang: string) =>
+	Applied(langSrc.event, (l) => (l === lang ? "font-bold" : ""));
 
-export const lang =
-	(classSrc: EventType<string>): EventType<string> =>
-	(user) => {
-		const selectRu = lateShared();
-		const selectEn = lateShared();
+export function Lang(classSrc: EventType<string>): EventType<string> {
+	return (user) => {
+		const selectRu = LateShared();
+		const selectEn = LateShared();
 
-		constant("ru", selectRu.event)(langSrc.use);
-		constant("en", selectEn.event)(langSrc.use);
+		Constant("ru", selectRu.event)(langSrc.use);
+		Constant("en", selectEn.event)(langSrc.use);
 
-		const t = template();
+		const t = Template();
 		t.template(
 			`<nav class="px-2 ${t.var(classSrc)}">
-        ${t.var(button(of("ru"), active("ru"), selectRu.use))}
-        ${t.var(button(of("en"), active("en"), selectEn.use))}
-      </nav>`,
+			${t.var(Button(Of("ru"), Active("ru"), selectRu.use))}
+			${t.var(Button(Of("en"), Active("en"), selectEn.use))}
+		</nav>`,
 		);
 		t.value(user);
 	};
+}

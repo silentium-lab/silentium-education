@@ -3,7 +3,7 @@ import { LateShared, type SourceType } from "silentium";
 /**
  * URL representation associated with the History API
  */
-export const HistoryUrl = (): SourceType<string> => {
+export function HistoryUrl(): SourceType<string> {
 	const urlSrc = LateShared(location.pathname);
 	return {
 		use: (value) => {
@@ -18,4 +18,4 @@ export const HistoryUrl = (): SourceType<string> => {
 			urlSrc.event(u);
 		},
 	};
-};
+}

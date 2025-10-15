@@ -1,15 +1,15 @@
-import { applied, type EventType, lateShared, of, once } from "silentium";
-import { concatenated, template } from "silentium-components";
-import { button } from "../components/Button";
+import { Applied, EventType, LateShared, Of, Once } from "silentium";
+import { Concatenated, Template } from "silentium-components";
+import { Button } from "../components/Button";
 
-export const counter = (): EventType<string> => {
+export function Counter(): EventType<string> {
 	return (u) => {
-		const countSrc = lateShared(1);
-		const clickedSrc = lateShared();
-		const resetSrc = lateShared();
+		const countSrc = LateShared(1);
+		const clickedSrc = LateShared();
+		const resetSrc = LateShared();
 
 		clickedSrc.event(() => {
-			once(countSrc.event)((v) => {
+			Once(countSrc.event)((v) => {
 				countSrc.use(v + 1);
 			});
 		});
@@ -18,17 +18,17 @@ export const counter = (): EventType<string> => {
 			countSrc.use(1);
 		});
 
-		const t = template();
+		const t = Template();
 		t.template(
 			`<div class="flex gap-1">
         ${t.var(
-					button(
-						concatenated([of("clicked "), applied(countSrc.event, String)]),
-						of("btn"),
+					Button(
+						Concatenated([Of("clicked "), Applied(countSrc.event, String)]),
+						Of("btn"),
 						clickedSrc.use,
 					),
 				)}
-        ${t.var(button(of("reset"), of("btn"), resetSrc.use))}
+        ${t.var(Button(Of("reset"), Of("btn"), resetSrc.use))}
       </div>`,
 		);
 		t.value(u);
@@ -37,4 +37,4 @@ export const counter = (): EventType<string> => {
 			t.destroy();
 		};
 	};
-};
+}

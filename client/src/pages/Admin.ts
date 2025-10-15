@@ -1,8 +1,7 @@
 import { type EventType, Of } from "silentium";
 import { Detached, Router } from "silentium-components";
-import { routePrivate } from "../modules/RoutePrivate";
 import { titleSrc, urlSrc } from "../store";
-import { articleEdit } from "./Admin/ArticleEdit";
+import { ArticleEdit } from "./Admin/ArticleEdit";
 import { ArticleNew } from "./Admin/ArticleNew";
 import { Articles } from "./Admin/Articles";
 import { Auth } from "./Admin/Auth";
@@ -13,7 +12,7 @@ export const Admin = (): EventType<string> =>
 
 		const localUrlSrc = Detached(urlSrc.event);
 
-		const r = Router(
+		const rd = Router(
 			localUrlSrc,
 			Of([
 				{
@@ -23,24 +22,23 @@ export const Admin = (): EventType<string> =>
 				{
 					pattern: "^/admin/articles$",
 					name: "list",
-					template: () => routePrivate(Articles()),
+					template: Articles,
 				},
 				{
 					pattern: "^/admin/articles/create$",
 					name: "create",
-					template: () => routePrivate(ArticleNew()),
+					template: ArticleNew,
 				},
 				{
 					pattern: String.raw`^/admin/articles/.+/$`,
 					name: "edit",
-					template: () => routePrivate(articleEdit()),
+					template: ArticleEdit,
 				},
 			]),
 			() => Of("Admin not found"),
-		);
-		const rDestructor = r(user);
+		)(user);
 
 		return function AdminDestroy() {
-			rDestructor?.();
+			rd?.();
 		};
 	};

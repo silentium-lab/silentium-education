@@ -24,8 +24,8 @@ import {
 	backendTransport,
 	notificationSrc,
 } from "../../bootstrap";
-import { link } from "../../components/Link";
-import { clickedId } from "../../modules/ClickedId";
+import { Link } from "../../components/Link";
+import { ClickedId } from "../../modules/ClickedId";
 import { i18n, titleSrc } from "../../store";
 import type { ArticleType } from "../../types/ArticleType";
 
@@ -39,7 +39,7 @@ export const Articles = (): EventType<string> => {
 		const articlesSearchSrc = LateShared({});
 		const articlesSrc = Shared(
 			backendCrudSrc
-				.OfModelName(Of("articles"))
+				.ofModelName(Of("articles"))
 				.list(transport.get, articlesSearchSrc.event),
 		);
 
@@ -48,7 +48,7 @@ export const Articles = (): EventType<string> => {
 		const t = Template();
 		t.template(`<div class="article">
         <h1 class="title-1">${t.var(title)}</h1>
-        ${t.var(link(Of("/admin/articles/create"), Of("Создать статью"), Of("block mb-3 underline")))}
+        ${t.var(Link(Of("/admin/articles/create"), Of("Создать статью"), Of("block mb-3 underline")))}
         ${t.var(
 					Applied(
 						Any<any>(
@@ -60,7 +60,7 @@ export const Articles = (): EventType<string> => {
 								const removedSrc = Shared(
 									dc.add(
 										backendCrudSrc
-											.OfModelName(Of("articles"))
+											.ofModelName(Of("articles"))
 											.deleted(
 												transport.get,
 												Shot(
@@ -86,7 +86,7 @@ export const Articles = (): EventType<string> => {
                 <div class="cursor-pointer $removeId">&times;</div>
               </div>`),
 									RecordOf({
-										$link: link(
+										$link: Link(
 											Template(
 												Of("/admin/articles/$id/"),
 												RecordOf({ $id: Path(article, Of("_id")) }),
@@ -94,7 +94,7 @@ export const Articles = (): EventType<string> => {
 											Path(article, Of("title")),
 											Of("underline"),
 										),
-										$removeId: dc.add(clickedId(removeTrigger)),
+										$removeId: dc.add(ClickedId(removeTrigger)),
 									}),
 								).value;
 							}),

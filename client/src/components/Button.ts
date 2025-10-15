@@ -12,11 +12,11 @@ import { ClassName } from "../modules/ClassName";
 import { Clicked } from "../modules/Clicked";
 import { Id } from "../modules/Id";
 
-export const Button = (
+export function Button(
 	theLabel: EventType<string>,
 	theClass: EventType<string> = Of(""),
 	valueOwner: EventUserType = Void(),
-): EventType<string> => {
+): EventType<string> {
 	return (u) => {
 		const idSrc = Shared(Id()).event;
 
@@ -42,4 +42,4 @@ export const Button = (
 			t.destroy();
 		};
 	};
-};
+}

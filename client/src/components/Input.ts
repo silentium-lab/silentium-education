@@ -5,9 +5,8 @@ import { ClassName } from "../modules/ClassName";
 import { Id } from "../modules/Id";
 import { KeyPressed } from "../modules/KeyPressed";
 
-export const Input =
-	(valueSrc: SourceType<string>): EventType<string> =>
-	(user) => {
+export function Input(valueSrc: SourceType<string>): EventType<string> {
+	return (user) => {
 		const idSrc = Shared(Id());
 		idSrc.event(user);
 
@@ -28,3 +27,4 @@ export const Input =
 			valueSrc.use((e.target as HTMLInputElement).value);
 		});
 	};
+}

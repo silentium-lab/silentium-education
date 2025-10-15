@@ -12,11 +12,11 @@ import { Configuration } from "./Configuration";
  * Ensure everything configured
  */
 export function AdminConfigGuard(
-	AdminLazy: ConstructorType<[], EventType<string>>,
+	Child: ConstructorType<[], EventType<string>>,
 ): EventType<string> {
 	return (user) => {
 		const transport = ConstructorDestroyable(backendTransport);
-		const r = Destructor(BranchLazy(hasSettingsSrc.event, AdminLazy, Configuration));
+		const r = Destructor(BranchLazy(hasSettingsSrc.event, Child, Configuration));
 		r.event(user);
 
 		return () => {

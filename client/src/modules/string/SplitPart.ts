@@ -1,12 +1,11 @@
 import { All, Applied, type EventType, Filtered } from "silentium";
 
-export const SplitPart =
-	(
-		baseSrc: EventType<string>,
-		splitSrc: EventType<string>,
-		indexSrc: EventType<number>,
-	): EventType<string> =>
-	(user) => {
+export function SplitPart(
+	baseSrc: EventType<string>,
+	splitSrc: EventType<string>,
+	indexSrc: EventType<number>,
+): EventType<string> {
+	return (user) => {
 		Filtered(
 			Applied(All(baseSrc, splitSrc, indexSrc), ([base, split, index]) => {
 				const parts = base.split(split);
@@ -15,3 +14,4 @@ export const SplitPart =
 			(r) => r !== undefined,
 		)(user);
 	};
+}

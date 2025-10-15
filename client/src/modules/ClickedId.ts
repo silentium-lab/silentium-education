@@ -5,7 +5,7 @@ import { ClassName } from "../modules/ClassName";
 import { Id } from "../modules/Id";
 import { Clicked } from "./Clicked";
 
-export const ClickedId = (clickSrc: SourceType<unknown>): EventType<string> => {
+export function ClickedId(clickSrc: SourceType<unknown>): EventType<string> {
 	return (u) => {
 		const idSrc = Shared(Id());
 		idSrc.event(u);
@@ -19,4 +19,4 @@ export const ClickedId = (clickSrc: SourceType<unknown>): EventType<string> => {
 			d.destroy();
 		}
 	};
-};
+}

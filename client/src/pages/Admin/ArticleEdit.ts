@@ -1,67 +1,58 @@
 import { omit, partialRight } from "lodash-es";
 import {
-	any,
-	applied,
-	constructorDestroyable,
+	Any,
+	Applied,
+	ConstructorDestroyable,
+	LateShared,
+	Of,
+	Shared,
 	type EventType,
 	type EventUserType,
-	lateShared,
-	of,
-	shared,
 } from "silentium";
-import {
-	branch,
-	constant,
-	detached,
-	loading,
-	shot,
-	task,
-	template,
-	toJson,
-} from "silentium-components";
 import {
 	backendCrudSrc,
 	backendTransport,
 	notificationSrc,
 } from "../../bootstrap";
-import { button } from "../../components/Button";
-import { link } from "../../components/Link";
 import { SplitPart } from "../../modules/string/SplitPart";
 import { i18n, titleSrc, urlSrc } from "../../store";
 import type { ArticleType } from "../../types/ArticleType";
-import { articleForm } from "./ArticleForm";
+import { ArticleForm } from "./ArticleForm";
+import { Branch, Constant, Detached, Loading, Shot, Task, Template, ToJson } from "silentium-components";
+import { Link } from "../../components/Link";
+import { Button } from "../../components/Button";
 
-export const articleEdit = (): EventType<string> => (user) => {
+export const ArticleEdit = (): EventType<string> => (user) => {
 	const title = i18n.tr("Article");
 	title(titleSrc.use);
 
-	const transport = constructorDestroyable(backendTransport);
+	const transport = ConstructorDestroyable(backendTransport);
 
-	const localUrlSrc = detached(urlSrc.event);
-	const idSrc = shared(SplitPart(localUrlSrc, of("/"), of(3)));
-	const articleSrc = shared(
+	const localUrlSrc = Detached(urlSrc.event);
+	const idSrc = Shared(SplitPart(localUrlSrc, Of("/"), Of(3)));
+	const articleSrc = Shared(
 		backendCrudSrc
-			.ofModelName(of("articles"))
+			.ofModelName(Of("articles"))
 			.entity(transport.get, idSrc.event),
 	);
-	const clickedSrc = lateShared();
-	const formSrc = lateShared<ArticleType>();
+	const clickedSrc = LateShared();
+	const formSrc = LateShared<ArticleType>();
 
-	const formUpdatedSrc = shared(
+	const formUpdatedSrc = Shared(
 		backendCrudSrc
-			.ofModelName(of("articles"))
+			.ofModelName(Of("articles"))
 			.updated(
 				transport.get,
 				idSrc.event,
-				toJson(shot(formSrc.event, clickedSrc.event)),
+				ToJson(Shot(formSrc.event, clickedSrc.event)),
 			),
 	);
-	const formUpdateLoadingSrc = any(
-		loading(clickedSrc.event, formUpdatedSrc.event),
-		of(false),
+	const formUpdateLoadingSrc = Any(
+		Loading(clickedSrc.event, formUpdatedSrc.event),
+		Of(false),
 	);
 
-	constant(
+	Constant(
 		{
 			type: "success",
 			content: "Успешно изменено",
@@ -69,26 +60,26 @@ export const articleEdit = (): EventType<string> => (user) => {
 		formUpdatedSrc.event,
 	)(notificationSrc.use);
 
-	applied(
-		any(articleSrc.event, task(formUpdatedSrc.event)),
+	Applied(
+		Any(articleSrc.event, Task(formUpdatedSrc.event)),
 		partialRight(omit, ["_id"]),
 	)(formSrc.use as EventUserType);
 
-	const t = template();
+	const t = Template();
 	t.template(`<div class="article">
-			${t.var(link(of("/admin/articles"), i18n.tr("Articles"), of("underline")))}
+			${t.var(Link(Of("/admin/articles"), i18n.tr("Articles"), Of("underline")))}
         <h1 class="title-1">${t.var(title)}</h1>
 		<div class="mb-2">
 			<div>
 				<b>id: </b>
 				${t.var(idSrc.event)}
 			</div>
-			${t.var(articleForm(formSrc))}
+			${t.var(ArticleForm(formSrc))}
 		</div>
 		${t.var(
-			button(
-				branch(formUpdateLoadingSrc, of("Сохраняем..."), of("Сохранить")),
-				of("btn"),
+			Button(
+				Branch(formUpdateLoadingSrc, Of("Сохраняем..."), Of("Сохранить")),
+				Of("btn"),
 				clickedSrc.use,
 			),
 		)}

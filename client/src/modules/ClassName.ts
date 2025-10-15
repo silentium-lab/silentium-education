@@ -3,5 +3,6 @@ import { Applied, type EventType } from "silentium";
 /**
  * CSS class name representation
  */
-export const ClassName = (s: EventType<string>): EventType<string> =>
-	Applied(s, (s) => `.${s}`);
+export function ClassName(s: EventType<string>): EventType<string> {
+	return Applied(s, (s) => `.${s}`);
+}

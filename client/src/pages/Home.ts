@@ -1,7 +1,7 @@
 import { type EventType, Of } from "silentium";
 import { Template } from "silentium-components";
-import { counter } from "../chunks/Counter";
-import { link } from "../components/Link";
+import { Counter } from "../chunks/Counter";
+import { Link } from "../components/Link";
 import { i18n, titleSrc } from "../store";
 
 export const Home = (): EventType<string> => {
@@ -13,9 +13,9 @@ export const Home = (): EventType<string> => {
 			<h1 class="title-1">
 			Silentium
 			</h1>
-			<div class="mb-3">${t.var(counter())}</div>
+			<div class="mb-3">${t.var(Counter())}</div>
 			<div>
-				${t.var(link(Of("/admin/articles"), Of("Статьи"), Of("underline")))}
+				${t.var(Link(Of("/admin/articles"), Of("Статьи"), Of("underline")))}
 			</div>
 		</section>`,
 		);

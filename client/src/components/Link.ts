@@ -6,13 +6,12 @@ import { Clicked } from "../modules/Clicked";
 import { Id } from "../modules/Id";
 import { urlSrc } from "../store";
 
-export const Link =
-	(
+export function Link(
 		linkUrlSrc: EventType<string>,
 		textSrc: EventType<string>,
 		classSrc: EventType<string> = Of(""),
-	): EventType<string> =>
-	(user) => {
+	): EventType<string> {
+	return (user) => {
 		const idSrc = Shared(Id());
 		const sharedUrlSrc = Shared(linkUrlSrc);
 		const urlSync = Primitive(linkUrlSrc);
@@ -33,3 +32,4 @@ export const Link =
 		);
 		t.value(user);
 	};
+}

@@ -1,8 +1,8 @@
 import { ConstructorDestroyable, EventType, LateShared, Of, Shared } from "silentium";
 import { RecordOf, Shot, Template, ToJson } from "silentium-components";
 import { backendCrudSrc, backendTransport } from "../../bootstrap";
-import { button } from "../../components/Button";
-import { input } from "../../components/Input";
+import { Button } from "../../components/Button";
+import { Input } from "../../components/Input";
 import { i18n } from "../../store";
 
 /**
@@ -26,7 +26,7 @@ export function Configuration(): EventType<string> {
 	    const transport = ConstructorDestroyable(backendTransport);
         const formUpdatedSrc = Shared(
             backendCrudSrc
-                .OfModelName(Of("settings"))
+                .ofModelName(Of("settings"))
                 .created(transport.get, ToJson(savedFormSrc)),
         );
 
@@ -42,13 +42,13 @@ export function Configuration(): EventType<string> {
             </p>
             <div class="mb-2">
                 Имя пользователя
-                <input class="${t.var(input(username))} border-1 p-2 rounded-sm w-full" />
+                <input class="${t.var(Input(username))} border-1 p-2 rounded-sm w-full" />
             </div>
             <div class="mb-2">
                 Пароль
-                <input class="${t.var(input(password))} border-1 p-2 rounded-sm w-full" />
+                <input class="${t.var(Input(password))} border-1 p-2 rounded-sm w-full" />
             </div>
-            ${t.var(button(
+            ${t.var(Button(
                 Of('Сохранить'),
                 Of("btn"),
                 savedSrc.use,

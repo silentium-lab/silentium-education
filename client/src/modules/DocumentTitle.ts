@@ -3,7 +3,7 @@ import { LateShared, type SourceType } from "silentium";
 /**
  * Document header representation
  */
-export const DocumentTitle = (): SourceType<string> => {
+export function DocumentTitle(): SourceType<string> {
 	const src = LateShared(document.title);
 
 	return {
