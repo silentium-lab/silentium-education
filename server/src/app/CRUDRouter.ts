@@ -39,9 +39,10 @@ export const CRUDRouter = (
                                     SplitPart(
                                         Path(detachedReq as EventType<any>, Of('url')),
                                         Of("/"),
-                                        Of(2)
+                                        Of(3)
                                     )
                                 );
+                                console.log(idSync.primitive());
                                 const collection = db.collection(collectionName);
                                 const all = await collection.findOne({
                                     _id: new ObjectId(
@@ -93,7 +94,7 @@ export const CRUDRouter = (
                                     SplitPart(
                                         Path(detachedReq, Of('url')),
                                         Of("/"),
-                                        Of(2)
+                                        Of(3)
                                     )
                                 );
                                 const collection = db.collection(collectionName);
@@ -126,7 +127,7 @@ export const CRUDRouter = (
                                     SplitPart(
                                         Path(detachedReq, Of('url')),
                                         Of("/"),
-                                        Of(2)
+                                        Of(3)
                                     )
                                 );
                                 const collection = db.collection(collectionName);

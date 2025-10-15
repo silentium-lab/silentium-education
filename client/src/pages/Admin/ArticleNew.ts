@@ -40,7 +40,7 @@ export const ArticleNew = (): EventType<string> => (user) => {
 	const transport = ConstructorDestroyable(backendTransport);
 	const formUpdatedSrc = Shared(
 		backendCrudSrc
-			.ofModelName(Of("articles"))
+			.ofModelName(Of("private/articles"))
 			.created(transport.get, ToJson(Shot(formSrc.event, clickedSrc.event))),
 	);
 	const formUpdateLoadingSrc = Any(

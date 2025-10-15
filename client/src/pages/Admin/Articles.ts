@@ -39,7 +39,7 @@ export const Articles = (): EventType<string> => {
 		const articlesSearchSrc = LateShared({});
 		const articlesSrc = Shared(
 			backendCrudSrc
-				.ofModelName(Of("articles"))
+				.ofModelName(Of("private/articles"))
 				.list(transport.get, articlesSearchSrc.event),
 		);
 
@@ -60,7 +60,7 @@ export const Articles = (): EventType<string> => {
 								const removedSrc = Shared(
 									dc.add(
 										backendCrudSrc
-											.ofModelName(Of("articles"))
+											.ofModelName(Of("private/articles"))
 											.deleted(
 												transport.get,
 												Shot(

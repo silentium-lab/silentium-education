@@ -32,7 +32,7 @@ export const ArticleEdit = (): EventType<string> => (user) => {
 	const idSrc = Shared(SplitPart(localUrlSrc, Of("/"), Of(3)));
 	const articleSrc = Shared(
 		backendCrudSrc
-			.ofModelName(Of("articles"))
+			.ofModelName(Of("private/articles"))
 			.entity(transport.get, idSrc.event),
 	);
 	const clickedSrc = LateShared();
@@ -40,7 +40,7 @@ export const ArticleEdit = (): EventType<string> => (user) => {
 
 	const formUpdatedSrc = Shared(
 		backendCrudSrc
-			.ofModelName(Of("articles"))
+			.ofModelName(Of("private/articles"))
 			.updated(
 				transport.get,
 				idSrc.event,

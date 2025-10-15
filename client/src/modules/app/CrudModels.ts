@@ -11,6 +11,29 @@ class ModuleCrudModels {
 		return new ModuleCrudModels(this.responsePathSrc, modelNameSrc);
 	}
 
+	public custom<T>(
+		modelTransport: ConstructorType<any, any>,
+		searchSrc: EventType<Record<string, unknown>> = Of({}),
+	) {
+		return Path<T>(
+			FromJson(
+				modelTransport(
+					RecordOf({
+						url: Template(
+							Of("/$1"),
+							RecordOf({
+								$1: this.modelNameSrc,
+							}),
+						).value,
+						method: Of("GET"),
+						query: searchSrc ?? Of({}),
+					}),
+				),
+			),
+			this.responsePathSrc,
+		);
+	}
+
 	public list(
 		modelTransport: ConstructorType<any, any>,
 		searchSrc?: EventType<Record<string, unknown>>,
