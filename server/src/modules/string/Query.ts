@@ -4,6 +4,6 @@ import {
   EventType
 } from "silentium";
 
-export const Query = (req: EventType<IncomingMessage>): EventType<string> => {
+export function Query(req: EventType<IncomingMessage>): EventType<string> {
   return Applied(req, (r) => `${r.method}:${r.url}`);
 }

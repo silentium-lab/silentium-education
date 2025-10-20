@@ -6,11 +6,11 @@ import {
   Shared
 } from "silentium";
 
-export const WebServer = (
+export function WebServer(
     processSrc: ConstructorType<[EventType<IncomingMessage>], EventType<string>>,
     hostname: string = "0.0.0.0",
     port: number = 4000,
-): EventType<string> => {
+): EventType<string> {
   return (user) => {
     const config = {
       port,

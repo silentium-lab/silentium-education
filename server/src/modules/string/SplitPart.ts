@@ -1,10 +1,10 @@
 import { All, Applied, EventType, Filtered } from "silentium";
 
-export const SplitPart = (
+export function SplitPart(
     $base: EventType<string>,
     $split: EventType<string>,
     $index: EventType<number>
-): EventType<string> => {
+): EventType<string> {
     return Filtered(Applied(All(
         $base,
         $split,

@@ -7,29 +7,29 @@ import { Id } from "../modules/Id";
 import { urlSrc } from "../store";
 
 export function Link(
-		linkUrlSrc: EventType<string>,
-		textSrc: EventType<string>,
-		classSrc: EventType<string> = Of(""),
-	): EventType<string> {
-	return (user) => {
-		const idSrc = Shared(Id());
-		const sharedUrlSrc = Shared(linkUrlSrc);
-		const urlSync = Primitive(linkUrlSrc);
+  linkUrlSrc: EventType<string>,
+  textSrc: EventType<string>,
+  classSrc: EventType<string> = Of(""),
+): EventType<string> {
+  return (user) => {
+    const idSrc = Shared(Id());
+    const sharedUrlSrc = Shared(linkUrlSrc);
+    const urlSync = Primitive(linkUrlSrc);
 
-		On(Clicked(First(Elements(ClassName(idSrc.event)))), (e) => {
-			e.preventDefault();
-			urlSrc.use(urlSync.primitive() as string);
-		});
+    On(Clicked(First(Elements(ClassName(idSrc.event)))), (e) => {
+      e.preventDefault();
+      urlSrc.use(urlSync.primitive() as string);
+    });
 
-		const t = Template();
-		t.template(
-			`<a
+    const t = Template();
+    t.template(
+      `<a
         href="${t.var(sharedUrlSrc.event)}"
         class="${t.var(idSrc.event)} ${t.var(classSrc)}"
       >
         ${t.var(textSrc)}
       </a>`,
-		);
-		t.value(user);
-	};
+    );
+    t.value(user);
+  };
 }

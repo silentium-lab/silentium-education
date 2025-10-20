@@ -3,16 +3,17 @@ import { Part, Template } from "silentium-components";
 import { Input } from "../../components/Input";
 import type { ArticleType } from "../../types/ArticleType";
 
-export const ArticleForm =
-	(formSrc: SourceType<ArticleType>): EventType<string> =>
-	(user) => {
-		const formModels = {
-			title: Part<string>(formSrc, Of("title")),
-			content: Part<string>(formSrc, Of("content")),
-		};
+export function ArticleForm(
+  formSrc: SourceType<ArticleType>,
+): EventType<string> {
+  return (user) => {
+    const formModels = {
+      title: Part<string>(formSrc, Of("title")),
+      content: Part<string>(formSrc, Of("content")),
+    };
 
-		const t = Template();
-		t.template(`<div class="mb-2">
+    const t = Template();
+    t.template(`<div class="mb-2">
 			<div class="mb-2">
 				<div class="font-bold">Название: </div>
 				<input class="${t.var(Input(formModels.title))} border-1 p-2 rounded-sm w-full" />
@@ -23,9 +24,10 @@ export const ArticleForm =
 			</div>
 		</div>
 	`);
-		t.value(user);
+    t.value(user);
 
-		return () => {
-			t.destroy();
-		};
-	};
+    return () => {
+      t.destroy();
+    };
+  };
+}

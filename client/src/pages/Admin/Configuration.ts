@@ -1,4 +1,10 @@
-import { ConstructorDestroyable, EventType, LateShared, Of, Shared } from "silentium";
+import {
+  ConstructorDestroyable,
+  EventType,
+  LateShared,
+  Of,
+  Shared,
+} from "silentium";
 import { RecordOf, Shot, Template, ToJson } from "silentium-components";
 import { backendCrudSrc, backendTransport } from "../../bootstrap";
 import { Button } from "../../components/Button";
@@ -9,31 +15,31 @@ import { i18n } from "../../store";
  * Configuration page
  */
 export function Configuration(): EventType<string> {
-    return (user) => {
-        i18n.tr("Configuration");
+  return (user) => {
+    i18n.tr("Configuration");
 
-        const username = LateShared('');
-        const password = LateShared('');
-        const formSrc = RecordOf({
-            username: username.event,
-            password: password.event,
-        });
+    const username = LateShared("");
+    const password = LateShared("");
+    const formSrc = RecordOf({
+      username: username.event,
+      password: password.event,
+    });
 
-        const savedSrc = LateShared();
+    const savedSrc = LateShared();
 
-        const savedFormSrc = Shot(formSrc, savedSrc.event);
+    const savedFormSrc = Shot(formSrc, savedSrc.event);
 
-	    const transport = ConstructorDestroyable(backendTransport);
-        const formUpdatedSrc = Shared(
-            backendCrudSrc
-                .ofModelName(Of("settings"))
-                .created(transport.get, ToJson(savedFormSrc)),
-        );
+    const transport = ConstructorDestroyable(backendTransport);
+    const formUpdatedSrc = Shared(
+      backendCrudSrc
+        .ofModelName(Of("settings"))
+        .created(transport.get, ToJson(savedFormSrc)),
+    );
 
-        formUpdatedSrc.event(() => location.reload());
+    formUpdatedSrc.event(() => location.reload());
 
-		const t = Template();
-		t.template(`<div class="article">
+    const t = Template();
+    t.template(`<div class="article">
 			<h1 class="title-1">Конфигурирование системы</h1>
             <p class="mb-2">
                 Перед использованием панели администратора
@@ -48,17 +54,13 @@ export function Configuration(): EventType<string> {
                 Пароль
                 <input class="${t.var(Input(password))} border-1 p-2 rounded-sm w-full" />
             </div>
-            ${t.var(Button(
-                Of('Сохранить'),
-                Of("btn"),
-                savedSrc.use,
-            ))}
+            ${t.var(Button(Of("Сохранить"), Of("btn"), savedSrc.use))}
 		</div>`);
-	    t.value(user);
+    t.value(user);
 
-        return () => {
-            t.destroy();
-            transport.destroy();
-        }
-    }
+    return () => {
+      t.destroy();
+      transport.destroy();
+    };
+  };
 }

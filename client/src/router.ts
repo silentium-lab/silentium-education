@@ -11,30 +11,30 @@ import { NotFound } from "./pages/NotFound";
 import { urlSrc } from "./store";
 
 export const routerSrc = Shared(
-	Router(
-		urlSrc.event,
-		Of([
-			{
-				pattern: "^/?$",
-				template: Home,
-			},
-			{
-				pattern: "/about",
-				template: About,
-			},
-			{
-				pattern: "/documentation",
-				template: Documentation,
-			},
-			{
-				pattern: "/blog",
-				template: Blog,
-			},
-			{
-				pattern: "/admin.*",
-				template: partial(AdminConfigGuard, Admin),
-			},
-		]),
-		NotFound,
-	),
+  Router(
+    urlSrc.event,
+    Of([
+      {
+        pattern: "^/?$",
+        template: Home,
+      },
+      {
+        pattern: "/about",
+        template: About,
+      },
+      {
+        pattern: "/documentation",
+        template: Documentation,
+      },
+      {
+        pattern: "/blog",
+        template: Blog,
+      },
+      {
+        pattern: "/admin.*",
+        template: partial(AdminConfigGuard, Admin),
+      },
+    ]),
+    NotFound,
+  ),
 );
