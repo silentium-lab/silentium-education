@@ -7,11 +7,11 @@ import { settingsModels } from "../models/settingsModels";
  * Is admin panel configured
  */
 export function Configured(): EventType<string> {
-    return ToJson(
-        RecordOf({
-            data: RecordOf({
-                configured: settingsModels.isConfigured(mongoTransport())
-            })
-        })
-    )
+  return ToJson(
+    RecordOf({
+      data: RecordOf({
+        configured: settingsModels.isConfigured(mongoTransport()),
+      }),
+    }),
+  );
 }

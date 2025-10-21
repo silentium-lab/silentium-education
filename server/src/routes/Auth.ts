@@ -3,8 +3,8 @@ import { ToJson } from "silentium-components";
 
 export function Auth(): EventType<string> {
   return ToJson(
-      Of({
-        message: "do auth",
-      }),
-    );
+    Of({
+      message: "do auth",
+    }),
+  );
 }
