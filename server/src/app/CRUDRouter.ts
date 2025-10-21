@@ -1,11 +1,15 @@
 import { IncomingMessage } from "http";
-import { Db, ObjectId } from "mongodb";
-import getRawBody from "raw-body";
-import { ConstructorType, EventType, Of, Primitive } from "silentium";
-import { Detached, Path, Router, ToJson } from "silentium-components";
+import { Db } from "mongodb";
+import { Any, Catch, ConstructorType, EventType, Late, Of } from "silentium";
+import { Detached, RecordOf, Router, ToJson } from "silentium-components";
 import { NotFoundSrc } from "../../store";
+import { Created } from "../modules/mongo/Created";
+import { Entity } from "../modules/mongo/Entity";
+import { List } from "../modules/mongo/List";
+import { Removed } from "../modules/mongo/Removed";
+import { Updated } from "../modules/mongo/Updated";
 import { Query } from "../modules/string/Query";
-import { SplitPart } from "../modules/string/SplitPart";
+import { UrlFromMessage } from "../modules/string/UrlFromMessage";
 
 export const CRUDRouter = (
   req: EventType<IncomingMessage>,
@@ -20,136 +24,84 @@ export const CRUDRouter = (
       {
         pattern: `^GET:${baseUrl}$`,
         template: (): EventType<string> => (o) => {
-          dbTransport()(async (db) => {
-            const collection = db.collection(collectionName);
-            const all = await collection.find().toArray();
-            ToJson(
-              Of({
-                message: "ok",
-                data: all,
-              }),
-            )(o);
-          });
+          const error = Late();
+          ToJson(
+            RecordOf({
+              data: Any(
+                Catch(List(dbTransport(), collectionName), error.use),
+                Of(null),
+              ),
+              error: Any(error.event, Of(null)),
+            }),
+          )(o);
         },
       },
       {
         pattern: `^GET:${baseUrl}/.+/$`,
         template: (): EventType<string> => (o) => {
-          dbTransport()(async (db) => {
-            try {
-              const idSync = Primitive(
-                SplitPart(
-                  Path(detachedReq as EventType<any>, Of("url")),
-                  Of("/"),
-                  Of(3),
-                ),
-              );
-              console.log(idSync.primitive());
-              const collection = db.collection(collectionName);
-              const all = await collection.findOne({
-                _id: new ObjectId(idSync.primitiveWithException()),
-              });
-              ToJson(
-                Of({
-                  message: "ok",
-                  data: all,
-                }),
-              )(o);
-            } catch {
-              ToJson(
-                Of({
-                  message: "unable to find entity",
-                }),
-              )(o);
-            }
-          });
+          const $url = UrlFromMessage(detachedReq);
+          const error = Late();
+          ToJson(
+            RecordOf({
+              data: Any(
+                Catch(Entity(dbTransport(), $url, collectionName), error.use),
+                Of(null),
+              ),
+              error: Any(error.event, Of(null)),
+            }),
+          )(o);
         },
       },
       {
         pattern: `^POST:${baseUrl}$`,
         template: (): EventType<string> => (o) => {
-          dbTransport()(async (db) => {
-            try {
-              const collection = db.collection(collectionName);
-              const reqSync = Primitive(detachedReq);
-              const body = await getRawBody(reqSync.primitiveWithException());
-              const bodyText = body.toString("utf8");
-              const result = await collection.insertOne(JSON.parse(bodyText));
-              ToJson(
-                Of({
-                  message: "created",
-                  data: result,
-                }),
-              )(o);
-            } catch {
-              ToJson(
-                Of({
-                  message: "unable to create",
-                }),
-              )(o);
-            }
-          });
+          const error = Late();
+          ToJson(
+            RecordOf({
+              data: Any(
+                Catch(
+                  Created(dbTransport(), detachedReq, collectionName),
+                  error.use,
+                ),
+                Of(null),
+              ),
+              error: Any(error.event, Of(null)),
+            }),
+          )(o);
         },
       },
       {
         pattern: `^PUT:${baseUrl}/.+/$`,
         template: (): EventType<string> => (o) => {
-          dbTransport()(async (db) => {
-            try {
-              const idSync = Primitive(
-                SplitPart(Path(detachedReq, Of("url")), Of("/"), Of(3)),
-              );
-              const collection = db.collection(collectionName);
-              const reqSync = Primitive(detachedReq);
-              const body = await getRawBody(reqSync.primitiveWithException());
-              const bodyText = body.toString("utf8");
-              const all = await collection.findOneAndUpdate(
-                { _id: new ObjectId(idSync.primitiveWithException()) },
-                { $set: JSON.parse(bodyText) },
-                { returnDocument: "after" },
-              );
-              ToJson(
-                Of({
-                  message: "ok",
-                  data: all,
-                }),
-              )(o);
-            } catch {
-              ToJson(
-                Of({
-                  message: "unable to find entity",
-                }),
-              )(o);
-            }
-          });
+          const error = Late();
+          ToJson(
+            RecordOf({
+              data: Any(
+                Catch(
+                  Updated(dbTransport(), detachedReq, collectionName),
+                  error.use,
+                ),
+                Of(null),
+              ),
+              error: Any(error.event, Of(null)),
+            }),
+          )(o);
         },
       },
       {
         pattern: `^DELETE:${baseUrl}/.+/$`,
         template: (): EventType<string> => (o) => {
-          dbTransport()(async (db) => {
-            try {
-              const idSync = Primitive(
-                SplitPart(Path(detachedReq, Of("url")), Of("/"), Of(3)),
-              );
-              const collection = db.collection(collectionName);
-              const all = await collection.deleteOne({
-                _id: new ObjectId(idSync.primitiveWithException()),
-              });
-              ToJson(
-                Of({
-                  message: "ok",
-                  data: all,
-                }),
-              )(o);
-            } catch {
-              ToJson(
-                Of({
-                  message: "unable to delete",
-                }),
-              )(o);
-            }
-          });
+          const error = Late();
+          const $url = UrlFromMessage(detachedReq);
+          ToJson(
+            RecordOf({
+              data: Any(
+                Catch(Removed(dbTransport(), $url, collectionName), error.use),
+                Of(null),
+              ),
+              error: Any(error.event, Of(null)),
+            }),
+          )(o);
         },
       },
     ]),
