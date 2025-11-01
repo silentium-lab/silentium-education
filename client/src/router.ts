@@ -1,5 +1,4 @@
-import { partial } from "lodash-es";
-import { Of, Shared } from "silentium";
+import { Of, Shared, TransportEvent } from "silentium";
 import { Router } from "silentium-components";
 import { About } from "./pages/About";
 import { Admin } from "./pages/Admin";
@@ -12,29 +11,29 @@ import { urlSrc } from "./store";
 
 export const routerSrc = Shared(
   Router(
-    urlSrc.event,
+    urlSrc,
     Of([
       {
         pattern: "^/?$",
-        template: Home,
+        event: TransportEvent(Home),
       },
       {
         pattern: "/about",
-        template: About,
+        event: TransportEvent(About),
       },
       {
         pattern: "/documentation",
-        template: Documentation,
+        event: TransportEvent(Documentation),
       },
       {
         pattern: "/blog",
-        template: Blog,
+        event: TransportEvent(Blog),
       },
       {
         pattern: "/admin.*",
-        template: partial(AdminConfigGuard, Admin),
+        event: TransportEvent(() => AdminConfigGuard(Admin())),
       },
     ]),
-    NotFound,
+    TransportEvent(NotFound),
   ),
 );

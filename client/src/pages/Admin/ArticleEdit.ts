@@ -2,22 +2,13 @@ import { omit, partialRight } from "lodash-es";
 import {
   Any,
   Applied,
-  ConstructorDestroyable,
+  Event,
   LateShared,
   Of,
   Shared,
+  TransportDestroyable,
   type EventType,
-  type EventUserType,
 } from "silentium";
-import {
-  backendCrudSrc,
-  backendTransport,
-  notificationSrc,
-} from "../../bootstrap";
-import { SplitPart } from "../../modules/string/SplitPart";
-import { i18n, titleSrc, urlSrc } from "../../store";
-import type { ArticleType } from "../../types/ArticleType";
-import { ArticleForm } from "./ArticleForm";
 import {
   Branch,
   Constant,
@@ -28,37 +19,42 @@ import {
   Template,
   ToJson,
 } from "silentium-components";
-import { Link } from "../../components/Link";
+import {
+  backendCrudSrc,
+  backendTransport,
+  notificationSrc,
+} from "../../bootstrap";
 import { Button } from "../../components/Button";
+import { Link } from "../../components/Link";
+import { SplitPart } from "../../modules/string/SplitPart";
+import { i18n, titleSrc, urlSrc } from "../../store";
+import type { ArticleType } from "../../types/ArticleType";
+import { ArticleForm } from "./ArticleForm";
 
 export function ArticleEdit(): EventType<string> {
-  return (user) => {
-    const title = i18n.tr("Article");
-    title(titleSrc.use);
+  return Event((transport) => {
+    const $title = i18n.tr("Article");
+    $title.event(titleSrc);
 
-    const transport = ConstructorDestroyable(backendTransport);
+    const backendTransportInstance = TransportDestroyable(backendTransport);
 
-    const localUrlSrc = Detached(urlSrc.event);
-    const idSrc = Shared(SplitPart(localUrlSrc, Of("/"), Of(3)));
-    const articleSrc = Shared(
+    const $localUrl = Detached(urlSrc);
+    const $id = SplitPart($localUrl, Of("/"), Of(3));
+    const $article = Shared(
       backendCrudSrc
         .ofModelName(Of("private/articles"))
-        .entity(transport.get, idSrc.event),
+        .entity(backendTransportInstance, $id),
     );
-    const clickedSrc = LateShared();
-    const formSrc = LateShared<ArticleType>();
+    const $clicked = LateShared();
+    const $form = LateShared<ArticleType>();
 
-    const formUpdatedSrc = Shared(
+    const $formUpdated = Shared(
       backendCrudSrc
         .ofModelName(Of("private/articles"))
-        .updated(
-          transport.get,
-          idSrc.event,
-          ToJson(Shot(formSrc.event, clickedSrc.event)),
-        ),
+        .updated(backendTransportInstance, $id, ToJson(Shot($form, $clicked))),
     );
     const formUpdateLoadingSrc = Any(
-      Loading(clickedSrc.event, formUpdatedSrc.event),
+      Loading($clicked, $formUpdated),
       Of(false),
     );
 
@@ -67,38 +63,38 @@ export function ArticleEdit(): EventType<string> {
         type: "success",
         content: "Успешно изменено",
       } as const,
-      formUpdatedSrc.event,
-    )(notificationSrc.use);
+      $formUpdated,
+    ).event(notificationSrc);
 
     Applied(
-      Any(articleSrc.event, Task(formUpdatedSrc.event)),
+      Any($article, Task($formUpdated)),
       partialRight(omit, ["_id"]),
-    )(formSrc.use as EventUserType);
+    ).event($form);
 
     const t = Template();
     t.template(`<div class="article">
 			${t.var(Link(Of("/admin/articles"), i18n.tr("Articles"), Of("underline")))}
-        <h1 class="title-1">${t.var(title)}</h1>
+        <h1 class="title-1">${t.var($title)}</h1>
 		<div class="mb-2">
 			<div>
 				<b>id: </b>
-				${t.var(idSrc.event)}
+				${t.var($id)}
 			</div>
-			${t.var(ArticleForm(formSrc))}
+			${t.var(ArticleForm($form))}
 		</div>
 		${t.var(
       Button(
         Branch(formUpdateLoadingSrc, Of("Сохраняем..."), Of("Сохранить")),
         Of("btn"),
-        clickedSrc.use,
+        $clicked.use,
       ),
     )}
       </div>`);
-    t.value(user);
+    t.event(transport);
 
     return () => {
-      transport.destroy();
+      backendTransportInstance.destroy();
       t.destroy();
     };
-  };
+  });
 }

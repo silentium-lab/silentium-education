@@ -1,11 +1,11 @@
-import { Applied, type ConstructorType, type EventType, Of } from "silentium";
+import { Applied, type EventType, Of, TransportType } from "silentium";
 import { backendCrudSrc } from "../bootstrap";
 
 export const settingsModels = {
   /**
    * Application is configured
    */
-  hasSettings(transport: ConstructorType): EventType<boolean> {
+  hasSettings(transport: TransportType): EventType<boolean> {
     const settingsSrc = backendCrudSrc
       .ofModelName(Of("configured"))
       .custom<{ configured: boolean }>(transport);

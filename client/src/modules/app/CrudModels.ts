@@ -1,4 +1,9 @@
-import { type ConstructorType, type EventType, Of } from "silentium";
+import {
+  type ConstructorType,
+  type EventType,
+  Of,
+  TransportType,
+} from "silentium";
 import { FromJson, Path, RecordOf, Template } from "silentium-components";
 
 class ModuleCrudModels {
@@ -12,19 +17,19 @@ class ModuleCrudModels {
   }
 
   public custom<T>(
-    modelTransport: ConstructorType<any, any>,
+    modelTransport: TransportType<any, any>,
     searchSrc: EventType<Record<string, unknown>> = Of({}),
   ) {
     return Path<T>(
       FromJson(
-        modelTransport(
+        modelTransport.use(
           RecordOf({
             url: Template(
               Of("/$1"),
               RecordOf({
                 $1: this.modelNameSrc,
               }),
-            ).value,
+            ),
             method: Of("GET"),
             query: searchSrc ?? Of({}),
           }),
@@ -47,7 +52,7 @@ class ModuleCrudModels {
               RecordOf({
                 $1: this.modelNameSrc,
               }),
-            ).value,
+            ),
             method: Of("GET"),
             query: searchSrc ?? Of({}),
           }),
@@ -58,12 +63,12 @@ class ModuleCrudModels {
   }
 
   public entity(
-    modelTransport: ConstructorType<any, any>,
+    modelTransport: TransportType<any, any>,
     idSrc: EventType<string>,
   ) {
     return Path(
       FromJson(
-        modelTransport(
+        modelTransport.use(
           RecordOf({
             url: Template(
               Of("/$1/$2/"),
@@ -71,7 +76,7 @@ class ModuleCrudModels {
                 $1: this.modelNameSrc,
                 $2: idSrc,
               }),
-            ).value,
+            ),
             method: Of("GET"),
           }),
         ),
@@ -93,7 +98,7 @@ class ModuleCrudModels {
               RecordOf({
                 $1: this.modelNameSrc,
               }),
-            ).value,
+            ),
             method: Of("POST"),
             body: formSrc,
           }),
@@ -104,13 +109,13 @@ class ModuleCrudModels {
   }
 
   public updated(
-    modelTransport: ConstructorType<any, any>,
+    modelTransport: TransportType<any, any>,
     idSrc: EventType<string>,
     formSrc: EventType<string>,
   ) {
     return Path(
       FromJson(
-        modelTransport(
+        modelTransport.use(
           RecordOf({
             url: Template(
               Of("/$1/$2/"),
@@ -118,7 +123,7 @@ class ModuleCrudModels {
                 $1: this.modelNameSrc,
                 $2: idSrc,
               }),
-            ).value,
+            ),
             method: Of("PUT"),
             body: formSrc,
           }),
@@ -142,7 +147,7 @@ class ModuleCrudModels {
                 $1: this.modelNameSrc,
                 $2: idSrc,
               }),
-            ).value,
+            ),
             method: Of("DELETE"),
           }),
         ),

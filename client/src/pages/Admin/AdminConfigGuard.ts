@@ -1,7 +1,7 @@
 import {
-  ConstructorDestroyable,
-  Destructor,
-  type ConstructorType,
+  Event,
+  TransportDestroyable,
+  TransportEvent,
   type EventType,
 } from "silentium";
 import { BranchLazy } from "silentium-components";
@@ -11,19 +11,19 @@ import { Configuration } from "./Configuration";
 /**
  * Ensure everything configured
  */
-export function AdminConfigGuard(
-  Child: ConstructorType<[], EventType<string>>,
-): EventType<string> {
-  return (user) => {
-    const transport = ConstructorDestroyable(backendTransport);
-    const r = Destructor(
-      BranchLazy(hasSettingsSrc.event, Child, Configuration),
+export function AdminConfigGuard($child: EventType<string>): EventType<string> {
+  return Event((transport) => {
+    const backendTransportInstance = TransportDestroyable(backendTransport);
+    const r = BranchLazy(
+      hasSettingsSrc,
+      TransportEvent(() => $child),
+      TransportEvent(() => Configuration()),
     );
-    r.event(user);
+    r.event(transport);
 
     return () => {
-      transport.destroy();
+      backendTransportInstance.destroy();
       r.destroy();
     };
-  };
+  });
 }

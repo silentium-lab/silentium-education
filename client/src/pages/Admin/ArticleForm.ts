@@ -1,15 +1,13 @@
-import { type EventType, Of, type SourceType } from "silentium";
+import { Event, type EventType, Of, type SourceType } from "silentium";
 import { Part, Template } from "silentium-components";
 import { Input } from "../../components/Input";
 import type { ArticleType } from "../../types/ArticleType";
 
-export function ArticleForm(
-  formSrc: SourceType<ArticleType>,
-): EventType<string> {
-  return (user) => {
+export function ArticleForm($form: SourceType<ArticleType>): EventType<string> {
+  return Event((transport) => {
     const formModels = {
-      title: Part<string>(formSrc, Of("title")),
-      content: Part<string>(formSrc, Of("content")),
+      title: Part<string>($form, Of("title")),
+      content: Part<string>($form, Of("content")),
     };
 
     const t = Template();
@@ -22,12 +20,11 @@ export function ArticleForm(
 				<div class="font-bold">Содержимое: </div>
 				<textarea rows="20" class="${t.var(Input(formModels.content))} border-1 p-2 rounded-sm w-full"></textarea>
 			</div>
-		</div>
-	`);
-    t.value(user);
+		</div>`);
+    t.event(transport);
 
     return () => {
       t.destroy();
     };
-  };
+  });
 }
