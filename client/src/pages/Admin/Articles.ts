@@ -13,6 +13,7 @@ import {
   Shared,
   TransportDestroyable,
   TransportEvent,
+  Transport,
 } from "silentium";
 import {
   Constant,
@@ -60,7 +61,7 @@ export function Articles(): EventType<string> {
                 articlesSrc,
                 TransportEvent((article) => {
                   const removeTrigger = LateShared();
-                  removeTrigger.event(console.log);
+                  removeTrigger.event(Transport(console.log));
                   const localArticle = Detached<ArticleType>(article);
                   const removedSrc = Shared(
                     dc.add(

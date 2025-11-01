@@ -91,7 +91,7 @@ class ModuleCrudModels {
   ): EventType<Record<string, unknown>> {
     return Path(
       FromJson(
-        modelTransport(
+        modelTransport.use(
           RecordOf({
             url: Template(
               Of("/$1"),
