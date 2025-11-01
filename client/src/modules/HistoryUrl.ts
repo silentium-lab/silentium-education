@@ -4,18 +4,18 @@ import { LateShared, type SourceType } from "silentium";
  * URL representation associated with the History API
  */
 export function HistoryUrl(): SourceType<string> {
-  const urlSrc = LateShared(location.pathname);
+  const $url = LateShared(location.pathname);
   return {
     use: (value) => {
       const state = { page: value, timestamp: Date.now() };
       const title = `Page ${value}`;
       const url = `${value}`;
-
       history.pushState(state, title, url);
-      urlSrc.use(value);
+      $url.use(value);
     },
-    event: (u) => {
-      urlSrc.event(u);
+    event(u) {
+      $url.event(u);
+      return this;
     },
   };
 }

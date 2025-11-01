@@ -40,12 +40,12 @@ class ModuleCrudModels {
   }
 
   public list(
-    modelTransport: ConstructorType<any, any>,
+    modelTransport: TransportType<any, any>,
     searchSrc?: EventType<Record<string, unknown>>,
   ) {
     return Path<unknown[]>(
       FromJson(
-        modelTransport(
+        modelTransport.use(
           RecordOf({
             url: Template(
               Of("/$1"),
@@ -86,7 +86,7 @@ class ModuleCrudModels {
   }
 
   public created(
-    modelTransport: ConstructorType<any, any>,
+    modelTransport: TransportType<any, any>,
     formSrc: EventType<string>,
   ): EventType<Record<string, unknown>> {
     return Path(

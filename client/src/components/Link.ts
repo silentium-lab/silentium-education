@@ -1,4 +1,4 @@
-import { type EventType, Of, On, Primitive, Shared } from "silentium";
+import { Event, type EventType, Of, On, Primitive, Shared } from "silentium";
 import { First, Template } from "silentium-components";
 import { Elements } from "silentium-web-api";
 import { ClassName } from "../modules/ClassName";
@@ -11,12 +11,11 @@ export function Link(
   textSrc: EventType<string>,
   classSrc: EventType<string> = Of(""),
 ): EventType<string> {
-  return (user) => {
-    const idSrc = Shared(Id());
-    const sharedUrlSrc = Shared(linkUrlSrc);
+  return Event((transport) => {
+    const idSrc = Shared(Id()).event;
     const urlSync = Primitive(linkUrlSrc);
 
-    On(Clicked(First(Elements(ClassName(idSrc.event)))), (e) => {
+    On(Clicked(First(Elements(ClassName(idSrc)))), (e: Event) => {
       e.preventDefault();
       urlSrc.use(urlSync.primitive() as string);
     });
@@ -24,12 +23,12 @@ export function Link(
     const t = Template();
     t.template(
       `<a
-        href="${t.var(sharedUrlSrc.event)}"
-        class="${t.var(idSrc.event)} ${t.var(classSrc)}"
+        href="${t.var(linkUrlSrc)}"
+        class="${t.var(idSrc)} ${t.var(classSrc)}"
       >
         ${t.var(textSrc)}
       </a>`,
     );
-    t.value(user);
-  };
+    t.event(transport);
+  });
 }

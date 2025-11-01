@@ -20,5 +20,5 @@ export function Footer(): EventType<string> {
         </footer>`,
     );
     t.value(user);
-  }
+  };
 }

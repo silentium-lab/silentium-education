@@ -1,4 +1,4 @@
-import { type EventType, FromEvent, Of } from "silentium";
+import { Event, type EventType, FromEvent, Of } from "silentium";
 
 /**
  * DOM element keypress even
@@ -6,12 +6,12 @@ import { type EventType, FromEvent, Of } from "silentium";
 export function KeyPressed<T extends Event>(
   elSrc: EventType<HTMLElement>,
 ): EventType<T> {
-  return (u) => {
+  return Event((transport) => {
     FromEvent<T>(
       elSrc,
       Of("keyup"),
       Of("addEventListener"),
       Of("removeEventListener"),
-    )(u);
-  };
+    ).event(transport);
+  });
 }

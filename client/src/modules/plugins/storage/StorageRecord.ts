@@ -3,6 +3,7 @@ import {
   LateShared,
   Primitive,
   type SourceType,
+  Transport,
 } from "silentium";
 
 /**
@@ -16,34 +17,37 @@ export function StorageRecord<T = string>(
   const nameSync = Primitive(nameSrc);
   const resultSrc = LateShared<T>();
   const result: SourceType<T> = {
-    event: (u) => {
+    event(u) {
       resultSrc.event(u);
       const storage = window[storageType];
-      nameSrc((name) => {
-        window.addEventListener("storage", (e) => {
-          if (e.storageArea === storage) {
-            if (e.key === name) {
-              const newValue = e.newValue
-                ? JSON.parse(e.newValue)
-                : defaultValue;
-              if (newValue !== undefined && newValue !== null) {
-                result.use(newValue as T);
+      nameSrc.event(
+        Transport((name) => {
+          window.addEventListener("storage", (e) => {
+            if (e.storageArea === storage) {
+              if (e.key === name) {
+                const newValue = e.newValue
+                  ? JSON.parse(e.newValue)
+                  : defaultValue;
+                if (newValue !== undefined && newValue !== null) {
+                  result.use(newValue as T);
+                }
               }
             }
+          });
+          if (storage[name]) {
+            try {
+              resultSrc.use(JSON.parse(storage[name]));
+            } catch {
+              console.warn(`LocalStorageRecord cant parse value ${name}`);
+            }
+          } else if (defaultValue !== undefined) {
+            result.use(defaultValue as T);
           }
-        });
-        if (storage[name]) {
-          try {
-            resultSrc.use(JSON.parse(storage[name]));
-          } catch {
-            console.warn(`LocalStorageRecord cant parse value ${name}`);
-          }
-        } else if (defaultValue !== undefined) {
-          result.use(defaultValue as T);
-        }
-      });
+        }),
+      );
+      return this;
     },
-    use: (v) => {
+    use(v) {
       const storage = window[storageType];
       resultSrc.use(v);
 

@@ -1,10 +1,11 @@
 import {
   Any,
-  ConstructorDestroyable,
+  Event,
   type EventType,
   LateShared,
   Of,
   Shared,
+  TransportDestroyable,
 } from "silentium";
 import {
   Branch,
@@ -28,9 +29,9 @@ import { i18n, titleSrc, urlSrc } from "../../store";
 import { ArticleForm } from "./ArticleForm";
 
 export function ArticleNew(): EventType<string> {
-  return (user) => {
+  return Event((transport) => {
     const title = i18n.tr("Create Article");
-    title(titleSrc.use);
+    title.event(titleSrc);
 
     const clickedSrc = LateShared();
     const formSrc = LateShared({
@@ -38,35 +39,35 @@ export function ArticleNew(): EventType<string> {
       content: "",
     });
 
-    const transport = ConstructorDestroyable(backendTransport);
+    const backendTransportInstance = TransportDestroyable(backendTransport);
     const formUpdatedSrc = Shared(
       backendCrudSrc
         .ofModelName(Of("private/articles"))
-        .created(transport.get, ToJson(Shot(formSrc.event, clickedSrc.event))),
+        .created(backendTransportInstance, ToJson(Shot(formSrc, clickedSrc))),
     );
     const formUpdateLoadingSrc = Any(
-      Loading(clickedSrc.event, formUpdatedSrc.event),
+      Loading(clickedSrc, formUpdatedSrc),
       Of(false),
     );
 
-    const insertedIdSrc = Path(formUpdatedSrc.event, Of("insertedId"));
+    const insertedIdSrc = Path(formUpdatedSrc, Of("insertedId"));
     Task(
       Template(
         Of("/admin/articles/$id/"),
         RecordOf({
           $id: insertedIdSrc,
         }),
-      ).value,
+      ),
       900,
-    )(urlSrc.use);
+    ).event(urlSrc);
 
     Constant(
       {
         type: "success",
         content: "Успешно создано",
       } as const,
-      formUpdatedSrc.event,
-    )(notificationSrc.use);
+      formUpdatedSrc,
+    ).event(notificationSrc);
 
     const t = Template();
     t.template(`<div class="article">
@@ -81,11 +82,11 @@ export function ArticleNew(): EventType<string> {
       ),
     )}
       </div>`);
-    t.value(user);
+    t.event(transport);
 
     return () => {
-      transport.destroy();
+      backendTransportInstance.destroy();
       t.destroy();
     };
-  };
+  });
 }

@@ -5,11 +5,14 @@ import {
   ConstructorDestroyable,
   DestroyContainer,
   type EventType,
+  Event,
   LateShared,
   Map,
   Of,
   Once,
   Shared,
+  TransportDestroyable,
+  TransportEvent,
 } from "silentium";
 import {
   Constant,
@@ -30,17 +33,17 @@ import { i18n, titleSrc } from "../../store";
 import type { ArticleType } from "../../types/ArticleType";
 
 export function Articles(): EventType<string> {
-  return (user) => {
+  return Event((transport) => {
     const title = i18n.tr("Articles");
-    title(titleSrc.use);
+    title.event(titleSrc);
 
-    const transport = ConstructorDestroyable(backendTransport);
+    const backendTransportInstance = TransportDestroyable(backendTransport);
 
     const articlesSearchSrc = LateShared({});
     const articlesSrc = Shared(
       backendCrudSrc
         .ofModelName(Of("private/articles"))
-        .list(transport.get, articlesSearchSrc.event),
+        .list(backendTransportInstance, articlesSearchSrc),
     );
 
     const dc = DestroyContainer();
@@ -52,64 +55,67 @@ export function Articles(): EventType<string> {
         ${t.var(
           Applied(
             Any<any>(
-              Chain(articlesSearchSrc.event, Of([])),
-              Map(articlesSrc.event, (article) => {
-                const removeTrigger = LateShared();
-                removeTrigger.event(console.log);
-                const localArticle = Detached<ArticleType>(article);
-                const removedSrc = Shared(
-                  dc.add(
-                    backendCrudSrc
-                      .ofModelName(Of("private/articles"))
-                      .deleted(
-                        transport.get,
-                        Shot(
-                          Once(Path(localArticle, Of("_id"))),
-                          Once(removeTrigger.event),
+              Chain(articlesSearchSrc, Of([])),
+              Map(
+                articlesSrc,
+                TransportEvent((article) => {
+                  const removeTrigger = LateShared();
+                  removeTrigger.event(console.log);
+                  const localArticle = Detached<ArticleType>(article);
+                  const removedSrc = Shared(
+                    dc.add(
+                      backendCrudSrc
+                        .ofModelName(Of("private/articles"))
+                        .deleted(
+                          backendTransportInstance.get,
+                          Shot(
+                            Once(Path(localArticle, Of("_id"))),
+                            Once(removeTrigger.event),
+                          ),
                         ),
-                      ),
-                  ),
-                );
-                Constant({}, Once(removedSrc.event))(articlesSearchSrc.use);
-
-                Constant(
-                  {
-                    type: "success",
-                    content: "Успешно удалено",
-                  } as const,
-                  removedSrc.event,
-                )(notificationSrc.use);
-
-                return Template(
-                  Of(`<div class="flex gap-2">
-                $link
-                <div class="cursor-pointer $removeId">&times;</div>
-              </div>`),
-                  RecordOf({
-                    $link: Link(
-                      Template(
-                        Of("/admin/articles/$id/"),
-                        RecordOf({ $id: Path(article, Of("_id")) }),
-                      ).value,
-                      Path(article, Of("title")),
-                      Of("underline"),
                     ),
-                    $removeId: dc.add(ClickedId(removeTrigger)),
-                  }),
-                ).value;
-              }),
+                  );
+                  Constant({}, Once(removedSrc)).event(articlesSearchSrc);
+
+                  Constant(
+                    {
+                      type: "success",
+                      content: "Успешно удалено",
+                    } as const,
+                    removedSrc,
+                  ).event(notificationSrc);
+
+                  return Template(
+                    Of(`<div class="flex gap-2">
+                    $link
+                    <div class="cursor-pointer $removeId">&times;</div>
+                  </div>`),
+                    RecordOf({
+                      $link: Link(
+                        Template(
+                          Of("/admin/articles/$id/"),
+                          RecordOf({ $id: Path(article, Of("_id")) }),
+                        ),
+                        Path(article, Of("title")),
+                        Of("underline"),
+                      ),
+                      $removeId: dc.add(ClickedId(removeTrigger)),
+                    }),
+                  );
+                }),
+              ),
             ),
             (a) => a.join(""),
           ),
         )}
       </div>`);
-    t.value(user);
+    t.event(transport);
 
     return () => {
       dc.destroy();
       articlesSrc.destroy();
-      transport.destroy();
+      backendTransportInstance.destroy();
       t.destroy();
     };
-  };
+  });
 }
