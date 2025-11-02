@@ -8,21 +8,21 @@ import {
 } from "silentium";
 import { First, Template } from "silentium-components";
 import { Elements } from "silentium-web-api";
-import { ClassName } from "../modules/ClassName";
-import { Clicked } from "../modules/Clicked";
-import { Id } from "../modules/Id";
-import { urlSrc } from "../store";
+import { ClassName } from "@/modules/ClassName";
+import { Clicked } from "@/modules/Clicked";
+import { Id } from "@/modules/Id";
+import { urlSrc } from "@/store";
 
 export function Link(
-  linkUrlSrc: EventType<string>,
-  textSrc: EventType<string>,
-  classSrc: EventType<string> = Of(""),
-): EventType<string> {
-  return Event((transport) => {
+  $linkUrl: EventType<string>,
+  $text: EventType<string>,
+  $class: EventType<string> = Of(""),
+) {
+  return Event<string>((transport) => {
     const $id = Shared(Id());
-    const $url = Primitive(linkUrlSrc);
+    const $url = Primitive($linkUrl);
 
-    Clicked(First(Elements(ClassName($id)))).event(
+    const clicked = Clicked(First(Elements(ClassName($id)))).event(
       Transport((e: Event) => {
         e.preventDefault();
         urlSrc.use($url.primitive() as string);
@@ -32,12 +32,16 @@ export function Link(
     const t = Template();
     t.template(
       `<a
-        href="${t.var(linkUrlSrc)}"
-        class="${t.var($id)} ${t.var(classSrc)}"
+        href="${t.var($linkUrl)}"
+        class="${t.var($id)} ${t.var($class)}"
       >
-        ${t.var(textSrc)}
+        ${t.var($text)}
       </a>`,
     );
     t.event(transport);
+
+    return () => {
+      clicked.destroy();
+    };
   });
 }

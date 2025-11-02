@@ -1,4 +1,4 @@
-import { type EventType, Of } from "silentium";
+import { Event, type EventType, Of } from "silentium";
 import { Template } from "silentium-components";
 import { Link } from "../components/Link";
 import { i18n } from "../store";
@@ -6,8 +6,8 @@ import { Lang } from "./Lang";
 import { logoSrc } from "./Logo";
 
 export function Header(): EventType<string> {
-  return (user) => {
-    const t = Template();
+  return Event((transport) => {
+    const t = Template().event(transport);
     t.template(
       `<header class="mb-2 flex justify-between py-2 gap-2 min-h-10 flex-wrap items-center">
           ${t.var(logoSrc)}
@@ -19,6 +19,5 @@ export function Header(): EventType<string> {
           </nav>
         </header>`,
     );
-    t.value(user);
-  };
+  });
 }

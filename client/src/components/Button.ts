@@ -19,9 +19,9 @@ export function Button(
   clickTransport: TransportType = Void(),
 ): EventType<string> {
   return Event((transport) => {
-    const idSrc = Shared(Id());
+    const $id = Shared(Id());
 
-    const clicked = Clicked(First(Elements(ClassName(idSrc)))).event(
+    const clicked = Clicked(First(Elements(ClassName($id)))).event(
       Transport((e) => {
         e.preventDefault();
         clickTransport.use(e);
@@ -30,7 +30,7 @@ export function Button(
 
     const t = Template().event(transport);
     t.template(
-      `<button class="${t.var(idSrc)} ${t.var($class)} cursor-pointer">
+      `<button class="${t.var($id)} ${t.var($class)} cursor-pointer">
         ${t.var($label)}
       </button>`,
     );

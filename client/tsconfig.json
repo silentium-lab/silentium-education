@@ -11,6 +11,7 @@
     "noImplicitAny": true,
     "useUnknownInCatchVariables": false,
     "inlineSourceMap": true,
+    "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]

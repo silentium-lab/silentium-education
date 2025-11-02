@@ -56,7 +56,7 @@ export function Configuration(): EventType<string> {
                 Пароль
                 <input class="${t.var(Input($password))} border-1 p-2 rounded-sm w-full" />
             </div>
-            ${t.var(Button(Of("Сохранить"), Of("btn"), $saved.use))}
+            ${t.var(Button(Of("Сохранить"), Of("btn"), $saved))}
 		</div>`);
     t.event(transport);
 
