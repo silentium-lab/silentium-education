@@ -1,9 +1,12 @@
-import type { EventType } from "silentium";
+import { Event, type EventType } from "silentium";
+import { Template } from "silentium-components";
 import { titleSrc } from "../store";
 
 export function NotFound(): EventType<string> {
-  return function NotFound(u) {
+  return Event((transport) => {
     titleSrc.use("Не найдено");
-    u("<div>Not found</div>");
-  };
+    const t = Template();
+    t.template("<div>Not found</div>");
+    t.event(transport);
+  });
 }

@@ -7,7 +7,6 @@ import {
   Of,
   Shared,
   TransportDestroyable,
-  type EventType,
 } from "silentium";
 import {
   Branch,
@@ -31,8 +30,8 @@ import { i18n, titleSrc, urlSrc } from "../../store";
 import type { ArticleType } from "../../types/ArticleType";
 import { ArticleForm } from "./ArticleForm";
 
-export function ArticleEdit(): EventType<string> {
-  return Event((transport) => {
+export function ArticleEdit() {
+  return Event<string>((transport) => {
     const $title = i18n.tr("Article");
     $title.event(titleSrc);
 

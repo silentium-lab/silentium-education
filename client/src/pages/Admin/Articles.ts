@@ -2,18 +2,17 @@ import {
   Any,
   Applied,
   Chain,
-  ConstructorDestroyable,
   DestroyContainer,
-  type EventType,
   Event,
   LateShared,
   Map,
   Of,
   Once,
   Shared,
+  Transport,
   TransportDestroyable,
   TransportEvent,
-  Transport,
+  type EventType,
 } from "silentium";
 import {
   Constant,
@@ -64,17 +63,15 @@ export function Articles(): EventType<string> {
                   removeTrigger.event(Transport(console.log));
                   const localArticle = Detached<ArticleType>(article);
                   const removedSrc = Shared(
-                    dc.add(
-                      backendCrudSrc
-                        .ofModelName(Of("private/articles"))
-                        .deleted(
-                          backendTransportInstance.get,
-                          Shot(
-                            Once(Path(localArticle, Of("_id"))),
-                            Once(removeTrigger.event),
-                          ),
+                    backendCrudSrc
+                      .ofModelName(Of("private/articles"))
+                      .deleted(
+                        backendTransportInstance,
+                        Shot(
+                          Once(Path(localArticle, Of("_id"))),
+                          Once(removeTrigger),
                         ),
-                    ),
+                      ),
                   );
                   Constant({}, Once(removedSrc)).event(articlesSearchSrc);
 
@@ -88,9 +85,9 @@ export function Articles(): EventType<string> {
 
                   return Template(
                     Of(`<div class="flex gap-2">
-                    $link
-                    <div class="cursor-pointer $removeId">&times;</div>
-                  </div>`),
+                      $link
+                      <div class="cursor-pointer $removeId">&times;</div>
+                    </div>`),
                     RecordOf({
                       $link: Link(
                         Template(

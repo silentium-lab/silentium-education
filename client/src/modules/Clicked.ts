@@ -3,9 +3,9 @@ import { type EventType, FromEvent, Of } from "silentium";
 /**
  * DOM element click even
  */
-export function Clicked(elSrc: EventType<HTMLElement>) {
-  return FromEvent(
-    elSrc,
+export function Clicked($el: EventType<HTMLElement>) {
+  return FromEvent<Event>(
+    $el,
     Of("click"),
     Of("addEventListener"),
     Of("removeEventListener"),

@@ -11,8 +11,8 @@ import { Configuration } from "./Configuration";
 /**
  * Ensure everything configured
  */
-export function AdminConfigGuard($child: EventType<string>): EventType<string> {
-  return Event((transport) => {
+export function AdminConfigGuard($child: EventType<string>) {
+  return Event<string>((transport) => {
     const backendTransportInstance = TransportDestroyable(backendTransport);
     const r = BranchLazy(
       hasSettingsSrc,

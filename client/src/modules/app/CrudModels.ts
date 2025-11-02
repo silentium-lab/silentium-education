@@ -1,9 +1,4 @@
-import {
-  type ConstructorType,
-  type EventType,
-  Of,
-  TransportType,
-} from "silentium";
+import { type EventType, Of, TransportType } from "silentium";
 import { FromJson, Path, RecordOf, Template } from "silentium-components";
 
 class ModuleCrudModels {
@@ -134,12 +129,12 @@ class ModuleCrudModels {
   }
 
   public deleted(
-    modelTransport: ConstructorType<any, any>,
+    modelTransport: TransportType<any, any>,
     idSrc: EventType<string>,
   ) {
     return Path(
       FromJson(
-        modelTransport(
+        modelTransport.use(
           RecordOf({
             url: Template(
               Of("/$1/$2/"),

@@ -1,12 +1,12 @@
-import { type EventType, Of } from "silentium";
+import { Event, type EventType, Of } from "silentium";
 import { Template } from "silentium-components";
-import { Counter } from "../chunks/Counter";
-import { Link } from "../components/Link";
-import { i18n, titleSrc } from "../store";
+import { Counter } from "@/chunks/Counter";
+import { Link } from "@/components/Link";
+import { i18n, titleSrc } from "@/store";
 
 export function Home(): EventType<string> {
-  return function HomeEvent(u) {
-    i18n.tr("home")(titleSrc.use);
+  return Event((transport) => {
+    i18n.tr("home").event(titleSrc);
     const t = Template();
     t.template(
       `<section class="article">
@@ -19,9 +19,9 @@ export function Home(): EventType<string> {
 			</div>
 		</section>`,
     );
-    t.value(u);
+    t.event(transport);
     return function homeDestroy() {
       t.destroy();
     };
-  };
+  });
 }

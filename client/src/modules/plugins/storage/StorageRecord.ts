@@ -10,17 +10,17 @@ import {
  * Data representation from Storage API
  */
 export function StorageRecord<T = string>(
-  nameSrc: EventType<string>,
+  $name: EventType<string>,
   defaultValue?: unknown,
   storageType: "localStorage" | "sessionStorage" = "localStorage",
 ): SourceType<T> {
-  const nameSync = Primitive(nameSrc);
+  const nameSync = Primitive($name);
   const resultSrc = LateShared<T>();
   const result: SourceType<T> = {
     event(u) {
       resultSrc.event(u);
       const storage = window[storageType];
-      nameSrc.event(
+      $name.event(
         Transport((name) => {
           window.addEventListener("storage", (e) => {
             if (e.storageArea === storage) {

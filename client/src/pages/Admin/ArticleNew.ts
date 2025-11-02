@@ -1,7 +1,6 @@
 import {
   Any,
   Event,
-  type EventType,
   LateShared,
   Of,
   Shared,
@@ -28,8 +27,8 @@ import { Link } from "../../components/Link";
 import { i18n, titleSrc, urlSrc } from "../../store";
 import { ArticleForm } from "./ArticleForm";
 
-export function ArticleNew(): EventType<string> {
-  return Event((transport) => {
+export function ArticleNew() {
+  return Event<string>((transport) => {
     const title = i18n.tr("Create Article");
     title.event(titleSrc);
 

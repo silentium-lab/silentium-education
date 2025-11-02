@@ -1,12 +1,12 @@
-import { type EventType, Of } from "silentium";
+import { type EventType, Of, Event } from "silentium";
 import { Template } from "silentium-components";
-import { LinkExternal } from "../components/LinkExternal";
-import { i18n } from "../store";
-import { logoSrc } from "./Logo";
+import { LinkExternal } from "@/components/LinkExternal";
+import { i18n } from "@/store";
+import { logoSrc } from "@/chunks/Logo";
 
 export function Footer(): EventType<string> {
-  return (user) => {
-    const t = Template();
+  return Event((transport) => {
+    const t = Template().event(transport);
     t.template(
       `<footer class="mt-auto py-2 flex justify-between items-center gap-2 flex-wrap">
           <span>
@@ -19,6 +19,5 @@ export function Footer(): EventType<string> {
           ${t.var(logoSrc)}
         </footer>`,
     );
-    t.value(user);
-  };
+  });
 }

@@ -1,10 +1,10 @@
-import { Event, type EventType, Of, type SourceType } from "silentium";
+import { Event, Of, type SourceType } from "silentium";
 import { Part, Template } from "silentium-components";
 import { Input } from "../../components/Input";
 import type { ArticleType } from "../../types/ArticleType";
 
-export function ArticleForm($form: SourceType<ArticleType>): EventType<string> {
-  return Event((transport) => {
+export function ArticleForm($form: SourceType<ArticleType>) {
+  return Event<string>((transport) => {
     const formModels = {
       title: Part<string>($form, Of("title")),
       content: Part<string>($form, Of("content")),

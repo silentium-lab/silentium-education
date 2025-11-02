@@ -1,9 +1,11 @@
 import {
-  ConstructorDestroyable,
+  Event,
   EventType,
   LateShared,
   Of,
   Shared,
+  Transport,
+  TransportDestroyable,
 } from "silentium";
 import { RecordOf, Shot, Template, ToJson } from "silentium-components";
 import { backendCrudSrc, backendTransport } from "../../bootstrap";
@@ -15,28 +17,28 @@ import { i18n } from "../../store";
  * Configuration page
  */
 export function Configuration(): EventType<string> {
-  return (user) => {
+  return Event((transport) => {
     i18n.tr("Configuration");
 
-    const username = LateShared("");
-    const password = LateShared("");
-    const formSrc = RecordOf({
-      username: username.event,
-      password: password.event,
+    const $username = LateShared("");
+    const $password = LateShared("");
+    const $form = RecordOf({
+      username: $username,
+      password: $password,
     });
 
-    const savedSrc = LateShared();
+    const $saved = LateShared();
 
-    const savedFormSrc = Shot(formSrc, savedSrc.event);
+    const $savedForm = Shot($form, $saved);
 
-    const transport = ConstructorDestroyable(backendTransport);
-    const formUpdatedSrc = Shared(
+    const transportInstance = TransportDestroyable(backendTransport);
+    const $formUpdated = Shared(
       backendCrudSrc
         .ofModelName(Of("settings"))
-        .created(transport.get, ToJson(savedFormSrc)),
+        .created(transportInstance, ToJson($savedForm)),
     );
 
-    formUpdatedSrc.event(() => location.reload());
+    $formUpdated.event(Transport(() => location.reload()));
 
     const t = Template();
     t.template(`<div class="article">
@@ -48,19 +50,19 @@ export function Configuration(): EventType<string> {
             </p>
             <div class="mb-2">
                 Имя пользователя
-                <input class="${t.var(Input(username))} border-1 p-2 rounded-sm w-full" />
+                <input class="${t.var(Input($username))} border-1 p-2 rounded-sm w-full" />
             </div>
             <div class="mb-2">
                 Пароль
-                <input class="${t.var(Input(password))} border-1 p-2 rounded-sm w-full" />
+                <input class="${t.var(Input($password))} border-1 p-2 rounded-sm w-full" />
             </div>
-            ${t.var(Button(Of("Сохранить"), Of("btn"), savedSrc.use))}
+            ${t.var(Button(Of("Сохранить"), Of("btn"), $saved.use))}
 		</div>`);
-    t.value(user);
+    t.event(transport);
 
     return () => {
       t.destroy();
-      transport.destroy();
+      transportInstance.destroy();
     };
-  };
+  });
 }

@@ -1,9 +1,10 @@
 import {
+  Event,
   type EventType,
-  type EventUserType,
   Of,
-  On,
   Shared,
+  Transport,
+  TransportType,
   Void,
 } from "silentium";
 import { First, Template } from "silentium-components";
@@ -13,33 +14,30 @@ import { Clicked } from "../modules/Clicked";
 import { Id } from "../modules/Id";
 
 export function Button(
-  theLabel: EventType<string>,
-  theClass: EventType<string> = Of(""),
-  valueOwner: EventUserType = Void(),
+  $label: EventType<string>,
+  $class: EventType<string> = Of(""),
+  clickTransport: TransportType = Void(),
 ): EventType<string> {
-  return (u) => {
-    const idSrc = Shared(Id()).event;
+  return Event((transport) => {
+    const idSrc = Shared(Id());
 
-    const clickDestructor = On(
-      Clicked(First(Elements(ClassName(idSrc)))),
-      (e) => {
+    const clicked = Clicked(First(Elements(ClassName(idSrc)))).event(
+      Transport((e) => {
         e.preventDefault();
-        valueOwner(e);
-      },
+        clickTransport.use(e);
+      }),
     );
 
-    const t = Template();
+    const t = Template().event(transport);
     t.template(
-      `<button class="${t.var(idSrc)} ${t.var(theClass)} cursor-pointer">
-        ${t.var(theLabel)}
+      `<button class="${t.var(idSrc)} ${t.var($class)} cursor-pointer">
+        ${t.var($label)}
       </button>`,
     );
 
-    t.value(u);
-
     return () => {
-      clickDestructor?.();
+      clicked.destroy();
       t.destroy();
     };
-  };
+  });
 }

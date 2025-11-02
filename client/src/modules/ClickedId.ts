@@ -5,16 +5,15 @@ import { ClassName } from "../modules/ClassName";
 import { Id } from "../modules/Id";
 import { Clicked } from "./Clicked";
 
-export function ClickedId(clickSrc: SourceType<unknown>) {
+export function ClickedId($click: SourceType<unknown>) {
   return Event((transport) => {
-    const idSrc = Id();
+    const $id = Id();
+    const $el = First(Elements(ClassName($id)));
 
-    const elSrc = First(Elements(ClassName(idSrc)));
+    const d = Clicked($el);
+    d.event($click);
 
-    const d = Clicked(elSrc);
-    d.event(clickSrc);
-
-    idSrc.event(transport);
+    $id.event(transport);
 
     return () => {
       d.destroy();
