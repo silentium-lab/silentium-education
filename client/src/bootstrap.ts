@@ -31,8 +31,8 @@ const requestTransport = Transport<RPCType>((r) => {
       }),
     );
   }
-  const { baseUrl, url, method, credentials, headers, body, query } =
-    r.params ?? {};
+  const { baseUrl, credentials, headers, body, query } = r.params ?? {};
+  const [method, url] = r.method.split(".");
   let urlWithQuery: URL;
   try {
     urlWithQuery = new URL(

@@ -90,7 +90,7 @@ class ModuleCrudModels {
     return RPC(
       RecordOf({
         transport: Of("request"),
-        method: Concatenated([Of("create."), this.modelNameSrc]),
+        method: Concatenated([Of("post."), this.modelNameSrc]),
         params: RecordOf({
           body: formSrc,
         }),
