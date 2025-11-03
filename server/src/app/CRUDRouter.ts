@@ -62,7 +62,7 @@ export const CRUDRouter = (
       },
       {
         pattern: `^POST:${baseUrl}$`,
-        event: TransportEvent((o) => {
+        event: TransportEvent(() => {
           const error = Late();
           return ToJson(
             RecordOf({

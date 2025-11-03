@@ -33,16 +33,13 @@
     "lodash-es": "^4.17.21",
     "mustache": "^4.2.0",
     "silentium": "^0.0.123",
-    "silentium-components": "^0.0.74",
+    "silentium-components": "^0.0.76",
     "silentium-morphdom": "^0.0.11",
-    "silentium-web-api": "^0.0.26",
+    "silentium-web-api": "^0.0.27",
     "uuid": "^11.1.0"
   },
   "@parcel/transformer-js": {
     "inlineFS": false,
     "inlineEnvironment": false
-  },
-  "alias": {
-    "@": "./src"
   }
 }

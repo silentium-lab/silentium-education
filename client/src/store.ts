@@ -19,14 +19,14 @@ import { StorageRecord } from "./modules/plugins/storage/StorageRecord";
   );
 };
 
-export const langSrc = SharedSource(StorageRecord(Of("lang"), "ru"));
+export const $lang = SharedSource(StorageRecord(Of("lang"), "ru"));
 
-export const urlSrc = SharedSource(HistoryUrl());
+export const $url = SharedSource(HistoryUrl());
 
-export const titleSrc = DocumentTitle();
+export const $title = DocumentTitle();
 
-export const i18n = I18N(Memo(langSrc), Of(translations));
+export const i18n = I18N(Memo($lang), Of(translations));
 
-export const authenticatedSrc = LateShared(true);
+export const $authenticated = LateShared(true);
 
-export const errorSrc = LateShared();
+export const $error = LateShared();

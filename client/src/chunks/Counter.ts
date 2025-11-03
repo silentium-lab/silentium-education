@@ -8,7 +8,7 @@ export function Counter(): EventType<string> {
     const $clicked = LateShared();
     const $reset = LateShared();
 
-    const t = Template().event(transport);
+    const t = Template();
     t.template(
       `<div class="flex gap-1">
         ${t.var(
@@ -21,6 +21,7 @@ export function Counter(): EventType<string> {
         ${t.var(Button(Of("reset"), Of("btn"), $reset))}
       </div>`,
     );
+    t.event(transport);
 
     return () => {
       t.destroy();

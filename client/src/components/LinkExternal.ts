@@ -7,7 +7,7 @@ export function LinkExternal(
   $class: EventType<string> = Of(""),
 ): EventType<string> {
   return Event((transport) => {
-    const t = Template().event(transport);
+    const t = Template();
     t.template(
       `<a
 			href="${t.var($url)}"
@@ -17,5 +17,6 @@ export function LinkExternal(
 			${t.var($text)}
 		</a>`,
     );
+    t.event(transport);
   });
 }

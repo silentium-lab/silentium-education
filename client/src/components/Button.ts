@@ -28,12 +28,13 @@ export function Button(
       }),
     );
 
-    const t = Template().event(transport);
+    const t = Template();
     t.template(
       `<button class="${t.var($id)} ${t.var($class)} cursor-pointer">
         ${t.var($label)}
       </button>`,
     );
+    t.event(transport);
 
     return () => {
       clicked.destroy();

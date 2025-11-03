@@ -18,29 +18,24 @@ import {
   Template,
   ToJson,
 } from "silentium-components";
-import {
-  backendCrudSrc,
-  backendTransport,
-  notificationSrc,
-} from "../../bootstrap";
+import { $backendCrud, $notification, backendTransport } from "../../bootstrap";
 import { Button } from "../../components/Button";
 import { Link } from "../../components/Link";
 import { SplitPart } from "../../modules/string/SplitPart";
-import { i18n, titleSrc, urlSrc } from "../../store";
+import { $title, $url, i18n } from "../../store";
 import type { ArticleType } from "../../types/ArticleType";
 import { ArticleForm } from "./ArticleForm";
 
 export function ArticleEdit() {
   return Event<string>((transport) => {
-    const $title = i18n.tr("Article");
-    $title.event(titleSrc);
+    i18n.tr("Article").event($title);
 
     const backendTransportInstance = TransportDestroyable(backendTransport);
 
-    const $localUrl = Detached(urlSrc);
+    const $localUrl = Detached($url);
     const $id = SplitPart($localUrl, Of("/"), Of(3));
     const $article = Shared(
-      backendCrudSrc
+      $backendCrud
         .ofModelName(Of("private/articles"))
         .entity(backendTransportInstance, $id),
     );
@@ -48,7 +43,7 @@ export function ArticleEdit() {
     const $form = LateShared<ArticleType>();
 
     const $formUpdated = Shared(
-      backendCrudSrc
+      $backendCrud
         .ofModelName(Of("private/articles"))
         .updated(backendTransportInstance, $id, ToJson(Shot($form, $clicked))),
     );
@@ -63,7 +58,7 @@ export function ArticleEdit() {
         content: "Успешно изменено",
       } as const,
       $formUpdated,
-    ).event(notificationSrc);
+    ).event($notification);
 
     Applied(
       Any($article, Task($formUpdated)),
@@ -85,7 +80,7 @@ export function ArticleEdit() {
       Button(
         Branch(formUpdateLoadingSrc, Of("Сохраняем..."), Of("Сохранить")),
         Of("btn"),
-        $clicked.use,
+        $clicked,
       ),
     )}
       </div>`);

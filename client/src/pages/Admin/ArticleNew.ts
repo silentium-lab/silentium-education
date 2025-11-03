@@ -17,20 +17,16 @@ import {
   Template,
   ToJson,
 } from "silentium-components";
-import {
-  backendCrudSrc,
-  backendTransport,
-  notificationSrc,
-} from "../../bootstrap";
+import { $backendCrud, backendTransport, $notification } from "../../bootstrap";
 import { Button } from "../../components/Button";
 import { Link } from "../../components/Link";
-import { i18n, titleSrc, urlSrc } from "../../store";
+import { i18n, $title, $url } from "../../store";
 import { ArticleForm } from "./ArticleForm";
 
 export function ArticleNew() {
   return Event<string>((transport) => {
     const title = i18n.tr("Create Article");
-    title.event(titleSrc);
+    title.event($title);
 
     const clickedSrc = LateShared();
     const formSrc = LateShared({
@@ -40,7 +36,7 @@ export function ArticleNew() {
 
     const backendTransportInstance = TransportDestroyable(backendTransport);
     const formUpdatedSrc = Shared(
-      backendCrudSrc
+      $backendCrud
         .ofModelName(Of("private/articles"))
         .created(backendTransportInstance, ToJson(Shot(formSrc, clickedSrc))),
     );
@@ -58,7 +54,7 @@ export function ArticleNew() {
         }),
       ),
       900,
-    ).event(urlSrc);
+    ).event($url);
 
     Constant(
       {
@@ -66,7 +62,7 @@ export function ArticleNew() {
         content: "Успешно создано",
       } as const,
       formUpdatedSrc,
-    ).event(notificationSrc);
+    ).event($notification);
 
     const t = Template();
     t.template(`<div class="article">
@@ -77,7 +73,7 @@ export function ArticleNew() {
       Button(
         Branch(formUpdateLoadingSrc, Of("Сохраняем..."), Of("Сохранить")),
         Of("btn"),
-        clickedSrc.use,
+        clickedSrc,
       ),
     )}
       </div>`);

@@ -6,7 +6,7 @@ import { logoSrc } from "@/chunks/Logo";
 
 export function Footer(): EventType<string> {
   return Event((transport) => {
-    const t = Template().event(transport);
+    const t = Template();
     t.template(
       `<footer class="mt-auto py-2 flex justify-between items-center gap-2 flex-wrap">
           <span>
@@ -19,5 +19,6 @@ export function Footer(): EventType<string> {
           ${t.var(logoSrc)}
         </footer>`,
     );
+    t.event(transport);
   });
 }

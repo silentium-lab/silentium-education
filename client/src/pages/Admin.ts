@@ -1,6 +1,6 @@
 import { Event, type EventType, Of, TransportEvent } from "silentium";
 import { Detached, Router } from "silentium-components";
-import { titleSrc, urlSrc } from "../store";
+import { $title, $url } from "../store";
 import { ArticleEdit } from "./Admin/ArticleEdit";
 import { ArticleNew } from "./Admin/ArticleNew";
 import { Articles } from "./Admin/Articles";
@@ -8,9 +8,9 @@ import { Auth } from "./Admin/Auth";
 
 export function Admin(): EventType<string> {
   return Event((user) => {
-    titleSrc.use("Админ панель");
+    $title.use("Админ панель");
 
-    const $localUrl = Detached(urlSrc);
+    const $localUrl = Detached($url);
 
     const rd = Router(
       $localUrl,

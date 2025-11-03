@@ -8,7 +8,7 @@ import {
   TransportDestroyable,
 } from "silentium";
 import { RecordOf, Shot, Template, ToJson } from "silentium-components";
-import { backendCrudSrc, backendTransport } from "../../bootstrap";
+import { $backendCrud, backendTransport } from "../../bootstrap";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { i18n } from "../../store";
@@ -33,7 +33,7 @@ export function Configuration(): EventType<string> {
 
     const transportInstance = TransportDestroyable(backendTransport);
     const $formUpdated = Shared(
-      backendCrudSrc
+      $backendCrud
         .ofModelName(Of("settings"))
         .created(transportInstance, ToJson($savedForm)),
     );

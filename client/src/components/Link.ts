@@ -11,7 +11,7 @@ import { Elements } from "silentium-web-api";
 import { ClassName } from "@/modules/ClassName";
 import { Clicked } from "@/modules/Clicked";
 import { Id } from "@/modules/Id";
-import { urlSrc } from "@/store";
+import { $url } from "@/store";
 
 export function Link(
   $linkUrl: EventType<string>,
@@ -20,12 +20,12 @@ export function Link(
 ) {
   return Event<string>((transport) => {
     const $id = Shared(Id());
-    const $url = Primitive($linkUrl);
+    const url = Primitive($linkUrl);
 
     const clicked = Clicked(First(Elements(ClassName($id)))).event(
       Transport((e: Event) => {
         e.preventDefault();
-        urlSrc.use($url.primitive() as string);
+        $url.use(url.primitive() as string);
       }),
     );
 

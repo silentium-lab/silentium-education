@@ -5,7 +5,7 @@ import {
   type EventType,
 } from "silentium";
 import { BranchLazy } from "silentium-components";
-import { backendTransport, hasSettingsSrc } from "../../bootstrap";
+import { backendTransport, $hasSettings } from "../../bootstrap";
 import { Configuration } from "./Configuration";
 
 /**
@@ -15,7 +15,7 @@ export function AdminConfigGuard($child: EventType<string>) {
   return Event<string>((transport) => {
     const backendTransportInstance = TransportDestroyable(backendTransport);
     const r = BranchLazy(
-      hasSettingsSrc,
+      $hasSettings,
       TransportEvent(() => $child),
       TransportEvent(() => Configuration()),
     );

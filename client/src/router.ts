@@ -7,11 +7,11 @@ import { Blog } from "./pages/Blog";
 import { Documentation } from "./pages/Documentation";
 import { Home } from "./pages/Home";
 import { NotFound } from "./pages/NotFound";
-import { urlSrc } from "./store";
+import { $url } from "./store";
 
 export const routerSrc = Shared(
   Router(
-    urlSrc,
+    $url,
     Of([
       {
         pattern: "^/?$",

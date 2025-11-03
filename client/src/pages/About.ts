@@ -1,12 +1,12 @@
 import { Event, type EventType } from "silentium";
 import { Template } from "silentium-components";
 import { Counter } from "@/chunks/Counter";
-import { i18n, titleSrc } from "@/store";
+import { i18n, $title } from "@/store";
 
 export function About(): EventType<string> {
   return Event((transport) => {
     const title = i18n.tr("about");
-    title.event(titleSrc);
+    title.event($title);
     const t = Template();
     t.template(
       `<section class="article">

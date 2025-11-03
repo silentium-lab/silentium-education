@@ -4,18 +4,21 @@ import {
   LateShared,
   Of,
   Shared,
+  Transport,
   TransportEvent,
   TransportType,
 } from "silentium";
 import { settingsModels } from "./models/settingsModels";
 import { CrudModels } from "./modules/app/CrudModels";
-import { errorSrc } from "./store";
+import { $error } from "./store";
 import { FetchedData } from "silentium-web-api";
 
-export const backendTransport = TransportEvent<any, any>(([r, e, a]) =>
-  FetchedData(
+const $abort = LateShared();
+
+export const backendTransport = TransportEvent<any, any>((config) => {
+  return FetchedData(
     Applied(
-      r as EventType<Record<string, unknown>>,
+      config as EventType<Record<string, unknown>>,
       (r: Record<string, unknown>) => {
         return {
           baseUrl: "http://localhost:4000",
@@ -26,17 +29,17 @@ export const backendTransport = TransportEvent<any, any>(([r, e, a]) =>
         };
       },
     ),
-    (e as TransportType) ?? errorSrc,
-    a as EventType,
-  ),
-) as unknown as TransportType;
+    $error,
+    $abort,
+  );
+}) as unknown as TransportType;
 
-export const backendCrudSrc = CrudModels(Of("data"));
-export const notificationSrc = LateShared<{
+export const $backendCrud = CrudModels(Of("data"));
+export const $notification = LateShared<{
   type: "error" | "success" | "info";
   content: string;
 }>();
 
-export const hasSettingsSrc = Shared(
+export const $hasSettings = Shared(
   settingsModels.hasSettings(backendTransport),
 );
