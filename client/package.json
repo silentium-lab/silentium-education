@@ -32,10 +32,10 @@
   "dependencies": {
     "lodash-es": "^4.17.21",
     "mustache": "^4.2.0",
-    "silentium": "^0.0.121",
-    "silentium-components": "^0.0.73",
-    "silentium-morphdom": "^0.0.10",
-    "silentium-web-api": "^0.0.25",
+    "silentium": "^0.0.123",
+    "silentium-components": "^0.0.74",
+    "silentium-morphdom": "^0.0.11",
+    "silentium-web-api": "^0.0.26",
     "uuid": "^11.1.0"
   },
   "@parcel/transformer-js": {

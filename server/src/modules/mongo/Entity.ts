@@ -1,5 +1,5 @@
 import { Db, ObjectId } from "mongodb";
-import { EventType, Primitive } from "silentium";
+import { Event, EventType, Primitive, Transport } from "silentium";
 import { UrlId } from "../string/UrlId";
 
 export function Entity<T>(
@@ -7,18 +7,20 @@ export function Entity<T>(
   $url: EventType<string>,
   collectionName: string,
 ): EventType<T> {
-  return (user) => {
-    $db(async (db) => {
-      try {
-        const idSync = Primitive(UrlId($url));
-        const collection = db.collection(collectionName);
-        const one = await collection.findOne({
-          _id: new ObjectId(idSync.primitiveWithException()),
-        });
-        user(one as T);
-      } catch {
-        throw new Error("Entity not found");
-      }
-    });
-  };
+  return Event((transport) => {
+    $db.event(
+      Transport(async (db) => {
+        try {
+          const idSync = Primitive(UrlId($url));
+          const collection = db.collection(collectionName);
+          const one = await collection.findOne({
+            _id: new ObjectId(idSync.primitiveWithException()),
+          });
+          transport.use(one as T);
+        } catch {
+          throw new Error("Entity not found");
+        }
+      }),
+    );
+  });
 }

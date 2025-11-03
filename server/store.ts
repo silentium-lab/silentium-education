@@ -1,3 +1,3 @@
-import { Of } from "silentium";
+import { Of, TransportEvent } from "silentium";
 
-export const NotFoundSrc = () => Of('{"message": "not found"}');
+export const NotFoundSrc = TransportEvent(() => Of('{"message": "not found"}'));

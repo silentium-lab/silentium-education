@@ -1,5 +1,5 @@
 import type { IncomingMessage } from "node:http";
-import { EventType, Of } from "silentium";
+import { EventType, Of, TransportEvent } from "silentium";
 import { Detached, Router, Tick } from "silentium-components";
 import { Query } from "./src/modules/string/Query";
 import { Auth } from "./src/routes/Auth";
@@ -16,19 +16,19 @@ export const router = (req: EventType<IncomingMessage>) => {
       Of([
         {
           pattern: "^GET:/?$",
-          template: Health,
+          event: TransportEvent(Health),
         },
         {
           pattern: "^GET:/auth$",
-          template: Auth,
+          event: TransportEvent(Auth),
         },
         {
           pattern: "^GET:/configured$",
-          template: Configured,
+          event: TransportEvent(Configured),
         },
         {
           pattern: "^.+:/private.+$",
-          template: () => Private(subReq),
+          event: TransportEvent(() => Private(subReq)),
         },
       ]),
       NotFoundSrc,

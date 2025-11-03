@@ -1,6 +1,14 @@
 import { IncomingMessage } from "http";
 import { Db } from "mongodb";
-import { Any, Catch, ConstructorType, EventType, Late, Of } from "silentium";
+import {
+  Any,
+  Catch,
+  ConstructorType,
+  EventType,
+  Late,
+  Of,
+  TransportEvent,
+} from "silentium";
 import { Detached, RecordOf, Router, ToJson } from "silentium-components";
 import { NotFoundSrc } from "../../store";
 import { Created } from "../modules/mongo/Created";
@@ -23,86 +31,86 @@ export const CRUDRouter = (
     Of([
       {
         pattern: `^GET:${baseUrl}$`,
-        template: (): EventType<string> => (o) => {
+        event: TransportEvent(() => {
           const error = Late();
-          ToJson(
+          return ToJson(
             RecordOf({
               data: Any(
-                Catch(List(dbTransport(), collectionName), error.use),
+                Catch(List(dbTransport(), collectionName), error),
                 Of(null),
               ),
-              error: Any(error.event, Of(null)),
+              error: Any(error, Of(null)),
             }),
-          )(o);
-        },
+          );
+        }),
       },
       {
         pattern: `^GET:${baseUrl}/.+/$`,
-        template: (): EventType<string> => (o) => {
+        event: TransportEvent(() => {
           const $url = UrlFromMessage(detachedReq);
           const error = Late();
-          ToJson(
+          return ToJson(
             RecordOf({
               data: Any(
-                Catch(Entity(dbTransport(), $url, collectionName), error.use),
+                Catch(Entity(dbTransport(), $url, collectionName), error),
                 Of(null),
               ),
-              error: Any(error.event, Of(null)),
+              error: Any(error, Of(null)),
             }),
-          )(o);
-        },
+          );
+        }),
       },
       {
         pattern: `^POST:${baseUrl}$`,
-        template: (): EventType<string> => (o) => {
+        event: TransportEvent((o) => {
           const error = Late();
-          ToJson(
+          return ToJson(
             RecordOf({
               data: Any(
                 Catch(
                   Created(dbTransport(), detachedReq, collectionName),
-                  error.use,
+                  error,
                 ),
                 Of(null),
               ),
-              error: Any(error.event, Of(null)),
+              error: Any(error, Of(null)),
             }),
-          )(o);
-        },
+          );
+        }),
       },
       {
         pattern: `^PUT:${baseUrl}/.+/$`,
-        template: (): EventType<string> => (o) => {
+        event: TransportEvent(() => {
           const error = Late();
-          ToJson(
+          return ToJson(
             RecordOf({
               data: Any(
                 Catch(
                   Updated(dbTransport(), detachedReq, collectionName),
-                  error.use,
+                  error,
                 ),
                 Of(null),
               ),
-              error: Any(error.event, Of(null)),
+              error: Any(error, Of(null)),
             }),
-          )(o);
-        },
+          );
+        }),
       },
       {
         pattern: `^DELETE:${baseUrl}/.+/$`,
-        template: (): EventType<string> => (o) => {
+        event: TransportEvent(() => {
           const error = Late();
           const $url = UrlFromMessage(detachedReq);
-          ToJson(
+          return ToJson(
             RecordOf({
               data: Any(
-                Catch(Removed(dbTransport(), $url, collectionName), error.use),
+                Catch(Removed(dbTransport(), $url, collectionName), error),
                 Of(null),
               ),
-              error: Any(error.event, Of(null)),
+              error: Any(error, Of(null)),
             }),
-          )(o);
-        },
+          );
+        }),
       },
     ]),
     NotFoundSrc,

@@ -12,5 +12,5 @@ export const mongoTransport = () => {
     dbSrc.use(db);
   });
 
-  return dbSrc.event;
+  return dbSrc;
 };
