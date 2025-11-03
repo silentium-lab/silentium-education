@@ -1,12 +1,24 @@
 import { Button } from "@/components/Button";
-import { Applied, Event, EventType, LateShared, Of } from "silentium";
+import { Applied, Event, LateShared, Of, Transport } from "silentium";
 import { Concatenated, Template } from "silentium-components";
 
-export function Counter(): EventType<string> {
-  return Event((transport) => {
+export function Counter() {
+  return Event<string>((transport) => {
     const $count = LateShared(1);
     const $clicked = LateShared();
     const $reset = LateShared();
+
+    $clicked.event(
+      Transport(() => {
+        $count.use($count.value().primitiveWithException() + 1);
+      }),
+    );
+
+    $reset.event(
+      Transport(() => {
+        $count.use(1);
+      }),
+    );
 
     const t = Template();
     t.template(

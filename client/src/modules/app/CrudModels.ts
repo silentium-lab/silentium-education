@@ -1,5 +1,11 @@
-import { type EventType, Of, TransportType } from "silentium";
-import { FromJson, Path, RecordOf, Template } from "silentium-components";
+import { type EventType, Of, RPC, TransportType } from "silentium";
+import {
+  Concatenated,
+  FromJson,
+  Path,
+  RecordOf,
+  Template,
+} from "silentium-components";
 
 class ModuleCrudModels {
   public constructor(
@@ -80,26 +86,15 @@ class ModuleCrudModels {
     );
   }
 
-  public created(
-    modelTransport: TransportType<any, any>,
-    formSrc: EventType<string>,
-  ): EventType<Record<string, unknown>> {
-    return Path(
-      FromJson(
-        modelTransport.use(
-          RecordOf({
-            url: Template(
-              Of("/$1"),
-              RecordOf({
-                $1: this.modelNameSrc,
-              }),
-            ),
-            method: Of("POST"),
-            body: formSrc,
-          }),
-        ),
-      ),
-      this.responsePathSrc,
+  public created(formSrc: EventType) {
+    return RPC(
+      RecordOf({
+        transport: Of("request"),
+        method: Concatenated([Of("create."), this.modelNameSrc]),
+        params: RecordOf({
+          body: formSrc,
+        }),
+      }),
     );
   }
 

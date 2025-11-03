@@ -1,14 +1,6 @@
-import {
-  Event,
-  EventType,
-  LateShared,
-  Of,
-  Shared,
-  Transport,
-  TransportDestroyable,
-} from "silentium";
-import { RecordOf, Shot, Template, ToJson } from "silentium-components";
-import { $backendCrud, backendTransport } from "../../bootstrap";
+import { Event, EventType, LateShared, Of, Transport } from "silentium";
+import { RecordOf, Shot, Template } from "silentium-components";
+import { $backendCrud } from "../../bootstrap";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { i18n } from "../../store";
@@ -28,17 +20,13 @@ export function Configuration(): EventType<string> {
     });
 
     const $saved = LateShared();
-
     const $savedForm = Shot($form, $saved);
 
-    const transportInstance = TransportDestroyable(backendTransport);
-    const $formUpdated = Shared(
-      $backendCrud
-        .ofModelName(Of("settings"))
-        .created(transportInstance, ToJson($savedForm)),
-    );
+    const $formUpdated = $backendCrud
+      .ofModelName(Of("settings"))
+      .created($savedForm);
 
-    $formUpdated.event(Transport(() => location.reload()));
+    $formUpdated.result().event(Transport(() => location.reload()));
 
     const t = Template();
     t.template(`<div class="article">
@@ -62,7 +50,6 @@ export function Configuration(): EventType<string> {
 
     return () => {
       t.destroy();
-      transportInstance.destroy();
     };
   });
 }
