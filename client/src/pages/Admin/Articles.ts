@@ -1,4 +1,10 @@
+import { $notification } from "@/bootstrap";
+import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
+import { ServerResponse } from "@/modules/app/ServerResponse";
+import { ClickedId } from "@/modules/ClickedId";
+import { $title, i18n } from "@/store";
+import type { ArticleType } from "@/types/ArticleType";
 import {
   Any,
   Applied,
@@ -22,20 +28,17 @@ import {
   Shot,
   Template,
 } from "silentium-components";
-import { $notification } from "@/bootstrap";
-import { Link } from "@/components/Link";
-import { ClickedId } from "@/modules/ClickedId";
-import { $title, i18n } from "@/store";
-import type { ArticleType } from "@/types/ArticleType";
 
 export function Articles(): EventType<string> {
   return Event((transport) => {
     const title = i18n.tr("Articles");
     title.event($title);
 
-    const articlesSearchSrc = LateShared({});
-    const articlesSrc = Shared(
-      CRUD(Of("private/articles")).list(articlesSearchSrc).result(),
+    const $articlesSearch = LateShared({});
+    const $articles = Shared(
+      ServerResponse(
+        CRUD(Of("private/articles")).list($articlesSearch).result(),
+      ),
     );
 
     const dc = DestroyContainer();
@@ -47,9 +50,9 @@ export function Articles(): EventType<string> {
         ${t.var(
           Applied(
             Any<any>(
-              Chain(articlesSearchSrc, Of([])),
+              Chain($articlesSearch, Of([])),
               Map(
-                articlesSrc,
+                $articles,
                 TransportEvent((article) => {
                   const removeTrigger = LateShared();
                   removeTrigger.event(Transport(console.log));
@@ -64,7 +67,7 @@ export function Articles(): EventType<string> {
                       )
                       .result(),
                   );
-                  Constant({}, Once(removedSrc)).event(articlesSearchSrc);
+                  Constant({}, Once(removedSrc)).event($articlesSearch);
 
                   Constant(
                     {
@@ -102,7 +105,7 @@ export function Articles(): EventType<string> {
 
     return () => {
       dc.destroy();
-      articlesSrc.destroy();
+      $articles.destroy();
       t.destroy();
     };
   });
