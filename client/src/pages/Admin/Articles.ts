@@ -1,4 +1,4 @@
-import { CRUD } from "../../modules/app/CRUD";
+import { CRUD } from "@/modules/app/CRUD";
 import {
   Any,
   Applied,
@@ -22,11 +22,11 @@ import {
   Shot,
   Template,
 } from "silentium-components";
-import { $notification } from "../../bootstrap";
-import { Link } from "../../components/Link";
-import { ClickedId } from "../../modules/ClickedId";
-import { $title, i18n } from "../../store";
-import type { ArticleType } from "../../types/ArticleType";
+import { $notification } from "@/bootstrap";
+import { Link } from "@/components/Link";
+import { ClickedId } from "@/modules/ClickedId";
+import { $title, i18n } from "@/store";
+import type { ArticleType } from "@/types/ArticleType";
 
 export function Articles(): EventType<string> {
   return Event((transport) => {

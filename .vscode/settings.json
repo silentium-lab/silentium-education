@@ -1,6 +1,7 @@
 {
     "npm-scripts.showStartNotification": false,
     "conventionalCommits.scopes": [
-        "server"
+        "server",
+        "client"
     ]
 }
