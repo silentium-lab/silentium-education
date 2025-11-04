@@ -16,7 +16,6 @@ import {
   Of,
   Once,
   Shared,
-  Transport,
   TransportEvent,
   type EventType,
 } from "silentium";
@@ -28,6 +27,7 @@ import {
   Shot,
   Template,
 } from "silentium-components";
+import { Log } from "silentium-web-api";
 
 export function Articles(): EventType<string> {
   return Event((transport) => {
@@ -55,14 +55,14 @@ export function Articles(): EventType<string> {
                 $articles,
                 TransportEvent((article) => {
                   const removeTrigger = LateShared();
-                  removeTrigger.event(Transport(console.log));
+
                   const localArticle = Detached<ArticleType>(article);
                   const removedSrc = Shared(
                     CRUD(Of("private/articles"))
                       .deleted(
                         Shot(
                           Once(Path(localArticle, Of("_id"))),
-                          Once(removeTrigger),
+                          Once(removeTrigger.event(Log("removeTrigger"))),
                         ),
                       )
                       .result(),
