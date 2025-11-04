@@ -90,10 +90,7 @@ class CRUDImpl {
   /**
    * Updating an entity
    */
-  public updated<R = unknown>(
-    idSrc: EventType<string>,
-    formSrc: EventType<string>,
-  ) {
+  public updated<R = unknown>(idSrc: EventType<string>, formSrc: EventType) {
     return RPC<R>(
       RecordOf({
         transport: this.$transport,

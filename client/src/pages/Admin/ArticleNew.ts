@@ -1,11 +1,4 @@
-import {
-  Any,
-  Event,
-  LateShared,
-  Of,
-  Shared,
-  TransportDestroyable,
-} from "silentium";
+import { Any, Event, LateShared, Of, Shared } from "silentium";
 import {
   Branch,
   Constant,
@@ -15,13 +8,13 @@ import {
   Shot,
   Task,
   Template,
-  ToJson,
 } from "silentium-components";
-import { $backendCrud, backendTransport, $notification } from "../../bootstrap";
+import { $notification } from "../../bootstrap";
 import { Button } from "../../components/Button";
 import { Link } from "../../components/Link";
 import { i18n, $title, $url } from "../../store";
 import { ArticleForm } from "./ArticleForm";
+import { CRUD } from "@/modules/app/CRUD";
 
 export function ArticleNew() {
   return Event<string>((transport) => {
@@ -34,11 +27,8 @@ export function ArticleNew() {
       content: "",
     });
 
-    const backendTransportInstance = TransportDestroyable(backendTransport);
     const formUpdatedSrc = Shared(
-      $backendCrud
-        .ofModelName(Of("private/articles"))
-        .created(backendTransportInstance, ToJson(Shot(formSrc, clickedSrc))),
+      CRUD(Of("private/articles")).created(Shot(formSrc, clickedSrc)).result(),
     );
     const formUpdateLoadingSrc = Any(
       Loading(clickedSrc, formUpdatedSrc),
@@ -80,7 +70,6 @@ export function ArticleNew() {
     t.event(transport);
 
     return () => {
-      backendTransportInstance.destroy();
       t.destroy();
     };
   });

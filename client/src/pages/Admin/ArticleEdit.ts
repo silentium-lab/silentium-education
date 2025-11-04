@@ -1,13 +1,6 @@
+import { CRUD } from "@/modules/app/CRUD";
 import { omit, partialRight } from "lodash-es";
-import {
-  Any,
-  Applied,
-  Event,
-  LateShared,
-  Of,
-  Shared,
-  TransportDestroyable,
-} from "silentium";
+import { Any, Applied, Event, LateShared, Of, Shared } from "silentium";
 import {
   Branch,
   Constant,
@@ -16,9 +9,8 @@ import {
   Shot,
   Task,
   Template,
-  ToJson,
 } from "silentium-components";
-import { $backendCrud, $notification, backendTransport } from "../../bootstrap";
+import { $notification } from "../../bootstrap";
 import { Button } from "../../components/Button";
 import { Link } from "../../components/Link";
 import { SplitPart } from "../../modules/string/SplitPart";
@@ -30,22 +22,14 @@ export function ArticleEdit() {
   return Event<string>((transport) => {
     i18n.tr("Article").event($title);
 
-    const backendTransportInstance = TransportDestroyable(backendTransport);
-
     const $localUrl = Detached($url);
     const $id = SplitPart($localUrl, Of("/"), Of(3));
-    const $article = Shared(
-      $backendCrud
-        .ofModelName(Of("private/articles"))
-        .entity(backendTransportInstance, $id),
-    );
+    const $article = Shared(CRUD(Of("private/articles")).entity($id).result());
     const $clicked = LateShared();
     const $form = LateShared<ArticleType>();
 
     const $formUpdated = Shared(
-      $backendCrud
-        .ofModelName(Of("private/articles"))
-        .updated(backendTransportInstance, $id, ToJson(Shot($form, $clicked))),
+      CRUD(Of("private/articles")).updated($id, Shot($form, $clicked)).result(),
     );
     const formUpdateLoadingSrc = Any(
       Loading($clicked, $formUpdated),
@@ -87,7 +71,6 @@ export function ArticleEdit() {
     t.event(transport);
 
     return () => {
-      backendTransportInstance.destroy();
       t.destroy();
     };
   });

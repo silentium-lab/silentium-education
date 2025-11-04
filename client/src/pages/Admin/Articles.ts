@@ -1,3 +1,4 @@
+import { CRUD } from "../../modules/app/CRUD";
 import {
   Any,
   Applied,
@@ -10,7 +11,6 @@ import {
   Once,
   Shared,
   Transport,
-  TransportDestroyable,
   TransportEvent,
   type EventType,
 } from "silentium";
@@ -22,10 +22,10 @@ import {
   Shot,
   Template,
 } from "silentium-components";
-import { $backendCrud, backendTransport, $notification } from "../../bootstrap";
+import { $notification } from "../../bootstrap";
 import { Link } from "../../components/Link";
 import { ClickedId } from "../../modules/ClickedId";
-import { i18n, $title } from "../../store";
+import { $title, i18n } from "../../store";
 import type { ArticleType } from "../../types/ArticleType";
 
 export function Articles(): EventType<string> {
@@ -33,13 +33,9 @@ export function Articles(): EventType<string> {
     const title = i18n.tr("Articles");
     title.event($title);
 
-    const backendTransportInstance = TransportDestroyable(backendTransport);
-
     const articlesSearchSrc = LateShared({});
     const articlesSrc = Shared(
-      $backendCrud
-        .ofModelName(Of("private/articles"))
-        .list(backendTransportInstance, articlesSearchSrc),
+      CRUD(Of("private/articles")).list(articlesSearchSrc).result(),
     );
 
     const dc = DestroyContainer();
@@ -59,15 +55,14 @@ export function Articles(): EventType<string> {
                   removeTrigger.event(Transport(console.log));
                   const localArticle = Detached<ArticleType>(article);
                   const removedSrc = Shared(
-                    $backendCrud
-                      .ofModelName(Of("private/articles"))
+                    CRUD(Of("private/articles"))
                       .deleted(
-                        backendTransportInstance,
                         Shot(
                           Once(Path(localArticle, Of("_id"))),
                           Once(removeTrigger),
                         ),
-                      ),
+                      )
+                      .result(),
                   );
                   Constant({}, Once(removedSrc)).event(articlesSearchSrc);
 
@@ -108,7 +103,6 @@ export function Articles(): EventType<string> {
     return () => {
       dc.destroy();
       articlesSrc.destroy();
-      backendTransportInstance.destroy();
       t.destroy();
     };
   });
