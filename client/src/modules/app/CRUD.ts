@@ -22,9 +22,7 @@ class CRUDImpl {
   /**
    * List of entities from external system
    */
-  public list<R extends unknown[] = []>(
-    $search?: EventType<Record<string, unknown>>,
-  ) {
+  public list<R = unknown>($search?: EventType<Record<string, unknown>>) {
     return RPC<R>(
       RecordOf({
         transport: this.$transport,
