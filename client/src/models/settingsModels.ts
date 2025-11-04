@@ -1,15 +1,16 @@
-import { Applied, type EventType, Of, TransportType } from "silentium";
-import { $backendCrud } from "../bootstrap";
+import { CRUD } from "@/modules/app/CRUD";
+import { Of, type EventType } from "silentium";
+import { Path } from "silentium-components";
 
 export const settingsModels = {
   /**
    * Application is configured
    */
-  hasSettings(transport: TransportType): EventType<boolean> {
-    const settingsSrc = $backendCrud
-      .ofModelName(Of("configured"))
-      .custom<{ configured: boolean }>(transport);
+  hasSettings(): EventType<boolean> {
+    const $settings = CRUD(Of("configured")).custom<{
+      configured: boolean;
+    }>();
 
-    return Applied(settingsSrc, (s) => s.configured);
+    return Path($settings.result(), Of("configured"));
   },
 };
