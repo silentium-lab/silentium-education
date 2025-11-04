@@ -6,10 +6,11 @@ import {
   ConstructorType,
   EventType,
   Late,
+  LateShared,
   Of,
   TransportEvent,
 } from "silentium";
-import { Detached, RecordOf, Router, ToJson } from "silentium-components";
+import { Detached, RecordOf, Router, Shot, ToJson } from "silentium-components";
 import { NotFoundSrc } from "../../store";
 import { Created } from "../modules/mongo/Created";
 import { Entity } from "../modules/mongo/Entity";
@@ -32,14 +33,12 @@ export const CRUDRouter = (
       {
         pattern: `^GET:${baseUrl}$`,
         event: TransportEvent(() => {
-          const error = Late();
+          const error = LateShared();
+          const $data = Catch(List(dbTransport(), collectionName), error);
           return ToJson(
             RecordOf({
-              data: Any(
-                Catch(List(dbTransport(), collectionName), error),
-                Of(null),
-              ),
-              error: Any(error, Of(null)),
+              data: $data,
+              error: Any(error, Shot(Of(null), $data)),
             }),
           );
         }),
@@ -49,13 +48,14 @@ export const CRUDRouter = (
         event: TransportEvent(() => {
           const $url = UrlFromMessage(detachedReq);
           const error = Late();
+          const $data = Catch(
+            Entity(dbTransport(), $url, collectionName),
+            error,
+          );
           return ToJson(
             RecordOf({
-              data: Any(
-                Catch(Entity(dbTransport(), $url, collectionName), error),
-                Of(null),
-              ),
-              error: Any(error, Of(null)),
+              data: $data,
+              error: Any(error, Shot(Of(null), $data)),
             }),
           );
         }),
@@ -64,16 +64,14 @@ export const CRUDRouter = (
         pattern: `^POST:${baseUrl}$`,
         event: TransportEvent(() => {
           const error = Late();
+          const $data = Catch(
+            Created(dbTransport(), detachedReq, collectionName),
+            error,
+          );
           return ToJson(
             RecordOf({
-              data: Any(
-                Catch(
-                  Created(dbTransport(), detachedReq, collectionName),
-                  error,
-                ),
-                Of(null),
-              ),
-              error: Any(error, Of(null)),
+              data: $data,
+              error: Any(error, Shot(Of(null), $data)),
             }),
           );
         }),
@@ -82,16 +80,14 @@ export const CRUDRouter = (
         pattern: `^PUT:${baseUrl}/.+/$`,
         event: TransportEvent(() => {
           const error = Late();
+          const $data = Catch(
+            Updated(dbTransport(), detachedReq, collectionName),
+            error,
+          );
           return ToJson(
             RecordOf({
-              data: Any(
-                Catch(
-                  Updated(dbTransport(), detachedReq, collectionName),
-                  error,
-                ),
-                Of(null),
-              ),
-              error: Any(error, Of(null)),
+              data: $data,
+              error: Any(error, Shot(Of(null), $data)),
             }),
           );
         }),
@@ -101,13 +97,14 @@ export const CRUDRouter = (
         event: TransportEvent(() => {
           const error = Late();
           const $url = UrlFromMessage(detachedReq);
+          const $data = Catch(
+            Removed(dbTransport(), $url, collectionName),
+            error,
+          );
           return ToJson(
             RecordOf({
-              data: Any(
-                Catch(Removed(dbTransport(), $url, collectionName), error),
-                Of(null),
-              ),
-              error: Any(error, Of(null)),
+              data: $data,
+              error: Any(error, Shot(Of(null), $data)),
             }),
           );
         }),
