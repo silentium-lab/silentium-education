@@ -7,7 +7,7 @@
     "start:node": "node --loader ts-node/esm index.ts",
     "lint": "eslint src",
     "lint-fix": "eslint src --fix",
-    "dev:node": "npx nodemon -x \"node --loader ts-node/esm\" index.ts"
+    "dev:node": "npx nodemon -x \"node --inspect=0.0.0.0:9229 --loader ts-node/esm\" index.ts"
   },
   "author": "",
   "license": "MIT",
