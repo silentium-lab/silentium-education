@@ -69,14 +69,14 @@ class CRUDImpl {
   /**
    * Creating a new entity
    */
-  public created<R = unknown>(formSrc: EventType) {
+  public created<R = unknown>($form: EventType) {
     return RPC<R>(
       RecordOf({
         transport: this.$transport,
         method: Of("post"),
         params: RecordOf({
           model: this.$model,
-          body: formSrc,
+          body: $form,
         }),
       }),
     );
@@ -85,17 +85,14 @@ class CRUDImpl {
   /**
    * Updating an entity
    */
-  public updated<R = unknown>(idSrc: EventType<string>, formSrc: EventType) {
+  public updated<R = unknown>($id: EventType<string>, $form: EventType) {
     return RPC<R>(
       RecordOf({
         transport: this.$transport,
         method: Of("put"),
         params: RecordOf({
-          model: this.$model,
-          body: formSrc,
-          query: RecordOf({
-            id: idSrc,
-          }),
+          model: Concatenated([this.$model, Of("/"), $id, Of("/")]),
+          body: $form,
         }),
       }),
     );
@@ -104,7 +101,7 @@ class CRUDImpl {
   /**
    * Deleting an entity
    */
-  public deleted<R = unknown>(idSrc: EventType<string>) {
+  public deleted<R = unknown>($id: EventType<string>) {
     return RPC<R>(
       RecordOf({
         transport: this.$transport,
@@ -112,7 +109,7 @@ class CRUDImpl {
         params: RecordOf({
           model: this.$model,
           query: RecordOf({
-            id: idSrc,
+            id: $id,
           }),
         }),
       }),

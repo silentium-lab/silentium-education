@@ -32,7 +32,11 @@ export function ArticleEdit() {
     const $form = LateShared<ArticleType>();
 
     const $formUpdated = Shared(
-      CRUD(Of("private/articles")).updated($id, Shot($form, $clicked)).result(),
+      ServerResponse(
+        CRUD(Of("private/articles"))
+          .updated($id, Shot($form, $clicked))
+          .result(),
+      ),
     );
     const $formUpdateLoading = Any(Loading($clicked, $formUpdated), Of(false));
 
