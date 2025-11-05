@@ -1,6 +1,6 @@
 import { Of, type EventType } from "silentium";
 import { FromJson, Path } from "silentium-components";
-import { CRUD } from "../modules/app/CRUD";
+import { CRUD } from "@/modules/app/CRUD";
 
 export const settingsModels = {
   /**

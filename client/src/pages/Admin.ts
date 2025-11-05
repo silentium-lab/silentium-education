@@ -1,10 +1,10 @@
 import { Event, type EventType, Of, TransportEvent } from "silentium";
 import { Detached, Router } from "silentium-components";
-import { $title, $url } from "../store";
-import { ArticleEdit } from "./Admin/ArticleEdit";
-import { ArticleNew } from "./Admin/ArticleNew";
-import { Articles } from "./Admin/Articles";
-import { Auth } from "./Admin/Auth";
+import { $title, $url } from "@/store";
+import { ArticleEdit } from "@/pages/Admin/ArticleEdit";
+import { ArticleNew } from "@/pages/Admin/ArticleNew";
+import { Articles } from "@/pages/Admin/Articles";
+import { Auth } from "@/pages/Admin/Auth";
 
 export function Admin(): EventType<string> {
   return Event((user) => {

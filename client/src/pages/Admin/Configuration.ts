@@ -1,9 +1,9 @@
-import { CRUD } from "@/modules/app/CRUD";
-import { Event, EventType, LateShared, Of, Void } from "silentium";
-import { RecordOf, Shot, Template } from "silentium-components";
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
+import { CRUD } from "@/modules/app/CRUD";
 import { i18n } from "@/store";
+import { Event, EventType, LateShared, Of, Transport } from "silentium";
+import { RecordOf, Shot, Template } from "silentium-components";
 
 /**
  * Configuration page
@@ -24,8 +24,7 @@ export function Configuration(): EventType<string> {
 
     const $formUpdated = CRUD(Of("private/settings")).created($savedForm);
 
-    $formUpdated.result().event(Void());
-    // $formUpdated.result().event(Transport(() => location.reload()));
+    $formUpdated.result().event(Transport(() => location.reload()));
 
     const t = Template();
     t.template(`<div class="article">

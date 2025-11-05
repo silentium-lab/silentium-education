@@ -1,5 +1,5 @@
 import { Of } from "silentium";
-import { Link } from "../components/Link";
+import { Link } from "@/components/Link";
 
 export const logoSrc = Link(
   Of("/"),

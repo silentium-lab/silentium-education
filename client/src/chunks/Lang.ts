@@ -1,7 +1,7 @@
 import { Applied, Event, EventType, LateShared, Of } from "silentium";
-import { $lang } from "../store";
+import { $lang } from "@/store";
 import { Constant, Template } from "silentium-components";
-import { Button } from "../components/Button";
+import { Button } from "@/components/Button";
 
 const Active = (lang: string) =>
   Applied($lang, (l) => (l === lang ? "font-bold" : ""));

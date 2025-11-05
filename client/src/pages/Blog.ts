@@ -1,6 +1,6 @@
 import { Event, type EventType } from "silentium";
 import { Template } from "silentium-components";
-import { i18n, $title } from "../store";
+import { i18n, $title } from "@/store";
 
 export function Blog(): EventType<string> {
   return Event((u) => {

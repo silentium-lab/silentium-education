@@ -1,9 +1,9 @@
 import { Event, type SourceType } from "silentium";
 import { First } from "silentium-components";
 import { Elements } from "silentium-web-api";
-import { ClassName } from "../modules/ClassName";
-import { Id } from "../modules/Id";
-import { Clicked } from "./Clicked";
+import { ClassName } from "@/modules/ClassName";
+import { Id } from "@/modules/Id";
+import { Clicked } from "@/modules/Clicked";
 
 export function ClickedId($click: SourceType<unknown>) {
   return Event((transport) => {

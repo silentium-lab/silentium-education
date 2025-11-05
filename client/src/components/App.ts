@@ -16,9 +16,9 @@ import {
 } from "silentium-components";
 import { Render } from "silentium-morphdom";
 import { Elements, Timer } from "silentium-web-api";
-import { $notification } from "../bootstrap";
-import { Footer } from "../chunks/Footer";
-import { Header } from "../chunks/Header";
+import { $notification } from "@/bootstrap";
+import { Footer } from "@/chunks/Footer";
+import { Header } from "@/chunks/Header";
 
 export function App($route: EventType<string>): EventType<HTMLElement> {
   return Event((transport) => {

@@ -10,13 +10,13 @@ import {
   Task,
   Template,
 } from "silentium-components";
-import { $notification } from "../../bootstrap";
-import { Button } from "../../components/Button";
-import { Link } from "../../components/Link";
-import { SplitPart } from "../../modules/string/SplitPart";
-import { $title, $url, i18n } from "../../store";
-import type { ArticleType } from "../../types/ArticleType";
-import { ArticleForm } from "./ArticleForm";
+import { $notification } from "@/bootstrap";
+import { Button } from "@/components/Button";
+import { Link } from "@/components/Link";
+import { SplitPart } from "@/modules/string/SplitPart";
+import { $title, $url, i18n } from "@/store";
+import type { ArticleType } from "@/types/ArticleType";
+import { ArticleForm } from "@/pages/Admin/ArticleForm";
 
 export function ArticleEdit() {
   return Event<string>((transport) => {

@@ -1,6 +1,6 @@
 import { Event, type EventType } from "silentium";
 import { Template } from "silentium-components";
-import { $title } from "../store";
+import { $title } from "@/store";
 
 export function NotFound(): EventType<string> {
   return Event((transport) => {

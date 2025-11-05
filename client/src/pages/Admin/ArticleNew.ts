@@ -9,11 +9,11 @@ import {
   Task,
   Template,
 } from "silentium-components";
-import { $notification } from "../../bootstrap";
-import { Button } from "../../components/Button";
-import { Link } from "../../components/Link";
-import { i18n, $title, $url } from "../../store";
-import { ArticleForm } from "./ArticleForm";
+import { $notification } from "@/bootstrap";
+import { Button } from "@/components/Button";
+import { Link } from "@/components/Link";
+import { i18n, $title, $url } from "@/store";
+import { ArticleForm } from "@/pages/Admin/ArticleForm";
 import { CRUD } from "@/modules/app/CRUD";
 
 export function ArticleNew() {
