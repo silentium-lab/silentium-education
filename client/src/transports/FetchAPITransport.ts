@@ -2,8 +2,6 @@ import { RPCType, Transport } from "silentium";
 
 export function FetchAPITransport(baseUrlPredefined: string) {
   return Transport<RPCType>((r) => {
-    console.log("r", r);
-
     const abortController = new AbortController();
     if (r.params?.abort) {
       r.params.abort.event(

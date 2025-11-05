@@ -1,3 +1,6 @@
+import { ClassName } from "@/modules/ClassName";
+import { Id } from "@/modules/Id";
+import { KeyPressed } from "@/modules/KeyPressed";
 import {
   All,
   Event,
@@ -8,9 +11,6 @@ import {
 } from "silentium";
 import { First } from "silentium-components";
 import { Elements } from "silentium-web-api";
-import { ClassName } from "@/modules/ClassName";
-import { Id } from "@/modules/Id";
-import { KeyPressed } from "@/modules/KeyPressed";
 
 export function Input($value: SourceType<string>): EventType<string> {
   return Event((transport) => {

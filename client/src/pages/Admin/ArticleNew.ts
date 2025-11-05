@@ -15,6 +15,7 @@ import { Link } from "@/components/Link";
 import { i18n, $title, $url } from "@/store";
 import { ArticleForm } from "@/pages/Admin/ArticleForm";
 import { CRUD } from "@/modules/app/CRUD";
+import { ServerResponse } from "@/modules/app/ServerResponse";
 
 export function ArticleNew() {
   return Event<string>((transport) => {
@@ -27,15 +28,19 @@ export function ArticleNew() {
       content: "",
     });
 
-    const formUpdatedSrc = Shared(
-      CRUD(Of("private/articles")).created(Shot(formSrc, clickedSrc)).result(),
+    const $formUpdated = Shared(
+      ServerResponse(
+        CRUD(Of("private/articles"))
+          .created(Shot(formSrc, clickedSrc))
+          .result(),
+      ),
     );
     const formUpdateLoadingSrc = Any(
-      Loading(clickedSrc, formUpdatedSrc),
+      Loading(clickedSrc, $formUpdated),
       Of(false),
     );
 
-    const insertedIdSrc = Path(formUpdatedSrc, Of("insertedId"));
+    const insertedIdSrc = Path($formUpdated, Of("insertedId"));
     Task(
       Template(
         Of("/admin/articles/$id/"),
@@ -51,7 +56,7 @@ export function ArticleNew() {
         type: "success",
         content: "Успешно создано",
       } as const,
-      formUpdatedSrc,
+      $formUpdated,
     ).event($notification);
 
     const t = Template();
