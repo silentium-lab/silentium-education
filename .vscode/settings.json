@@ -2,6 +2,7 @@
     "npm-scripts.showStartNotification": false,
     "conventionalCommits.scopes": [
         "server",
-        "client"
+        "client",
+        "common"
     ]
 }
