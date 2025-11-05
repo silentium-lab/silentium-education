@@ -27,7 +27,6 @@ import {
   Shot,
   Template,
 } from "silentium-components";
-import { Log } from "silentium-web-api";
 
 export function Articles(): EventType<string> {
   return Event((transport) => {
@@ -62,7 +61,7 @@ export function Articles(): EventType<string> {
                       .deleted(
                         Shot(
                           Once(Path(localArticle, Of("_id"))),
-                          Once(removeTrigger.event(Log("removeTrigger"))),
+                          Once(removeTrigger),
                         ),
                       )
                       .result(),
