@@ -1,24 +1,10 @@
-import {
-  Applied,
-  Event,
-  type EventType,
-  LateShared,
-  Of,
-  Primitive,
-} from "silentium";
-import {
-  Constant,
-  First,
-  Path,
-  Polling,
-  Template,
-  Tick,
-} from "silentium-components";
-import { Render } from "silentium-morphdom";
-import { Elements, Timer } from "silentium-web-api";
 import { $notification } from "@/bootstrap";
 import { Footer } from "@/chunks/Footer";
 import { Header } from "@/chunks/Header";
+import { Event, type EventType, LateShared, Of } from "silentium";
+import { Constant, First, Polling, Template, Tick } from "silentium-components";
+import { Render } from "silentium-morphdom";
+import { Elements, Timer } from "silentium-web-api";
 
 export function App($route: EventType<string>): EventType<HTMLElement> {
   return Event((transport) => {
@@ -35,9 +21,6 @@ export function App($route: EventType<string>): EventType<HTMLElement> {
 				${t.var($route)}
 				</section>
 				${t.var(Footer())}
-				<div class="fixed top-2 right-2 p-2 rounded-md bg-${t.var(Of(Primitive(Path($notification, Of("type"))) as unknown as string))} ${t.var(Applied($notified, (show) => (show ? "visible" : "hidden")))}">
-				${t.var(Of(Primitive(Path($notification, Of("content"))) as unknown as string))}
-				</div>
 			</div>`,
     );
     const $el = First(Elements(Of("body .app")));
