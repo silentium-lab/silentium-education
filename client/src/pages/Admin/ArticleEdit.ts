@@ -1,4 +1,3 @@
-import { $notification } from "@/bootstrap";
 import { Button } from "@/components/Button";
 import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
@@ -23,6 +22,7 @@ export function ArticleEdit() {
   return Event<string>((transport) => {
     i18n.tr("Article").event($title);
 
+    const $notification = LateShared("");
     const $localUrl = Detached($url);
     const $id = Shared(SplitPart($localUrl, Of("/"), Of(3)));
     const $article = Shared(
@@ -40,13 +40,7 @@ export function ArticleEdit() {
     );
     const $formUpdateLoading = Any(Loading($clicked, $formUpdated), Of(false));
 
-    Constant(
-      {
-        type: "success",
-        content: "Успешно изменено",
-      } as const,
-      $formUpdated,
-    ).event($notification);
+    Constant("Успешно изменено", $formUpdated).event($notification);
 
     Applied(
       Any($article, Task($formUpdated)),
@@ -57,20 +51,21 @@ export function ArticleEdit() {
     t.template(`<div class="article">
 			${t.var(Link(Of("/admin/articles"), i18n.tr("Articles"), Of("underline")))}
         <h1 class="title-1">${t.var($title)}</h1>
-		<div class="mb-2">
-			<div>
-				<b>id: </b>
-				${t.var($id)}
-			</div>
-			${t.var(ArticleForm($form))}
-		</div>
-		${t.var(
-      Button(
-        Branch($formUpdateLoading, Of("Сохраняем..."), Of("Сохранить")),
-        Of("btn"),
-        $clicked,
-      ),
-    )}
+        <div class="mb-2">
+          <div>
+            <b>id: </b>
+            ${t.var($id)}
+          </div>
+          ${t.var(ArticleForm($form))}
+        </div>
+        ${t.var(
+          Button(
+            Branch($formUpdateLoading, Of("Сохраняем..."), Of("Сохранить")),
+            Of("btn"),
+            $clicked,
+          ),
+        )}
+        ${t.var(Any(Of(""), $notification))}
       </div>`);
     t.event(transport);
 
