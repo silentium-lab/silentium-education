@@ -93,7 +93,7 @@ export const CRUDRouter = (
         }),
       },
       {
-        pattern: `^DELETE:${baseUrl}/.+/$`,
+        pattern: `^DELETE:${baseUrl}.*$`,
         event: TransportEvent(() => {
           const error = Late();
           const $url = UrlFromMessage(detachedReq);

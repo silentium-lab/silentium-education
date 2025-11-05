@@ -1,9 +1,8 @@
 import { IncomingMessage } from "http";
-import { EventType, Of } from "silentium";
-import { Path } from "silentium-components";
+import { Applied, EventType } from "silentium";
 
 export function UrlFromMessage(
   $msg: EventType<IncomingMessage>,
 ): EventType<string> {
-  return Path($msg, Of("url"));
+  return Applied($msg, (msg) => `https://${msg.headers.host}${msg.url}`);
 }
