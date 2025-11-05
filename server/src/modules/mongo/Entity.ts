@@ -17,8 +17,8 @@ export function Entity<T>(
             _id: new ObjectId(idSync.primitiveWithException()),
           });
           transport.use(one as T);
-        } catch {
-          throw new Error("Entity not found");
+        } catch (e: unknown) {
+          throw new Error("Entity not found", { cause: e });
         }
       }),
     );

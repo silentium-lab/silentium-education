@@ -1,5 +1,5 @@
 import { type EventType, Of, RPC } from "silentium";
-import { RecordOf } from "silentium-components";
+import { Concatenated, RecordOf } from "silentium-components";
 
 /**
  * Represents a set of CRUD operations
@@ -44,10 +44,7 @@ class CRUDImpl {
         transport: this.$transport,
         method: Of("get"),
         params: RecordOf({
-          model: this.$model,
-          query: RecordOf({
-            id: $id,
-          }),
+          model: Concatenated([this.$model, Of("/"), $id, Of("/")]),
         }),
       }),
     );
