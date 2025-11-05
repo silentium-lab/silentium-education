@@ -7,7 +7,7 @@ export function DocumentTitle(): SourceType<string> {
   const $src = LateShared(document.title);
 
   return {
-    event: $src.event,
+    event: $src.event.bind($src),
     use: (v) => {
       $src.use(v);
       document.title = v;

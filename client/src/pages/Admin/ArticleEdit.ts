@@ -1,4 +1,12 @@
+import { $notification } from "@/bootstrap";
+import { Button } from "@/components/Button";
+import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
+import { ServerResponse } from "@/modules/app/ServerResponse";
+import { SplitPart } from "@/modules/string/SplitPart";
+import { ArticleForm } from "@/pages/Admin/ArticleForm";
+import { $title, $url, i18n } from "@/store";
+import type { ArticleType } from "@/types/ArticleType";
 import { omit, partialRight } from "lodash-es";
 import { Any, Applied, Event, LateShared, Of, Shared } from "silentium";
 import {
@@ -10,31 +18,23 @@ import {
   Task,
   Template,
 } from "silentium-components";
-import { $notification } from "@/bootstrap";
-import { Button } from "@/components/Button";
-import { Link } from "@/components/Link";
-import { SplitPart } from "@/modules/string/SplitPart";
-import { $title, $url, i18n } from "@/store";
-import type { ArticleType } from "@/types/ArticleType";
-import { ArticleForm } from "@/pages/Admin/ArticleForm";
 
 export function ArticleEdit() {
   return Event<string>((transport) => {
     i18n.tr("Article").event($title);
 
     const $localUrl = Detached($url);
-    const $id = SplitPart($localUrl, Of("/"), Of(3));
-    const $article = Shared(CRUD(Of("private/articles")).entity($id).result());
+    const $id = Shared(SplitPart($localUrl, Of("/"), Of(3)));
+    const $article = Shared(
+      ServerResponse(CRUD(Of("private/articles")).entity($id).result()),
+    );
     const $clicked = LateShared();
     const $form = LateShared<ArticleType>();
 
     const $formUpdated = Shared(
       CRUD(Of("private/articles")).updated($id, Shot($form, $clicked)).result(),
     );
-    const formUpdateLoadingSrc = Any(
-      Loading($clicked, $formUpdated),
-      Of(false),
-    );
+    const $formUpdateLoading = Any(Loading($clicked, $formUpdated), Of(false));
 
     Constant(
       {
@@ -62,7 +62,7 @@ export function ArticleEdit() {
 		</div>
 		${t.var(
       Button(
-        Branch(formUpdateLoadingSrc, Of("Сохраняем..."), Of("Сохранить")),
+        Branch($formUpdateLoading, Of("Сохраняем..."), Of("Сохранить")),
         Of("btn"),
         $clicked,
       ),
