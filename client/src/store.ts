@@ -1,4 +1,10 @@
+import translations from "@/data/translations.json";
+import { DocumentTitle } from "@/modules/DocumentTitle";
+import { HistoryUrl } from "@/modules/HistoryUrl";
+import { i18n as I18N } from "@/modules/I18n";
+import { StorageRecord } from "@/modules/plugins/storage/StorageRecord";
 import {
+  All,
   Applied,
   type EventType,
   LateShared,
@@ -6,15 +12,10 @@ import {
   SharedSource,
   Transport,
 } from "silentium";
-import { Memo, RecordOf } from "silentium-components";
-import translations from "@/data/translations.json";
-import { DocumentTitle } from "@/modules/DocumentTitle";
-import { HistoryUrl } from "@/modules/HistoryUrl";
-import { i18n as I18N } from "@/modules/I18n";
-import { StorageRecord } from "@/modules/plugins/storage/StorageRecord";
+import { Memo } from "silentium-components";
 
-(window as any).debug = (name: string, record: Record<string, EventType>) => {
-  Applied(RecordOf(record), (r) => ({ name, ...r })).event(
+(window as any).debug = (name: string, ...events: EventType[]) => {
+  Applied(All(...events), (r) => ({ name, ...r })).event(
     Transport(console.table),
   );
 };
