@@ -8,7 +8,7 @@ export function Footer(): EventType<string> {
   return Event((transport) => {
     const t = Template();
     t.template(
-      `<footer class="mt-auto py-2 flex justify-between items-center gap-2 flex-wrap">
+      `<footer class="py-2 flex justify-between items-center gap-2 flex-wrap">
           <span>
             ${t.var(Of(new Date().getFullYear().toString()))}
             &copy;

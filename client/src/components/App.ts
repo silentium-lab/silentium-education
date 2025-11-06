@@ -14,9 +14,9 @@ export function App($route: EventType<string>): EventType<HTMLElement> {
     const $deps = Any($lang);
     t.template(
       `<div class="container mx-auto px-3 h-full flex flex-col">
-				${t.var(Header())}
+        <div class="${t.var(MountPoint(Header()))}"></div>
 				<section class="content ${t.var(MountPoint(Chain($deps, $route)))}"></section>
-				${t.var(Footer())}
+        <div class="mt-auto ${t.var(MountPoint(Footer()))}"></div>
         <div class="${t.var(MountPoint(Chain($deps, Notifications())))}"></div>
 			</div>`,
     );

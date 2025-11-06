@@ -2,7 +2,7 @@ import { Event, type EventType, Of } from "silentium";
 import { Template } from "silentium-components";
 import { Counter } from "@/chunks/Counter";
 import { Link } from "@/components/Link";
-import { i18n, $title } from "@/store";
+import { i18n, $title, $lang } from "@/store";
 
 export function Home(): EventType<string> {
   return Event((transport) => {
@@ -14,6 +14,9 @@ export function Home(): EventType<string> {
 			Silentium
 			</h1>
 			<div class="mb-3">${t.var(Counter())}</div>
+      <div>
+        Lang: ${t.var($lang)}
+      </div>
 			<div>
 				${t.var(Link(Of("/admin/articles"), Of("Статьи"), Of("underline")))}
 			</div>
