@@ -1,6 +1,6 @@
 import { ClassName } from "@/modules/ClassName";
 import { Id } from "@/modules/Id";
-import { Event, EventType, Shared, Void } from "silentium";
+import { Event, EventType, Of, Shared, Void } from "silentium";
 import { Render } from "silentium-morphdom";
 import { Element } from "silentium-web-api";
 
@@ -13,7 +13,7 @@ import { Element } from "silentium-web-api";
  */
 export function MountPoint($base: EventType<string>) {
   return Event<string>((transport) => {
-    const $id = Shared(Id());
+    const $id = Shared(Id(Of("mount-point")));
     $id.event(transport);
     const $el = Element(ClassName($id));
     Render($el, $base).event(Void());

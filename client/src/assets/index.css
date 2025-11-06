@@ -21,6 +21,10 @@ body {
 }
 
 @layer components {
+  .app {
+    @apply h-full;
+  }
+
   .article {
     @apply mx-auto max-w-150;
   }

@@ -1,3 +1,4 @@
+import { $notification } from "@/bootstrap";
 import { Button } from "@/components/Button";
 import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
@@ -22,7 +23,6 @@ export function ArticleEdit() {
   return Event<string>((transport) => {
     i18n.tr("Article").event($title);
 
-    const $notification = LateShared("");
     const $localUrl = Detached($url);
     const $id = Shared(SplitPart($localUrl, Of("/"), Of(3)));
     const $article = Shared(
@@ -40,7 +40,13 @@ export function ArticleEdit() {
     );
     const $formUpdateLoading = Any(Loading($clicked, $formUpdated), Of(false));
 
-    Constant("Успешно изменено", $formUpdated).event($notification);
+    Constant(
+      {
+        type: "success",
+        content: "Успешно изменено",
+      } as const,
+      $formUpdated,
+    ).event($notification);
 
     Applied(
       Any($article, Task($formUpdated)),
@@ -65,7 +71,6 @@ export function ArticleEdit() {
             $clicked,
           ),
         )}
-        ${t.var(Any(Of(""), $notification))}
       </div>`);
     t.event(transport);
 
