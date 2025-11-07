@@ -1,3 +1,6 @@
+import { ClassName } from "@/modules/ClassName";
+import { Clicked } from "@/modules/Clicked";
+import { Id } from "@/modules/Id";
 import {
   Event,
   type EventType,
@@ -9,9 +12,6 @@ import {
 } from "silentium";
 import { First, Template } from "silentium-components";
 import { Elements } from "silentium-web-api";
-import { ClassName } from "@/modules/ClassName";
-import { Clicked } from "@/modules/Clicked";
-import { Id } from "@/modules/Id";
 
 export function Button(
   $label: EventType<string>,

@@ -1,13 +1,13 @@
-import { Event, type EventType, Of } from "silentium";
-import { Template } from "silentium-components";
 import { Counter } from "@/chunks/Counter";
 import { Link } from "@/components/Link";
-import { i18n, $title, $lang } from "@/store";
+import { Stencil } from "@/modules/render/Stencil";
+import { $lang, $title, i18n } from "@/store";
+import { Event, type EventType, Of } from "silentium";
 
 export function Home(): EventType<string> {
   return Event((transport) => {
     i18n.tr("home").event($title);
-    const t = Template();
+    const t = Stencil();
     t.template(
       `<section class="article">
 			<h1 class="title-1">
