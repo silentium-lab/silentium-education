@@ -13,10 +13,9 @@ import {
 import { RecordOf, Task, Transaction } from "silentium-components";
 
 /**
- * Шаблон, который в случае своего изменения повторно опросит
- * все свои переменные для получения новых значений, это
- * важно в случае построения приложения, чтобы при любом
- * изменении шаблона нужно с нуля пересоздать вычисляемые компоненты
+ * A template that, when changed, will re-query all its variables
+ * to obtain new values. This is important when building an application,
+ * as any template change requires recomputing the components from scratch.
  */
 export function Stencil($src: EventType<string> = Of("")) {
   return new StencilEvent($src);
