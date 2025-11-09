@@ -48,7 +48,7 @@ export const CRUDRouter = (
         event: TransportEvent(() => {
           const $url = UrlFromMessage(detachedReq);
           const $error = LateShared();
-          const $data = Entity($url, collectionName, $error);
+          const $data = Shared(Entity($url, collectionName, $error));
           return ToJson(
             Truncated(
               RecordOf({
@@ -64,7 +64,7 @@ export const CRUDRouter = (
         pattern: `^POST:${baseUrl}$`,
         event: TransportEvent(() => {
           const $error = LateShared();
-          const $data = Created(detachedReq, collectionName, $error);
+          const $data = Shared(Created(detachedReq, collectionName, $error));
           return ToJson(
             Truncated(
               RecordOf({
@@ -80,7 +80,7 @@ export const CRUDRouter = (
         pattern: `^PUT:${baseUrl}/.+/$`,
         event: TransportEvent(() => {
           const $error = LateShared();
-          const $data = Updated(detachedReq, collectionName, $error);
+          const $data = Shared(Updated(detachedReq, collectionName, $error));
           return ToJson(
             Truncated(
               RecordOf({
@@ -97,7 +97,7 @@ export const CRUDRouter = (
         event: TransportEvent(() => {
           const $error = LateShared();
           const $url = UrlFromMessage(detachedReq);
-          const $data = Removed($url, collectionName, $error);
+          const $data = Shared(Removed($url, collectionName, $error));
           return ToJson(
             Truncated(
               RecordOf({
