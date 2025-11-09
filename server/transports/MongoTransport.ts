@@ -11,7 +11,6 @@ export function MongoTransport(url: string) {
   const client = new MongoClient(url);
 
   return Transport<RPCType>((rpc) => {
-    console.log(rpc);
     const dbName = rpc.params?.dbName ?? "app";
     client
       .connect()
@@ -25,7 +24,7 @@ export function MongoTransport(url: string) {
           const postProcess = rpc.params?.postProcess;
           if (postProcess) {
             const postProcessArgs = rpc.params?.postProcessArgs ?? [];
-            result = result[postProcess](...postProcessArgs);
+            result = await result[postProcess](...postProcessArgs);
           }
           rpc.result?.use(result);
         } catch (e) {
@@ -33,7 +32,7 @@ export function MongoTransport(url: string) {
         }
       })
       .catch((e) => {
-        rpc.error?.use(e);
+        rpc.error?.use(e.message);
       });
   });
 }

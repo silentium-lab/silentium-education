@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import {
+  All,
   Applied,
   Event,
   EventType,
@@ -24,9 +25,11 @@ export function Entity<T>(
         method: Of("findOne"),
         params: RecordOf({
           collection: Of(collection),
-          args: RecordOf({
-            _id: Applied($id, (id) => new ObjectId(id)),
-          }),
+          args: All(
+            RecordOf({
+              _id: Applied($id, (id) => new ObjectId(id)),
+            }),
+          ),
         }),
       }),
     );

@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import {
+  All,
   Applied,
   Event,
   EventType,
@@ -9,7 +10,7 @@ import {
   TransportType,
 } from "silentium";
 import { RecordOf } from "silentium-components";
-import { UrlId } from "../string/UrlId";
+import { UrlParam } from "../string/UrlParam";
 
 export function Removed<T>(
   $url: EventType<string>,
@@ -17,16 +18,18 @@ export function Removed<T>(
   error?: TransportType,
 ): EventType<T> {
   return Event((transport) => {
-    const $id = UrlId($url);
+    const $id = UrlParam($url, Of("id"));
     const rpc = RPC(
       RecordOf({
         transport: Of("db"),
         method: Of("deleteOne"),
         params: RecordOf({
           collection: Of(collection),
-          args: RecordOf({
-            _id: Applied($id, (id) => new ObjectId(id)),
-          }),
+          args: All(
+            RecordOf({
+              _id: Applied($id, (id) => new ObjectId(id)),
+            }),
+          ),
         }),
       }),
     );

@@ -21,12 +21,6 @@ export function Private(req: EventType<IncomingMessage>): EventType<string> {
             CRUDRouter(req, "/private/categories", "categories"),
           ),
         },
-        {
-          pattern: "^.+:/private/settings.*$",
-          event: TransportEvent(() =>
-            CRUDRouter(req, "/private/settings", "settings"),
-          ),
-        },
       ]),
       TransportEvent(() => Of("Private not found")),
     ).event(user);

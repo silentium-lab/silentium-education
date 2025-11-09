@@ -2,9 +2,9 @@ import { IncomingMessage } from "http";
 import {
   Any,
   EventType,
-  Late,
   LateShared,
   Of,
+  Shared,
   TransportEvent,
 } from "silentium";
 import { Detached, RecordOf, Router, Shot, ToJson } from "silentium-components";
@@ -16,6 +16,7 @@ import { Removed } from "../modules/mongo/Removed";
 import { Updated } from "../modules/mongo/Updated";
 import { Query } from "../modules/string/Query";
 import { UrlFromMessage } from "../modules/string/UrlFromMessage";
+import { Truncated } from "../modules/structure/Truncated";
 
 export const CRUDRouter = (
   req: EventType<IncomingMessage>,
@@ -29,13 +30,16 @@ export const CRUDRouter = (
       {
         pattern: `^GET:${baseUrl}$`,
         event: TransportEvent(() => {
-          const error = LateShared();
-          const $data = List(collectionName, error);
+          const $error = LateShared();
+          const $data = Shared(List(collectionName, $error));
           return ToJson(
-            RecordOf({
-              data: $data,
-              error: Any(error, Shot(Of(null), $data)),
-            }),
+            Truncated(
+              RecordOf({
+                data: Any($data, Shot<unknown>(Of(""), $error)),
+                error: Any($error, Shot(Of(""), $data)),
+              }),
+              [""],
+            ),
           );
         }),
       },
@@ -43,53 +47,65 @@ export const CRUDRouter = (
         pattern: `^GET:${baseUrl}/.+/$`,
         event: TransportEvent(() => {
           const $url = UrlFromMessage(detachedReq);
-          const error = Late();
-          const $data = Entity($url, collectionName, error);
+          const $error = LateShared();
+          const $data = Entity($url, collectionName, $error);
           return ToJson(
-            RecordOf({
-              data: $data,
-              error: Any(error, Shot(Of(null), $data)),
-            }),
+            Truncated(
+              RecordOf({
+                data: Any($data, Shot(Of(""), $error)),
+                error: Any($error, Shot(Of(""), $data)),
+              }),
+              [""],
+            ),
           );
         }),
       },
       {
         pattern: `^POST:${baseUrl}$`,
         event: TransportEvent(() => {
-          const error = Late();
-          const $data = Created(detachedReq, collectionName, error);
+          const $error = LateShared();
+          const $data = Created(detachedReq, collectionName, $error);
           return ToJson(
-            RecordOf({
-              data: $data,
-              error: Any(error, Shot(Of(null), $data)),
-            }),
+            Truncated(
+              RecordOf({
+                data: Any($data, Shot(Of(""), $error)),
+                error: Any($error, Shot(Of(""), $data)),
+              }),
+              [""],
+            ),
           );
         }),
       },
       {
         pattern: `^PUT:${baseUrl}/.+/$`,
         event: TransportEvent(() => {
-          const error = Late();
-          const $data = Updated(detachedReq, collectionName, error);
+          const $error = LateShared();
+          const $data = Updated(detachedReq, collectionName, $error);
           return ToJson(
-            RecordOf({
-              data: $data,
-              error: Any(error, Shot(Of(null), $data)),
-            }),
+            Truncated(
+              RecordOf({
+                data: Any($data, Shot(Of(""), $error)),
+                error: Any($error, Shot(Of(""), $data)),
+              }),
+              [""],
+            ),
           );
         }),
       },
       {
         pattern: `^DELETE:${baseUrl}.*$`,
         event: TransportEvent(() => {
-          const error = Late();
+          const $error = LateShared();
           const $url = UrlFromMessage(detachedReq);
-          const $data = Removed($url, collectionName, error);
+          const $data = Removed($url, collectionName, $error);
           return ToJson(
-            RecordOf({
-              data: $data,
-              error: Any(error, Shot(Of(null), $data)),
-            }),
+            Truncated(
+              RecordOf({
+                data: Any($data, Shot(Of(""), $error)),
+                error: Any($error, Shot(Of(""), $data)),
+              }),
+              [""],
+            ),
           );
         }),
       },
