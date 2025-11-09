@@ -1,17 +1,20 @@
-import { Db } from "mongodb";
-import { Event, EventType, Transport } from "silentium";
+import { Event, EventType, Of, RPC, TransportType } from "silentium";
 
 export function List<T>(
-  $db: EventType<Db>,
-  collectionName: string,
+  collection: string,
+  error: TransportType,
 ): EventType<T[]> {
   return Event((transport) => {
-    $db.event(
-      Transport(async (db) => {
-        const collection = db.collection(collectionName);
-        const all = await collection.find().toArray();
-        transport.use(all as T[]);
+    const rpc = RPC(
+      Of({
+        method: "find",
+        params: {
+          collection,
+          postProcess: "toArray",
+        },
       }),
     );
+    rpc.error().event(error);
+    rpc.result().event(transport);
   });
 }

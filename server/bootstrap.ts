@@ -1,16 +1,10 @@
-import { Db, MongoClient } from "mongodb";
-import { Late } from "silentium";
+import { Applied, RPCOf } from "silentium";
+import { MongoTransport } from "./transports/MongoTransport";
 
-const url = process.env.MONGODB_URI ?? "";
-const client = new MongoClient(url);
-
-const dbName = "myapp";
-export const mongoTransport = () => {
-  const dbSrc = Late<Db>();
-  client.connect().then(() => {
-    const db = client.db(dbName);
-    dbSrc.use(db);
-  });
-
-  return dbSrc;
-};
+Applied(RPCOf("db"), (rpc) => ({
+  ...rpc,
+  params: {
+    dbName: "myapp",
+    ...rpc.params,
+  },
+})).event(MongoTransport(process.env.MONGODB_URI ?? ""));
