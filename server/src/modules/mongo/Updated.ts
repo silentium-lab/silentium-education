@@ -1,31 +1,54 @@
 import { IncomingMessage } from "http";
-import { Db, ObjectId } from "mongodb";
-import { All, Event, EventType, Primitive, Transport } from "silentium";
-import { UrlId } from "../string/UrlId";
-import { UrlFromMessage } from "../string/UrlFromMessage";
+import { ObjectId } from "mongodb";
 import getRawBody from "raw-body";
+import {
+  All,
+  Applied,
+  Event,
+  EventType,
+  Of,
+  RPC,
+  Transport,
+  TransportOptional,
+  TransportType,
+} from "silentium";
+import { RecordOf } from "silentium-components";
+import { UrlFromMessage } from "../string/UrlFromMessage";
+import { UrlId } from "../string/UrlId";
 
 export function Updated<T>(
-  $db: EventType<Db>,
   $req: EventType<IncomingMessage>,
-  collectionName: string,
+  collection: string,
+  error?: TransportType,
 ): EventType<T> {
   return Event((transport) => {
-    All($db, $req).event(
-      Transport(async ([db, req]) => {
+    const $id = UrlId(UrlFromMessage($req));
+
+    $req.event(
+      Transport(async (req) => {
         try {
-          const idSync = Primitive(UrlId(UrlFromMessage($req)));
-          const collection = db.collection(collectionName);
           const body = await getRawBody(req);
           const bodyText = body.toString("utf8");
-          const one = await collection.findOneAndUpdate(
-            { _id: new ObjectId(idSync.primitiveWithException()) },
-            { $set: JSON.parse(bodyText) },
-            { returnDocument: "after" },
+          const rpc = RPC(
+            RecordOf({
+              transport: Of("db"),
+              method: Of("findOneAndUpdate"),
+              params: RecordOf({
+                collection: Of(collection),
+                args: All(
+                  RecordOf({
+                    _id: Applied($id, (id) => new ObjectId(id)),
+                  }),
+                  Of({ $set: JSON.parse(bodyText) }),
+                  Of({ returnDocument: "after" }),
+                ),
+              }),
+            }),
           );
-          transport.use(one as T);
-        } catch {
-          throw new Error("Entity not found");
+          TransportOptional(error).wait(rpc.error());
+          rpc.result().event(transport);
+        } catch (e) {
+          error?.use(e);
         }
       }),
     );

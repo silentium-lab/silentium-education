@@ -1,26 +1,36 @@
-import { Db, ObjectId } from "mongodb";
-import { Event, EventType, Primitive, Transport } from "silentium";
+import { ObjectId } from "mongodb";
+import {
+  Applied,
+  Event,
+  EventType,
+  Of,
+  RPC,
+  TransportOptional,
+  TransportType,
+} from "silentium";
+import { RecordOf } from "silentium-components";
 import { UrlId } from "../string/UrlId";
 
 export function Entity<T>(
-  $db: EventType<Db>,
   $url: EventType<string>,
-  collectionName: string,
+  collection: string,
+  error?: TransportType,
 ): EventType<T> {
   return Event((transport) => {
-    $db.event(
-      Transport(async (db) => {
-        try {
-          const idSync = Primitive(UrlId($url));
-          const collection = db.collection(collectionName);
-          const one = await collection.findOne({
-            _id: new ObjectId(idSync.primitiveWithException()),
-          });
-          transport.use(one as T);
-        } catch (e: unknown) {
-          throw new Error("Entity not found", { cause: e });
-        }
+    const $id = UrlId($url);
+    const rpc = RPC(
+      RecordOf({
+        transport: Of("db"),
+        method: Of("findOne"),
+        params: RecordOf({
+          collection: Of(collection),
+          args: RecordOf({
+            _id: Applied($id, (id) => new ObjectId(id)),
+          }),
+        }),
       }),
     );
+    TransportOptional(error).wait(rpc.error());
+    rpc.result().event(transport);
   });
 }

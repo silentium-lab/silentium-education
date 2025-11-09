@@ -1,16 +1,10 @@
-import { Db } from "mongodb";
-import { Event, EventType, Transport } from "silentium";
+import { Applied, Event, EventType } from "silentium";
+import { List } from "../modules/mongo/List";
 
 export const settingsModels = {
-  isConfigured(dbSrc: EventType<Db>): EventType<boolean> {
+  isConfigured(): EventType<boolean> {
     return Event((transport) => {
-      dbSrc.event(
-        Transport(async (db) => {
-          const collection = db.collection("settings");
-          const all = await collection.find().toArray();
-          transport.use(all.length > 0);
-        }),
-      );
+      Applied(List("settings"), (l) => l.length > 0).event(transport);
     });
   },
 };

@@ -1,9 +1,8 @@
 import { IncomingMessage } from "http";
 import { Event, EventType, Of, TransportEvent } from "silentium";
 import { Router } from "silentium-components";
-import { Query } from "../modules/string/Query";
 import { CRUDRouter } from "../app/CRUDRouter";
-import { mongoTransport } from "../../bootstrap";
+import { Query } from "../modules/string/Query";
 
 export function Private(req: EventType<IncomingMessage>): EventType<string> {
   return Event((user) => {
@@ -13,24 +12,19 @@ export function Private(req: EventType<IncomingMessage>): EventType<string> {
         {
           pattern: "^.+:/private/articles.*$",
           event: TransportEvent(() =>
-            CRUDRouter(req, mongoTransport, "/private/articles", "documents"),
+            CRUDRouter(req, "/private/articles", "documents"),
           ),
         },
         {
           pattern: "^.+:/private/categories.*$",
           event: TransportEvent(() =>
-            CRUDRouter(
-              req,
-              mongoTransport,
-              "/private/categories",
-              "categories",
-            ),
+            CRUDRouter(req, "/private/categories", "categories"),
           ),
         },
         {
           pattern: "^.+:/private/settings.*$",
           event: TransportEvent(() =>
-            CRUDRouter(req, mongoTransport, "/private/settings", "settings"),
+            CRUDRouter(req, "/private/settings", "settings"),
           ),
         },
       ]),

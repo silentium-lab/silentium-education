@@ -1,24 +1,40 @@
 import { IncomingMessage } from "http";
-import { Db } from "mongodb";
 import getRawBody from "raw-body";
-import { All, Event, EventType, Transport } from "silentium";
+import {
+  Event,
+  EventType,
+  Of,
+  RPC,
+  Transport,
+  TransportOptional,
+  TransportType,
+} from "silentium";
 
 export function Created<T>(
-  $db: EventType<Db>,
   $req: EventType<IncomingMessage>,
-  collectionName: string,
+  collection: string,
+  error?: TransportType,
 ): EventType<T> {
   return Event((transport) => {
-    All($db, $req).event(
-      Transport(async ([db, req]) => {
+    $req.event(
+      Transport(async (req) => {
         try {
-          const collection = db.collection(collectionName);
           const body = await getRawBody(req);
           const bodyText = body.toString("utf8");
-          const result = await collection.insertOne(JSON.parse(bodyText));
-          transport.use(result as T);
-        } catch {
-          throw new Error("Entity not found");
+          const rpc = RPC(
+            Of({
+              transport: "db",
+              method: "insertOne",
+              params: {
+                collection,
+                args: [JSON.parse(bodyText)],
+              },
+            }),
+          );
+          TransportOptional(error).wait(rpc.error());
+          rpc.result().event(transport);
+        } catch (e) {
+          error?.use(e);
         }
       }),
     );

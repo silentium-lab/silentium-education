@@ -1,9 +1,6 @@
 import { IncomingMessage } from "http";
-import { Db } from "mongodb";
 import {
   Any,
-  Catch,
-  ConstructorType,
   EventType,
   Late,
   LateShared,
@@ -22,7 +19,6 @@ import { UrlFromMessage } from "../modules/string/UrlFromMessage";
 
 export const CRUDRouter = (
   req: EventType<IncomingMessage>,
-  dbTransport: ConstructorType<[], EventType<Db>>,
   baseUrl: string,
   collectionName: string,
 ): EventType<string> => {
@@ -34,7 +30,7 @@ export const CRUDRouter = (
         pattern: `^GET:${baseUrl}$`,
         event: TransportEvent(() => {
           const error = LateShared();
-          const $data = Catch(List(dbTransport(), collectionName), error);
+          const $data = List(collectionName, error);
           return ToJson(
             RecordOf({
               data: $data,
@@ -48,10 +44,7 @@ export const CRUDRouter = (
         event: TransportEvent(() => {
           const $url = UrlFromMessage(detachedReq);
           const error = Late();
-          const $data = Catch(
-            Entity(dbTransport(), $url, collectionName),
-            error,
-          );
+          const $data = Entity($url, collectionName, error);
           return ToJson(
             RecordOf({
               data: $data,
@@ -64,10 +57,7 @@ export const CRUDRouter = (
         pattern: `^POST:${baseUrl}$`,
         event: TransportEvent(() => {
           const error = Late();
-          const $data = Catch(
-            Created(dbTransport(), detachedReq, collectionName),
-            error,
-          );
+          const $data = Created(detachedReq, collectionName, error);
           return ToJson(
             RecordOf({
               data: $data,
@@ -80,10 +70,7 @@ export const CRUDRouter = (
         pattern: `^PUT:${baseUrl}/.+/$`,
         event: TransportEvent(() => {
           const error = Late();
-          const $data = Catch(
-            Updated(dbTransport(), detachedReq, collectionName),
-            error,
-          );
+          const $data = Updated(detachedReq, collectionName, error);
           return ToJson(
             RecordOf({
               data: $data,
@@ -97,10 +84,7 @@ export const CRUDRouter = (
         event: TransportEvent(() => {
           const error = Late();
           const $url = UrlFromMessage(detachedReq);
-          const $data = Catch(
-            Removed(dbTransport(), $url, collectionName),
-            error,
-          );
+          const $data = Removed($url, collectionName, error);
           return ToJson(
             RecordOf({
               data: $data,

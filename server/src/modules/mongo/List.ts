@@ -1,12 +1,20 @@
-import { Event, EventType, Of, RPC, TransportType } from "silentium";
+import {
+  Event,
+  EventType,
+  Of,
+  RPC,
+  TransportOptional,
+  TransportType,
+} from "silentium";
 
 export function List<T>(
   collection: string,
-  error: TransportType,
+  error?: TransportType,
 ): EventType<T[]> {
   return Event((transport) => {
     const rpc = RPC(
       Of({
+        transport: "db",
         method: "find",
         params: {
           collection,
@@ -14,7 +22,7 @@ export function List<T>(
         },
       }),
     );
-    rpc.error().event(error);
+    TransportOptional(error).wait(rpc.error());
     rpc.result().event(transport);
   });
 }
