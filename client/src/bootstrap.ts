@@ -1,7 +1,13 @@
 import { FetchAPITransport } from "@/transports/FetchAPITransport";
-import { LateShared, RPC } from "silentium";
+import { Applied, LateShared, RPCOf } from "silentium";
 
-RPC.transport.request = FetchAPITransport("http://localhost:4000");
+Applied(RPCOf("request"), (rpc) => ({
+  ...rpc,
+  params: {
+    ...rpc.params,
+    baseUrl: "http://localhost:4000",
+  },
+})).event(FetchAPITransport());
 
 export const $notification = LateShared<{
   type: "error" | "success" | "info";

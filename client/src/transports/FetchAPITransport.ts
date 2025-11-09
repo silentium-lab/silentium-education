@@ -1,6 +1,6 @@
 import { RPCType, Transport } from "silentium";
 
-export function FetchAPITransport(baseUrlPredefined: string) {
+export function FetchAPITransport() {
   return Transport<RPCType>((r) => {
     const abortController = new AbortController();
     if (r.params?.abort) {
@@ -16,7 +16,7 @@ export function FetchAPITransport(baseUrlPredefined: string) {
     const url = "/" + (r.params?.model ?? "unknown");
     let urlWithQuery: URL;
     try {
-      urlWithQuery = new URL(String(url ?? "/"), baseUrl ?? baseUrlPredefined);
+      urlWithQuery = new URL(String(url ?? "/"), baseUrl);
     } catch {
       r.error?.use(new Error("Invalid URL"));
       return;
