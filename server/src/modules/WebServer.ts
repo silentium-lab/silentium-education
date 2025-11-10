@@ -39,6 +39,10 @@ export function WebServer(
             });
             delete v.headers;
           }
+          if (v.status) {
+            res.statusCode = v.status as number;
+            delete v.status;
+          }
           res.end(JSON.stringify(v));
           process?.destroy();
         }),

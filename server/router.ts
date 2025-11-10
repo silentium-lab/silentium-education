@@ -19,8 +19,8 @@ export const router = (req: EventType<IncomingMessage>) => {
           event: TransportEvent(Health),
         },
         {
-          pattern: "^GET:/auth$",
-          event: TransportEvent(Auth),
+          pattern: "^.+:/auth.+$",
+          event: TransportEvent(() => Auth(subReq)),
         },
         {
           pattern: "^GET:/configured$",

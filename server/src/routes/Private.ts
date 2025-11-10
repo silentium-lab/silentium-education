@@ -5,7 +5,7 @@ import { CRUDRouter } from "../app/CRUDRouter";
 import { Query } from "../modules/string/Query";
 
 export function Private(req: EventType<IncomingMessage>): EventType {
-  return Event((user) => {
+  return Event((transport) => {
     const rd = Router(
       Query(req),
       Of([
@@ -29,7 +29,7 @@ export function Private(req: EventType<IncomingMessage>): EventType {
         },
       ]),
       TransportEvent(() => Of("Private not found")),
-    ).event(user);
+    ).event(transport);
 
     return function AdminDestroy() {
       rd.destroy();

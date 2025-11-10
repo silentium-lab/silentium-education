@@ -7,7 +7,7 @@ import { Articles } from "@/pages/Admin/Articles";
 import { Auth } from "@/pages/Admin/Auth";
 
 export function Admin(): EventType<string> {
-  return Event((user) => {
+  return Event((transport) => {
     $title.use("Админ панель");
 
     const $localUrl = Detached($url);
@@ -36,7 +36,7 @@ export function Admin(): EventType<string> {
         },
       ]),
       TransportEvent(() => Of("Admin not found")),
-    ).event(user);
+    ).event(transport);
 
     return function AdminDestroy() {
       rd.destroy();
