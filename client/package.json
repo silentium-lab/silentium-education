@@ -36,7 +36,7 @@
     "lodash-es": "^4.17.21",
     "mustache": "^4.2.0",
     "silentium": "^0.0.135",
-    "silentium-components": "^0.0.79",
+    "silentium-components": "^0.0.80",
     "silentium-morphdom": "^0.0.14",
     "silentium-web-api": "^0.0.29",
     "uuid": "^11.1.0"

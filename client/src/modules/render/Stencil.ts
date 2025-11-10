@@ -31,6 +31,7 @@ class StencilEvent implements EventType<string>, DestroyableType {
   public event(transport: TransportType<string, null>): this {
     const $vars = RecordOf(this.vars);
     const localsDC = DestroyContainer();
+    this.dc.add(localsDC);
     const $actualVars = Transaction(Task($vars, 1), () => {
       localsDC.destroy();
       const vars = Object.fromEntries(
@@ -44,7 +45,6 @@ class StencilEvent implements EventType<string>, DestroyableType {
       Object.entries(vars).forEach(([ph, val]) => {
         base = base.replaceAll(ph, String(val));
       });
-
       return base;
     }).event(transport);
     return this;
