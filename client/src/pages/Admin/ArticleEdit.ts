@@ -21,7 +21,8 @@ import {
 
 export function ArticleEdit() {
   return Event<string>((transport) => {
-    i18n.tr("Article").event($title);
+    const title = i18n.tr("Article");
+    title.event($title);
 
     const $localUrl = Detached($url);
     const $id = Shared(SplitPart($localUrl, Of("/"), Of(3)));
@@ -56,7 +57,7 @@ export function ArticleEdit() {
     const t = Template();
     t.template(`<div class="article">
 			${t.var(Link(Of("/admin/articles"), i18n.tr("Articles"), Of("underline")))}
-        <h1 class="title-1">${t.var($title)}</h1>
+        <h1 class="title-1">${t.var(title)}</h1>
         <div class="mb-2">
           <div>
             <b>id: </b>

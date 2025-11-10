@@ -7,8 +7,9 @@ export const settingsModels = {
    * Application is configured
    */
   hasSettings(): EventType<boolean> {
-    const $settings = FromJson(CRUD(Of("configured")).custom().result());
-
-    return Path($settings, Of("data.configured"));
+    return Path(
+      FromJson(CRUD(Of("configured")).custom().result()),
+      Of("data.configured"),
+    );
   },
 };

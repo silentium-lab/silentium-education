@@ -9,13 +9,14 @@ import {
   type EventType,
   LateShared,
   Of,
+  Shared,
   SharedSource,
   Transport,
 } from "silentium";
 import { Memo } from "silentium-components";
 
 (window as any).debug = (name: string, ...events: EventType[]) => {
-  Applied(All(...events), (r) => ({ name, ...r })).event(
+  Applied(All(...events.map((e) => Shared(e))), (r) => ({ name, ...r })).event(
     Transport(console.table),
   );
 };

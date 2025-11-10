@@ -7,7 +7,7 @@ import {
   isDestroyable,
   Local,
   Of,
-  TransportType
+  TransportType,
 } from "silentium";
 import { RecordOf, Task, Transaction } from "silentium-components";
 

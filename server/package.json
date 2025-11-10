@@ -27,7 +27,7 @@
   "dependencies": {
     "mongodb": "^6.19.0",
     "raw-body": "^3.0.1",
-    "silentium": "^0.0.134",
-    "silentium-components": "^0.0.78"
+    "silentium": "^0.0.135",
+    "silentium-components": "^0.0.79"
   }
 }
