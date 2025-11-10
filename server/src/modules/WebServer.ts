@@ -9,7 +9,10 @@ import {
 } from "silentium";
 
 export function WebServer(
-  processSrc: ConstructorType<[EventType<IncomingMessage>], EventType<string>>,
+  processSrc: ConstructorType<
+    [EventType<IncomingMessage>],
+    EventType<Record<string, unknown>>
+  >,
   hostname: string = "0.0.0.0",
   port: number = 4000,
 ): EventType<string> {
@@ -30,7 +33,13 @@ export function WebServer(
             "Access-Control-Allow-Methods",
             "GET, POST, PUT, DELETE, OPTIONS",
           );
-          res.end(v);
+          if (v.headers) {
+            Object.entries(v.headers).forEach(([name, value]) => {
+              res.setHeader(name, value);
+            });
+            delete v.headers;
+          }
+          res.end(JSON.stringify(v));
           process?.destroy();
         }),
       );

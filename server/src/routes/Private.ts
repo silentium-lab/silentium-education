@@ -4,7 +4,7 @@ import { Router } from "silentium-components";
 import { CRUDRouter } from "../app/CRUDRouter";
 import { Query } from "../modules/string/Query";
 
-export function Private(req: EventType<IncomingMessage>): EventType<string> {
+export function Private(req: EventType<IncomingMessage>): EventType {
   return Event((user) => {
     const rd = Router(
       Query(req),
@@ -19,6 +19,12 @@ export function Private(req: EventType<IncomingMessage>): EventType<string> {
           pattern: "^.+:/private/categories.*$",
           event: TransportEvent(() =>
             CRUDRouter(req, "/private/categories", "categories"),
+          ),
+        },
+        {
+          pattern: "^.+:/private/settings.*$",
+          event: TransportEvent(() =>
+            CRUDRouter(req, "/private/settings", "settings"),
           ),
         },
       ]),

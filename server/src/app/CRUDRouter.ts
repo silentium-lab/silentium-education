@@ -7,7 +7,7 @@ import {
   Shared,
   TransportEvent,
 } from "silentium";
-import { Detached, RecordOf, Router, Shot, ToJson } from "silentium-components";
+import { Detached, RecordOf, Router, Shot } from "silentium-components";
 import { NotFoundSrc } from "../../store";
 import { Created } from "../modules/mongo/Created";
 import { Entity } from "../modules/mongo/Entity";
@@ -32,14 +32,12 @@ export const CRUDRouter = (
         event: TransportEvent(() => {
           const $error = LateShared();
           const $data = Shared(List(collectionName, $error));
-          return ToJson(
-            Truncated(
-              RecordOf({
-                data: Any($data, Shot<unknown>(Of(""), $error)),
-                error: Any($error, Shot(Of(""), $data)),
-              }),
-              [""],
-            ),
+          return Truncated(
+            RecordOf({
+              data: Any($data, Shot<unknown>(Of(""), $error)),
+              error: Any($error, Shot(Of(""), $data)),
+            }),
+            [""],
           );
         }),
       },
@@ -49,14 +47,12 @@ export const CRUDRouter = (
           const $url = UrlFromMessage(detachedReq);
           const $error = LateShared();
           const $data = Shared(Entity($url, collectionName, $error));
-          return ToJson(
-            Truncated(
-              RecordOf({
-                data: Any($data, Shot(Of(""), $error)),
-                error: Any($error, Shot(Of(""), $data)),
-              }),
-              [""],
-            ),
+          return Truncated(
+            RecordOf({
+              data: Any($data, Shot(Of(""), $error)),
+              error: Any($error, Shot(Of(""), $data)),
+            }),
+            [""],
           );
         }),
       },
@@ -65,14 +61,12 @@ export const CRUDRouter = (
         event: TransportEvent(() => {
           const $error = LateShared();
           const $data = Shared(Created(detachedReq, collectionName, $error));
-          return ToJson(
-            Truncated(
-              RecordOf({
-                data: Any($data, Shot(Of(""), $error)),
-                error: Any($error, Shot(Of(""), $data)),
-              }),
-              [""],
-            ),
+          return Truncated(
+            RecordOf({
+              data: Any($data, Shot(Of(""), $error)),
+              error: Any($error, Shot(Of(""), $data)),
+            }),
+            [""],
           );
         }),
       },
@@ -81,14 +75,12 @@ export const CRUDRouter = (
         event: TransportEvent(() => {
           const $error = LateShared();
           const $data = Shared(Updated(detachedReq, collectionName, $error));
-          return ToJson(
-            Truncated(
-              RecordOf({
-                data: Any($data, Shot(Of(""), $error)),
-                error: Any($error, Shot(Of(""), $data)),
-              }),
-              [""],
-            ),
+          return Truncated(
+            RecordOf({
+              data: Any($data, Shot(Of(""), $error)),
+              error: Any($error, Shot(Of(""), $data)),
+            }),
+            [""],
           );
         }),
       },
@@ -98,14 +90,12 @@ export const CRUDRouter = (
           const $error = LateShared();
           const $url = UrlFromMessage(detachedReq);
           const $data = Shared(Removed($url, collectionName, $error));
-          return ToJson(
-            Truncated(
-              RecordOf({
-                data: Any($data, Shot(Of(""), $error)),
-                error: Any($error, Shot(Of(""), $data)),
-              }),
-              [""],
-            ),
+          return Truncated(
+            RecordOf({
+              data: Any($data, Shot(Of(""), $error)),
+              error: Any($error, Shot(Of(""), $data)),
+            }),
+            [""],
           );
         }),
       },

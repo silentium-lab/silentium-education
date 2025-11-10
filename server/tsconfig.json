@@ -15,7 +15,9 @@
     },
     "ts-node": {
         "esm": true,
-        "experimentalSpecifierResolution": "node",
+        "logError": true,
+        "pretty": true ,
+        "experimentalSpecifierResolution": "node"
     },
     "lib": ["esnext"],
 }

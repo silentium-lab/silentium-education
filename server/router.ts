@@ -11,7 +11,7 @@ import { NotFoundSrc } from "./store";
 export const router = (req: EventType<IncomingMessage>) => {
   const subReq = Detached(req);
   return Tick(
-    Router(
+    Router<unknown>(
       Query(req),
       Of([
         {
