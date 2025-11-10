@@ -1,10 +1,15 @@
-import { Applied, RPCOf } from "silentium";
+import { All, AppliedDestructured, Of, RPCOf } from "silentium";
 import { MongoTransport } from "./transports/MongoTransport";
+import { merge } from "lodash-es";
 
-Applied(RPCOf("db"), (rpc) => ({
-  ...rpc,
-  params: {
-    dbName: "myapp",
-    ...rpc.params,
-  },
-})).event(MongoTransport(process.env.MONGODB_URI ?? ""));
+AppliedDestructured(
+  All(
+    RPCOf("db"),
+    Of({
+      params: {
+        dbName: "myapp",
+      },
+    }),
+  ),
+  merge,
+).event(MongoTransport(process.env.MONGODB_URI ?? ""));
