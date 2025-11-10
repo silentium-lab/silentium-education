@@ -6,9 +6,8 @@ import {
   EventType,
   isDestroyable,
   Local,
-  LocalEvent,
   Of,
-  TransportType,
+  TransportType
 } from "silentium";
 import { RecordOf, Task, Transaction } from "silentium-components";
 
@@ -31,18 +30,15 @@ class StencilEvent implements EventType<string>, DestroyableType {
 
   public event(transport: TransportType<string, null>): this {
     const $vars = RecordOf(this.vars);
-    let lastLocal: LocalEvent<Record<string, unknown>> | null = null;
+    const localsDC = DestroyContainer();
     const $actualVars = Transaction(Task($vars, 1), () => {
-      if (lastLocal) {
-        lastLocal.destroy();
-      }
+      localsDC.destroy();
       const vars = Object.fromEntries(
         Object.entries(this.vars).map((entry) => {
-          return [entry[0], entry[1]];
+          return [entry[0], localsDC.add(entry[1])];
         }),
       );
-      lastLocal = Local(RecordOf(vars));
-      return lastLocal;
+      return Local(RecordOf(vars));
     });
     Applied(All(this.$src, $actualVars), ([base, vars]) => {
       Object.entries(vars).forEach(([ph, val]) => {
