@@ -1,9 +1,22 @@
 import { IncomingMessage } from "http";
-import { Event, EventType, Of, Transport, TransportEvent } from "silentium";
+import {
+  All,
+  Event,
+  EventType,
+  Of,
+  RPC,
+  Transport,
+  TransportEvent,
+} from "silentium";
 import { Router } from "silentium-components";
 import { Query } from "../modules/string/Query";
 import getRawBody from "raw-body";
-import SimpleWebAuthnServer from "@simplewebauthn/server";
+import {
+  verifyRegistrationResponse,
+  verifyAuthenticationResponse,
+  generateRegistrationOptions,
+} from "@simplewebauthn/server";
+import { PassKeyConfigType } from "../types/PassKeyConfigType";
 
 const users: any = {};
 const challenges: any = {};
@@ -19,34 +32,28 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
           pattern: "^POST:/auth/registration/start$",
           event: TransportEvent(() =>
             Event<unknown>((transport) => {
-              $req.event(
-                Transport(async (req) => {
+              const $config = RPC<PassKeyConfigType>(
+                Of({ transport: "config", method: "get" }),
+              ).result();
+              All($req, $config).event(
+                Transport(async ([req, config]) => {
                   const body = await getRawBody(req);
                   const bodyText = body.toString("utf8");
                   const { username } = JSON.parse(bodyText);
-                  const challenge = getNewChallenge();
-                  challenges[username] = convertChallenge(challenge);
-                  const pubKey = {
-                    challenge: challenge,
-                    rp: { id: rpId, name: "webauthn-app" },
-                    user: {
-                      id: username,
-                      name: username,
-                      displayName: username,
-                    },
-                    pubKeyCredParams: [
-                      { type: "public-key", alg: -7 },
-                      { type: "public-key", alg: -257 },
-                    ],
-                    authenticatorSelection: {
-                      authenticatorAttachment: "platform",
-                      userVerification: "required",
-                      residentKey: "preferred",
-                      requireResidentKey: false,
-                    },
-                  };
+                  const options: PublicKeyCredentialCreationOptionsJSON =
+                    await generateRegistrationOptions({
+                      rpName: config.rpName,
+                      rpID: config.rpID,
+                      userName: username,
+                      attestationType: "none",
+                      authenticatorSelection: {
+                        residentKey: "preferred",
+                        userVerification: "preferred",
+                        authenticatorAttachment: "platform",
+                      },
+                    });
                   transport.use({
-                    data: pubKey,
+                    data: options,
                   });
                 }),
               );
@@ -65,12 +72,11 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
                   // Verify the attestation response
                   let verification;
                   try {
-                    verification =
-                      await SimpleWebAuthnServer.verifyRegistrationResponse({
-                        response: data,
-                        expectedChallenge: challenges[data.username],
-                        expectedOrigin: expectedOrigin,
-                      });
+                    verification = await verifyRegistrationResponse({
+                      response: data,
+                      expectedChallenge: challenges[data.username],
+                      expectedOrigin: expectedOrigin,
+                    });
                     const { verified, registrationInfo } = verification;
                     if (verified) {
                       users[data.username] = registrationInfo;
@@ -152,15 +158,14 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
                   let verification;
                   try {
                     const user = users[username];
-                    verification =
-                      await SimpleWebAuthnServer.verifyAuthenticationResponse({
-                        expectedChallenge: challenges[username],
-                        response: data,
-                        credential: user,
-                        expectedRPID: rpId,
-                        expectedOrigin,
-                        requireUserVerification: false,
-                      });
+                    verification = await verifyAuthenticationResponse({
+                      expectedChallenge: challenges[username],
+                      response: data,
+                      credential: user,
+                      expectedRPID: rpId,
+                      expectedOrigin,
+                      requireUserVerification: false,
+                    });
                   } catch (error) {
                     console.error(error);
                     transport.use({

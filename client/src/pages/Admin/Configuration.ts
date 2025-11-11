@@ -1,9 +1,19 @@
 import { Button } from "@/components/Button";
-import { Input } from "@/components/Input";
 import { CRUD } from "@/modules/app/CRUD";
+import { ServerResponse } from "@/modules/app/ServerResponse";
 import { i18n } from "@/store";
-import { Event, EventType, LateShared, Of, Transport } from "silentium";
-import { RecordOf, Shot, Template } from "silentium-components";
+import { fido2Create } from "@ownid/webauthn";
+import {
+  Event,
+  EventType,
+  FromPromise,
+  LateShared,
+  Of,
+  Primitive,
+  Shared,
+} from "silentium";
+import { Shot, Template, Transaction } from "silentium-components";
+import { Log } from "silentium-web-api";
 
 /**
  * Configuration page
@@ -12,19 +22,32 @@ export function Configuration(): EventType<string> {
   return Event((transport) => {
     i18n.tr("Configuration");
 
-    const $username = LateShared("");
-    const $password = LateShared("");
-    const $form = RecordOf({
-      username: $username,
-      password: $password,
+    const $register = LateShared();
+
+    const username = "Test";
+    const $regStart = Shared(
+      ServerResponse(
+        CRUD(Of("auth/registration/start"))
+          .created(Shot(Of({ username }), $register))
+          .result(),
+      ),
+    );
+
+    const $fidoData = Transaction($regStart, (data) => {
+      return FromPromise(
+        fido2Create(Primitive(data).primitiveWithException(), username),
+        Log("fido error"),
+      );
     });
 
-    const $saved = LateShared();
-    const $savedForm = Shot($form, $saved);
+    const $regFinish = Shared(
+      ServerResponse(
+        CRUD(Of("auth/registration/finish")).created($fidoData).result(),
+      ),
+    );
 
-    const $formUpdated = CRUD(Of("private/settings")).created($savedForm);
-
-    $formUpdated.result().event(Transport(() => location.reload()));
+    $regStart.event(Log("formUpdated"));
+    $regFinish.event(Log("regFinish"));
 
     const t = Template();
     t.template(`<div class="article">
@@ -34,15 +57,7 @@ export function Configuration(): EventType<string> {
                 необходимо провести конфигурацию сервера,
                 Укажите обязательные параметры
             </p>
-            <div class="mb-2">
-                Имя пользователя
-                <input class="${t.var(Input($username))} border-1 p-2 rounded-sm w-full" />
-            </div>
-            <div class="mb-2">
-                Пароль
-                <input class="${t.var(Input($password))} border-1 p-2 rounded-sm w-full" />
-            </div>
-            ${t.var(Button(Of("Сохранить"), Of("btn"), $saved))}
+            ${t.var(Button(Of("Регистрация"), Of("btn"), $register))}
 		</div>`);
     t.event(transport);
 

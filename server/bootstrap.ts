@@ -1,6 +1,6 @@
-import { All, AppliedDestructured, Of, RPCOf } from "silentium";
-import { MongoTransport } from "./transports/MongoTransport";
 import { merge } from "lodash-es";
+import { All, AppliedDestructured, Of, RPCChain, RPCOf } from "silentium";
+import { MongoTransport } from "./transports/MongoTransport";
 
 AppliedDestructured(
   All(
@@ -13,3 +13,13 @@ AppliedDestructured(
   ),
   merge,
 ).event(MongoTransport(process.env.MONGODB_URI ?? ""));
+
+RPCOf("config").event(
+  RPCChain(
+    Of({
+      rpName: "TestApp",
+      rpID: "localhost",
+      origin: "http://localhost:1234",
+    }),
+  ),
+);

@@ -33,9 +33,10 @@
     "util": "^0.12.5"
   },
   "dependencies": {
+    "@ownid/webauthn": "^1.0.0",
     "lodash-es": "^4.17.21",
     "mustache": "^4.2.0",
-    "silentium": "^0.0.136",
+    "silentium": "^0.0.137",
     "silentium-components": "^0.0.80",
     "silentium-morphdom": "^0.0.14",
     "silentium-web-api": "^0.0.29",
