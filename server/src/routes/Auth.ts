@@ -52,6 +52,7 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
                         authenticatorAttachment: "platform",
                       },
                     });
+                  challenges[username] = options;
                   transport.use({
                     data: options,
                   });
@@ -64,18 +65,23 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
           pattern: "^POST:/auth/registration/finish$",
           event: TransportEvent(() =>
             Event<unknown>((transport) => {
-              $req.event(
-                Transport(async (req) => {
+              const $config = RPC<PassKeyConfigType>(
+                Of({ transport: "config", method: "get" }),
+              ).result();
+              All($req, $config).event(
+                Transport(async ([req, config]) => {
                   const body = await getRawBody(req);
                   const bodyText = body.toString("utf8");
                   const data = JSON.parse(bodyText);
                   // Verify the attestation response
                   let verification;
                   try {
+                    const currentOptions = challenges[data.username];
                     verification = await verifyRegistrationResponse({
-                      response: data,
-                      expectedChallenge: challenges[data.username],
-                      expectedOrigin: expectedOrigin,
+                      response: data.data,
+                      expectedChallenge: currentOptions.challenge,
+                      expectedOrigin: config.origin,
+                      expectedRPID: config.rpID,
                     });
                     const { verified, registrationInfo } = verification;
                     if (verified) {

@@ -3,6 +3,7 @@ import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { i18n } from "@/store";
 import { fido2Create } from "@ownid/webauthn";
+import { startRegistration } from "@simplewebauthn/browser";
 import {
   Event,
   EventType,
@@ -12,7 +13,7 @@ import {
   Primitive,
   Shared,
 } from "silentium";
-import { Shot, Template, Transaction } from "silentium-components";
+import { RecordOf, Shot, Template, Transaction } from "silentium-components";
 import { Log } from "silentium-web-api";
 
 /**
@@ -35,14 +36,23 @@ export function Configuration(): EventType<string> {
 
     const $fidoData = Transaction($regStart, (data) => {
       return FromPromise(
-        fido2Create(Primitive(data).primitiveWithException(), username),
+        startRegistration({
+          optionsJSON: Primitive(data).primitiveWithException() as any,
+        }),
         Log("fido error"),
       );
     });
 
     const $regFinish = Shared(
       ServerResponse(
-        CRUD(Of("auth/registration/finish")).created($fidoData).result(),
+        CRUD(Of("auth/registration/finish"))
+          .created(
+            RecordOf({
+              data: $fidoData,
+              username: Of(username),
+            }),
+          )
+          .result(),
       ),
     );
 
