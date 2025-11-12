@@ -12,6 +12,7 @@ export function CacheTransport() {
   return Transport<RPCType>((rpc) => {
     const key = rpc.params?.key ?? "none";
 
+    // TODO ttl consider
     if (rpc.method === "get") {
       const value = cache[key];
       if (isFilled(value)) {
