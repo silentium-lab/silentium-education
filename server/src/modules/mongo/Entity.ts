@@ -12,6 +12,7 @@ import {
 import { RecordOf } from "silentium-components";
 import { UrlId } from "../string/UrlId";
 
+// TODO move $url outside
 export function Entity<T>(
   $url: EventType<string>,
   collection: string,

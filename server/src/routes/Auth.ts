@@ -1,4 +1,13 @@
+import {
+  AuthenticatorTransportFuture,
+  CredentialDeviceType,
+  generateAuthenticationOptions,
+  generateRegistrationOptions,
+  verifyAuthenticationResponse,
+  verifyRegistrationResponse,
+} from "@simplewebauthn/server";
 import { IncomingMessage } from "http";
+import { uniqueId } from "lodash-es";
 import {
   All,
   Event,
@@ -8,23 +17,77 @@ import {
   Transport,
   TransportEvent,
 } from "silentium";
-import { Router } from "silentium-components";
-import { Query } from "../modules/string/Query";
-import getRawBody from "raw-body";
 import {
-  verifyRegistrationResponse,
-  verifyAuthenticationResponse,
-  generateRegistrationOptions,
-} from "@simplewebauthn/server";
+  Concatenated,
+  First,
+  Path,
+  RecordOf,
+  Router,
+} from "silentium-components";
+import { Created } from "../modules/mongo/Created";
+import { List } from "../modules/mongo/List";
+import { RequestBody } from "../modules/node/RequestBody";
+import { Query } from "../modules/string/Query";
 import { PassKeyConfigType } from "../types/PassKeyConfigType";
 
-const users: any = {};
-const challenges: any = {};
-const rpId = "localhost";
-const expectedOrigin = ["http://localhost:1234"];
+type UserModel = {
+  id: any;
+  username: string;
+};
+
+type Passkey = {
+  id: Base64URLString;
+  publicKey: Uint8Array;
+  user: UserModel;
+  webauthnUserID: Base64URLString;
+  counter: number;
+  deviceType: CredentialDeviceType;
+  backedUp: boolean;
+  transports?: AuthenticatorTransportFuture[];
+};
+
+type PassKeyChallenge = { challenge: any; user: any };
+
+function UserPasskeys($username: EventType<string>): EventType<Passkey[]> {
+  return List(
+    "user-passkeys",
+    RecordOf({
+      "user.username": $username,
+    }),
+  );
+}
+
+function ConcretePassKey(
+  $username: EventType,
+  $id: EventType,
+): EventType<Passkey> {
+  return First(
+    List(
+      "user-passkeys",
+      RecordOf({
+        "user.username": $username,
+        "user.id": $id,
+      }),
+    ),
+  );
+}
+
+function NewPassKey($form: EventType) {
+  return Created($form, "user-passkeys");
+}
+
+function PassKeyConfig() {
+  return RPC<PassKeyConfigType>(
+    Of({ transport: "config", method: "get" }),
+  ).result();
+}
 
 export function Auth($req: EventType<IncomingMessage>): EventType {
   return Event((transport) => {
+    const $config = RPC<PassKeyConfigType>(
+      Of({ transport: "config", method: "get" }),
+    ).result();
+
     const rd = Router(
       Query($req),
       Of([
@@ -32,27 +95,37 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
           pattern: "^POST:/auth/registration/start$",
           event: TransportEvent(() =>
             Event<unknown>((transport) => {
-              const $config = RPC<PassKeyConfigType>(
-                Of({ transport: "config", method: "get" }),
-              ).result();
-              All($req, $config).event(
-                Transport(async ([req, config]) => {
-                  const body = await getRawBody(req);
-                  const bodyText = body.toString("utf8");
-                  const { username } = JSON.parse(bodyText);
+              const $body = RequestBody($req);
+              const $passkeys = UserPasskeys(Path($body, Of("username")));
+              All($config, $body, $passkeys).event(
+                Transport(async ([config, body, passkeys]) => {
+                  const { username } = body;
                   const options: PublicKeyCredentialCreationOptionsJSON =
                     await generateRegistrationOptions({
                       rpName: config.rpName,
                       rpID: config.rpID,
                       userName: username,
                       attestationType: "none",
+                      excludeCredentials: passkeys.map((passkey) => ({
+                        id: passkey.id,
+                        transports: passkey.transports,
+                      })),
                       authenticatorSelection: {
                         residentKey: "preferred",
                         userVerification: "preferred",
                         authenticatorAttachment: "platform",
                       },
                     });
-                  challenges[username] = options;
+                  RPC(
+                    Of({
+                      transport: "cache",
+                      method: "put",
+                      params: {
+                        key: username,
+                        value: options,
+                      },
+                    }),
+                  );
                   transport.use({
                     data: options,
                   });
@@ -68,30 +141,55 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
               const $config = RPC<PassKeyConfigType>(
                 Of({ transport: "config", method: "get" }),
               ).result();
-              All($req, $config).event(
-                Transport(async ([req, config]) => {
-                  const body = await getRawBody(req);
-                  const bodyText = body.toString("utf8");
-                  const data = JSON.parse(bodyText);
-                  // Verify the attestation response
+              const $body = RequestBody<Record<string, any>>($req);
+              const $options = RPC<PassKeyChallenge>(
+                RecordOf({
+                  transport: Of("cache"),
+                  method: Of("get"),
+                  params: RecordOf({
+                    key: Path($body, Of("username")),
+                  }),
+                }),
+              ).result();
+              All($body, $options, $config).event(
+                Transport(async ([data, options, config]) => {
                   let verification;
                   try {
-                    const currentOptions = challenges[data.username];
                     verification = await verifyRegistrationResponse({
                       response: data.data,
-                      expectedChallenge: currentOptions.challenge,
+                      expectedChallenge: options.challenge,
                       expectedOrigin: config.origin,
                       expectedRPID: config.rpID,
+                      requireUserVerification: false,
                     });
                     const { verified, registrationInfo } = verification;
                     if (verified) {
-                      users[data.username] = registrationInfo;
+                      const {
+                        credential,
+                        credentialDeviceType,
+                        credentialBackedUp,
+                      } = registrationInfo;
+                      NewPassKey(
+                        Of({
+                          user: {
+                            id: uniqueId(),
+                            username: data.username,
+                          },
+                          webAuthnUserID: options.user.id,
+                          id: credential.id,
+                          publicKey: credential.publicKey,
+                          counter: credential.counter,
+                          transports: credential.transports,
+                          deviceType: credentialDeviceType,
+                          backedUp: credentialBackedUp,
+                        }),
+                      );
                       transport.use({
                         result: true,
                       });
+                      return;
                     }
                   } catch (error) {
-                    console.error(error);
                     transport.use({
                       status: 400,
                       error: error.message,
@@ -111,33 +209,31 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
           pattern: "^POST:/auth/login/start$",
           event: TransportEvent(() =>
             Event<unknown>((transport) => {
-              $req.event(
-                Transport(async (req) => {
-                  const body = await getRawBody(req);
-                  const bodyText = body.toString("utf8");
-                  const { username } = JSON.parse(bodyText);
-                  if (!users[username]) {
-                    transport.use({
-                      status: 404,
-                      error: "Not found",
+              const $body = RequestBody<Record<string, any>>($req);
+              const $passkeys = UserPasskeys(Path($body, Of("username")));
+              const $config = PassKeyConfig();
+              All($body, $passkeys, $config).event(
+                Transport(async ([body, passkeys, config]) => {
+                  const options: PublicKeyCredentialRequestOptionsJSON =
+                    await generateAuthenticationOptions({
+                      rpID: config.rpID,
+                      allowCredentials: passkeys.map((passkey) => ({
+                        id: passkey.id,
+                        transports: passkey.transports,
+                      })),
                     });
-                    return;
-                  }
-                  const challenge = getNewChallenge();
-                  challenges[username] = convertChallenge(challenge);
+                  RPC(
+                    Of({
+                      transport: "cache",
+                      method: "put",
+                      params: {
+                        key: `${body.username}-login`,
+                        value: options,
+                      },
+                    }),
+                  );
                   transport.use({
-                    data: {
-                      challenge,
-                      rpId,
-                      allowCredentials: [
-                        {
-                          type: "public-key",
-                          id: users[username].credentialID,
-                          transports: ["internal"],
-                        },
-                      ],
-                      userVerification: "preferred",
-                    },
+                    data: options,
                   });
                 }),
               );
@@ -148,42 +244,47 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
           pattern: "^POST:/auth/login/finish$",
           event: TransportEvent(() =>
             Event<unknown>((transport) => {
-              $req.event(
-                Transport(async (req) => {
-                  const body = await getRawBody(req);
-                  const bodyText = body.toString("utf8");
-                  const { username } = JSON.parse(bodyText);
-                  const data = JSON.parse(bodyText);
-                  if (!users[username]) {
+              const $body = RequestBody<Record<string, any>>($req);
+              const $username = Path($body, Of("username"));
+              const $id = Path($body, Of("id"));
+              const $passkeys = ConcretePassKey($username, $id);
+              const $options = RPC<PassKeyChallenge>(
+                RecordOf({
+                  transport: Of("cache"),
+                  method: Of("get"),
+                  params: RecordOf({
+                    key: Concatenated([$username, Of("-login")]),
+                  }),
+                }),
+              ).result();
+              const $config = PassKeyConfig();
+              All($body, $passkeys, $options, $config).event(
+                Transport(async ([body, passkey, options, config]) => {
+                  try {
+                    const verification = await verifyAuthenticationResponse({
+                      response: body as any,
+                      expectedChallenge: options.challenge,
+                      expectedOrigin: origin,
+                      expectedRPID: config.rpID,
+                      credential: {
+                        id: passkey.id,
+                        publicKey: passkey.publicKey as any,
+                        counter: passkey.counter,
+                        transports: passkey.transports,
+                      },
+                    });
+                    const { verified } = verification;
                     transport.use({
-                      status: 404,
-                      error: "Not found",
+                      verified,
                     });
                     return;
-                  }
-                  let verification;
-                  try {
-                    const user = users[username];
-                    verification = await verifyAuthenticationResponse({
-                      expectedChallenge: challenges[username],
-                      response: data,
-                      credential: user,
-                      expectedRPID: rpId,
-                      expectedOrigin,
-                      requireUserVerification: false,
-                    });
                   } catch (error) {
-                    console.error(error);
                     transport.use({
                       status: 400,
                       error: error.message,
                     });
                     return;
                   }
-                  const { verified } = verification;
-                  transport.use({
-                    res: verified,
-                  });
                 }),
               );
             }),
@@ -202,11 +303,4 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
       rd.destroy();
     };
   });
-}
-
-function getNewChallenge() {
-  return Math.random().toString(36).substring(2);
-}
-function convertChallenge(challenge: string) {
-  return btoa(challenge).replaceAll("=", "");
 }

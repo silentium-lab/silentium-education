@@ -1,7 +1,7 @@
 import { Button } from "@/components/Button";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
-import { i18n } from "@/store";
+import { $authenticated, i18n } from "@/store";
 import { fido2Create } from "@ownid/webauthn";
 import { startRegistration } from "@simplewebauthn/browser";
 import {
@@ -59,6 +59,8 @@ export function Configuration(): EventType<string> {
     $regStart.event(Log("formUpdated"));
     $regFinish.event(Log("regFinish"));
 
+    $authenticated = LateShared();
+
     const t = Template();
     t.template(`<div class="article">
 			<h1 class="title-1">Конфигурирование системы</h1>
@@ -68,6 +70,7 @@ export function Configuration(): EventType<string> {
                 Укажите обязательные параметры
             </p>
             ${t.var(Button(Of("Регистрация"), Of("btn"), $register))}
+            ${t.var(Button(Of("Войти"), Of("btn"), $register))}
 		</div>`);
     t.event(transport);
 

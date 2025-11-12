@@ -1,6 +1,7 @@
 import { merge } from "lodash-es";
 import { All, AppliedDestructured, Of, RPCChain, RPCOf } from "silentium";
 import { MongoTransport } from "./transports/MongoTransport";
+import { CacheTransport } from "./transports/CacheTransport";
 
 AppliedDestructured(
   All(
@@ -13,6 +14,8 @@ AppliedDestructured(
   ),
   merge,
 ).event(MongoTransport(process.env.MONGODB_URI ?? ""));
+
+RPCOf("cache").event(CacheTransport());
 
 RPCOf("config").event(
   RPCChain(

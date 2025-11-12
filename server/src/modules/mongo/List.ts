@@ -9,6 +9,7 @@ import {
 
 export function List<T>(
   collection: string,
+  conditions?: EventType,
   error?: TransportType,
 ): EventType<T[]> {
   return Event((transport) => {
@@ -18,6 +19,7 @@ export function List<T>(
         method: "find",
         params: {
           collection,
+          conditions,
           postProcess: "toArray",
         },
       }),
