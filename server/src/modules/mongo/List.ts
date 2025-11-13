@@ -1,4 +1,5 @@
 import {
+  All,
   Event,
   EventType,
   Of,
@@ -6,6 +7,7 @@ import {
   TransportOptional,
   TransportType,
 } from "silentium";
+import { RecordOf } from "silentium-components";
 
 export function List<T>(
   collection: string,
@@ -14,14 +16,14 @@ export function List<T>(
 ): EventType<T[]> {
   return Event((transport) => {
     const rpc = RPC(
-      Of({
-        transport: "db",
-        method: "find",
-        params: {
-          collection,
-          conditions,
-          postProcess: "toArray",
-        },
+      RecordOf({
+        transport: Of("db"),
+        method: Of("find"),
+        params: RecordOf({
+          collection: Of(collection),
+          postProcessArgs: conditions ? All(conditions) : Of([]),
+          postProcess: Of("toArray"),
+        }),
       }),
     );
     TransportOptional(error).wait(rpc.error());

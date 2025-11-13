@@ -1,9 +1,11 @@
 import { Button } from "@/components/Button";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
-import { $authenticated, i18n } from "@/store";
-import { fido2Create } from "@ownid/webauthn";
-import { startRegistration } from "@simplewebauthn/browser";
+import { i18n } from "@/store";
+import {
+  startAuthentication,
+  startRegistration,
+} from "@simplewebauthn/browser";
 import {
   Event,
   EventType,
@@ -59,18 +61,54 @@ export function Configuration(): EventType<string> {
     $regStart.event(Log("formUpdated"));
     $regFinish.event(Log("regFinish"));
 
-    $authenticated = LateShared();
+    const $authenticated = LateShared();
+
+    const $loginStart = Shared(
+      ServerResponse(
+        CRUD(Of("auth/login/start"))
+          .created(Shot(Of({ username }), $authenticated))
+          .result(),
+      ),
+    );
+    const $fidoAuthData = Transaction($loginStart, (data) => {
+      return FromPromise(
+        startAuthentication({
+          optionsJSON: Primitive(data).primitiveWithException() as any,
+        }),
+        Log("fido auth error"),
+      );
+    });
+
+    const $loginFinish = Shared(
+      ServerResponse(
+        CRUD(Of("auth/login/finish"))
+          .created(
+            RecordOf({
+              data: $fidoAuthData,
+              username: Of(username),
+            }),
+          )
+          .result(),
+      ),
+    );
+
+    $authenticated.event(Log("authenticated"));
+    $loginFinish.event(Log("loginFinish"));
 
     const t = Template();
     t.template(`<div class="article">
 			<h1 class="title-1">Конфигурирование системы</h1>
-            <p class="mb-2">
-                Перед использованием панели администратора
-                необходимо провести конфигурацию сервера,
-                Укажите обязательные параметры
-            </p>
-            ${t.var(Button(Of("Регистрация"), Of("btn"), $register))}
-            ${t.var(Button(Of("Войти"), Of("btn"), $register))}
+      <p class="mb-2">
+          Перед использованием панели администратора
+          необходимо провести конфигурацию сервера,
+          Укажите обязательные параметры
+      </p>
+      <div class="mb-2">
+        ${t.var(Button(Of("Войти"), Of("btn"), $authenticated))}
+      </div>
+      <div>
+        ${t.var(Button(Of("Регистрация"), Of("btn"), $register))}
+      </div>
 		</div>`);
     t.event(transport);
 

@@ -7,7 +7,7 @@ import {
   verifyRegistrationResponse,
 } from "@simplewebauthn/server";
 import { IncomingMessage } from "http";
-import { uniqueId } from "lodash-es";
+import { ObjectId } from "mongodb";
 import {
   All,
   Event,
@@ -15,7 +15,7 @@ import {
   Of,
   RPC,
   Transport,
-  TransportEvent,
+  TransportEvent
 } from "silentium";
 import {
   Concatenated,
@@ -24,7 +24,6 @@ import {
   RecordOf,
   Router,
 } from "silentium-components";
-import { Created } from "../modules/mongo/Created";
 import { List } from "../modules/mongo/List";
 import { RequestBody } from "../modules/node/RequestBody";
 import { Query } from "../modules/string/Query";
@@ -57,23 +56,28 @@ function UserPasskeys($username: EventType<string>): EventType<Passkey[]> {
   );
 }
 
-function ConcretePassKey(
-  $username: EventType,
-  $id: EventType,
-): EventType<Passkey> {
+function ConcretePassKey($username: EventType): EventType<Passkey> {
   return First(
     List(
       "user-passkeys",
       RecordOf({
         "user.username": $username,
-        "user.id": $id,
       }),
     ),
   );
 }
 
 function NewPassKey($form: EventType) {
-  return Created($form, "user-passkeys");
+  return RPC(
+    RecordOf({
+      transport: Of("db"),
+      method: Of("insertOne"),
+      params: RecordOf({
+        collection: Of("user-passkeys"),
+        args: All($form),
+      }),
+    }),
+  );
 }
 
 function PassKeyConfig() {
@@ -125,7 +129,7 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
                         value: options,
                       },
                     }),
-                  );
+                  ).result();
                   transport.use({
                     data: options,
                   });
@@ -172,7 +176,7 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
                       NewPassKey(
                         Of({
                           user: {
-                            id: uniqueId(),
+                            id: new ObjectId().toString(),
                             username: data.username,
                           },
                           webAuthnUserID: options.user.id,
@@ -183,7 +187,7 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
                           deviceType: credentialDeviceType,
                           backedUp: credentialBackedUp,
                         }),
-                      );
+                      ).result();
                       transport.use({
                         result: true,
                       });
@@ -231,7 +235,7 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
                         value: options,
                       },
                     }),
-                  );
+                  ).result();
                   transport.use({
                     data: options,
                   });
@@ -246,8 +250,7 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
             Event<unknown>((transport) => {
               const $body = RequestBody<Record<string, any>>($req);
               const $username = Path($body, Of("username"));
-              const $id = Path($body, Of("id"));
-              const $passkeys = ConcretePassKey($username, $id);
+              const $passkeys = ConcretePassKey($username);
               const $options = RPC<PassKeyChallenge>(
                 RecordOf({
                   transport: Of("cache"),
@@ -262,10 +265,11 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
                 Transport(async ([body, passkey, options, config]) => {
                   try {
                     const verification = await verifyAuthenticationResponse({
-                      response: body as any,
+                      response: body.data as any,
                       expectedChallenge: options.challenge,
-                      expectedOrigin: origin,
+                      expectedOrigin: config.origin,
                       expectedRPID: config.rpID,
+                      requireUserVerification: false,
                       credential: {
                         id: passkey.id,
                         publicKey: passkey.publicKey as any,
