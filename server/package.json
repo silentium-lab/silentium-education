@@ -27,10 +27,12 @@
   },
   "dependencies": {
     "@simplewebauthn/server": "^13.2.2",
+    "cookie": "^1.0.2",
     "lodash-es": "^4.17.21",
     "mongodb": "^6.19.0",
     "raw-body": "^3.0.1",
     "silentium": "^0.0.137",
-    "silentium-components": "^0.0.80"
+    "silentium-components": "^0.0.80",
+    "uuid": "^13.0.0"
   }
 }

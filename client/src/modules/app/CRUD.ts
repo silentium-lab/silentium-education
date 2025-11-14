@@ -69,7 +69,10 @@ class CRUDImpl {
   /**
    * Creating a new entity
    */
-  public created<R = unknown>($form: EventType) {
+  public created<R = unknown>(
+    $form: EventType,
+    $credentials?: EventType<string>,
+  ) {
     return RPC<R>(
       RecordOf({
         transport: this.$transport,
@@ -77,6 +80,11 @@ class CRUDImpl {
         params: RecordOf({
           model: this.$model,
           body: $form,
+          ...($credentials
+            ? {
+                credentials: $credentials,
+              }
+            : {}),
         }),
       }),
     );

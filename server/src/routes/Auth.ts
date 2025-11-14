@@ -15,7 +15,7 @@ import {
   Of,
   RPC,
   Transport,
-  TransportEvent
+  TransportEvent,
 } from "silentium";
 import {
   Concatenated,
@@ -28,6 +28,8 @@ import { List } from "../modules/mongo/List";
 import { RequestBody } from "../modules/node/RequestBody";
 import { Query } from "../modules/string/Query";
 import { PassKeyConfigType } from "../types/PassKeyConfigType";
+import { v4 as uuidv4 } from "uuid";
+import cookie from "cookie";
 
 type UserModel = {
   id: any;
@@ -67,6 +69,31 @@ function ConcretePassKey($username: EventType): EventType<Passkey> {
   );
 }
 
+function UpdateCounter(
+  $passkey: EventType<Passkey>,
+  $counter: EventType<number>,
+) {
+  return RPC(
+    RecordOf({
+      transport: Of("db"),
+      method: Of("updateOne"),
+      params: RecordOf({
+        collection: Of("user-passkeys"),
+        args: All(
+          RecordOf({
+            _id: Path($passkey, Of("_id")),
+          }),
+          RecordOf({
+            $set: RecordOf({
+              counter: $counter,
+            }),
+          }),
+        ),
+      }),
+    }),
+  );
+}
+
 function NewPassKey($form: EventType) {
   return RPC(
     RecordOf({
@@ -84,6 +111,34 @@ function PassKeyConfig() {
   return RPC<PassKeyConfigType>(
     Of({ transport: "config", method: "get" }),
   ).result();
+}
+
+function NewCookie($key: EventType, $value: EventType, $ttl?: EventType) {
+  return RPC(
+    RecordOf({
+      transport: Of("cookie"),
+      method: Of("set"),
+      params: RecordOf({
+        key: $key,
+        value: $value,
+        ttl: $ttl ?? Of(86400),
+      }),
+    }),
+  );
+}
+
+function NewSession($key: EventType, $value: EventType, $ttl?: EventType) {
+  return RPC(
+    RecordOf({
+      transport: Of("cache"),
+      method: Of("put"),
+      params: RecordOf({
+        key: $key,
+        value: $value,
+        ttl: $ttl ?? Of(86400),
+      }),
+    }),
+  );
 }
 
 export function Auth($req: EventType<IncomingMessage>): EventType {
@@ -250,7 +305,7 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
             Event<unknown>((transport) => {
               const $body = RequestBody<Record<string, any>>($req);
               const $username = Path($body, Of("username"));
-              const $passkeys = ConcretePassKey($username);
+              const $passkey = ConcretePassKey($username);
               const $options = RPC<PassKeyChallenge>(
                 RecordOf({
                   transport: Of("cache"),
@@ -261,7 +316,7 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
                 }),
               ).result();
               const $config = PassKeyConfig();
-              All($body, $passkeys, $options, $config).event(
+              All($body, $passkey, $options, $config).event(
                 Transport(async ([body, passkey, options, config]) => {
                   try {
                     const verification = await verifyAuthenticationResponse({
@@ -272,14 +327,42 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
                       requireUserVerification: false,
                       credential: {
                         id: passkey.id,
-                        publicKey: passkey.publicKey as any,
+                        publicKey: new Uint8Array(
+                          passkey.publicKey.buffer as any,
+                        ),
                         counter: passkey.counter,
                         transports: passkey.transports,
                       },
                     });
                     const { verified } = verification;
+
+                    let authId = "";
+                    if (verified) {
+                      const { authenticationInfo } = verification;
+                      const { newCounter } = authenticationInfo;
+                      UpdateCounter(Of(passkey), Of(newCounter)).result();
+                      authId = uuidv4();
+                      NewSession(Of("sid"), Of(authId), Of(3600)).result();
+                    }
+
                     transport.use({
                       verified,
+                      ...(authId
+                        ? {
+                            headers: {
+                              "Access-Control-Allow-Origin":
+                                "http://localhost:1234",
+                              "Access-Control-Allow-Credentials": "true",
+                              "Set-Cookie": cookie.serialize("sid", authId, {
+                                httpOnly: true,
+                                sameSite: "lax",
+                                path: "/",
+                                secure: false,
+                                expires: new Date(Date.now() + 3600000000),
+                              }),
+                            },
+                          }
+                        : {}),
                     });
                     return;
                   } catch (error) {

@@ -87,6 +87,7 @@ export function Configuration(): EventType<string> {
               data: $fidoAuthData,
               username: Of(username),
             }),
+            Of("include"),
           )
           .result(),
       ),
