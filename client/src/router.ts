@@ -8,6 +8,7 @@ import { Of, Shared, TransportMessage } from "silentium";
 import { Router } from "silentium-components";
 import { NotFound } from "./pages/NotFound";
 import { $url } from "./store";
+import { AdminAuthGuard } from "@/pages/Admin/AdminAuthGuard";
 
 export const $router = Shared(
   Router(
@@ -31,7 +32,9 @@ export const $router = Shared(
       },
       {
         pattern: "/admin.*",
-        message: TransportMessage(() => AdminConfigGuard(Admin())),
+        message: TransportMessage(() =>
+          AdminConfigGuard(AdminAuthGuard(Admin())),
+        ),
       },
     ]),
     TransportMessage(NotFound),
