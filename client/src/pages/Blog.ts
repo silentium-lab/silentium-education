@@ -1,11 +1,11 @@
-import { Event, type EventType } from "silentium";
+import { $title, i18n } from "@/store";
+import { Message } from "silentium";
 import { Template } from "silentium-components";
-import { i18n, $title } from "@/store";
 
-export function Blog(): EventType<string> {
-  return Event((u) => {
+export function Blog() {
+  return Message<string>((u) => {
     const title = i18n.tr("blog");
-    title.event($title);
+    title.to($title);
 
     const t = Template();
     t.template(
@@ -13,6 +13,6 @@ export function Blog(): EventType<string> {
         <h1 class="title-1">${t.var(title)}</h1>
       </div>`,
     );
-    t.event(u);
+    t.to(u);
   });
 }

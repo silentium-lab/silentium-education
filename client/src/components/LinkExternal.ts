@@ -1,12 +1,12 @@
-import { Event, type EventType, Of } from "silentium";
+import { Message, MessageType, Of } from "silentium";
 import { Template } from "silentium-components";
 
 export function LinkExternal(
-  $url: EventType<string>,
-  $text: EventType<string>,
-  $class: EventType<string> = Of(""),
-): EventType<string> {
-  return Event((transport) => {
+  $url: MessageType<string>,
+  $text: MessageType<string>,
+  $class: MessageType<string> = Of(""),
+) {
+  return Message<string>((transport) => {
     const t = Template();
     t.template(
       `<a
@@ -17,6 +17,6 @@ export function LinkExternal(
 			${t.var($text)}
 		</a>`,
     );
-    t.event(transport);
+    t.to(transport);
   });
 }

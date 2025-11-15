@@ -6,8 +6,8 @@ import { StorageRecord } from "@/modules/plugins/storage/StorageRecord";
 import {
   All,
   Applied,
-  type EventType,
   LateShared,
+  MessageType,
   Of,
   Shared,
   SharedSource,
@@ -15,10 +15,11 @@ import {
 } from "silentium";
 import { Memo } from "silentium-components";
 
-(window as any).debug = (name: string, ...events: EventType[]) => {
-  Applied(All(...events.map((e) => Shared(e))), (r) => ({ name, ...r })).event(
-    Transport(console.table),
-  );
+(window as any).debug = (name: string, ...messages: MessageType[]) => {
+  Applied(All(...messages.map((e) => Shared(e))), (r) => ({
+    name,
+    ...r,
+  })).to(Transport(console.table));
 };
 
 export const $lang = SharedSource(StorageRecord(Of("lang"), "ru"));

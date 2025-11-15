@@ -1,16 +1,16 @@
-import { Event, type EventType } from "silentium";
+import { $title, i18n } from "@/store";
+import { Message } from "silentium";
 import { Template } from "silentium-components";
-import { i18n, $title } from "@/store";
 
-export function Documentation(): EventType<string> {
-  return Event((transport) => {
+export function Documentation() {
+  return Message<string>((transport) => {
     const title = i18n.tr("documentation");
-    title.event($title);
+    title.to($title);
 
     const t = Template();
     t.template(`<div class="article">
 		<h1 class="title-1">${t.var(title)}</h1>
 		</div>`);
-    t.event(transport);
+    t.to(transport);
   });
 }

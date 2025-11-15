@@ -1,6 +1,6 @@
-import { EventType, Of } from "silentium";
+import { MessageType, Of } from "silentium";
 import { SplitPart } from "./SplitPart";
 
-export function UrlId($url: EventType<string>): EventType<string> {
+export function UrlId($url: MessageType<string>) {
   return SplitPart($url, Of("/"), Of(-1));
 }

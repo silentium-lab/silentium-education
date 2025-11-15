@@ -3,33 +3,33 @@ import {
   Applied,
   DestroyableType,
   DestroyContainer,
-  EventType,
   isDestroyable,
   Local,
+  MessageType,
   Of,
   TransportType,
 } from "silentium";
-import { RecordOf, Task, Transaction } from "silentium-components";
+import { Record, Task, Transaction } from "silentium-components";
 
 /**
  * A template that, when changed, will re-query all its variables
  * to obtain new values. This is important when building an application,
  * as any template change requires recomputing the components from scratch.
  */
-export function Stencil($src: EventType<string> = Of("")) {
-  return new StencilEvent($src);
+export function Stencil($src: MessageType<string> = Of("")) {
+  return new StencilImpl($src);
 }
 
-class StencilEvent implements EventType<string>, DestroyableType {
+class StencilImpl implements MessageType<string>, DestroyableType {
   private dc = DestroyContainer();
-  private vars: Record<string, EventType> = {
+  private vars: Record<string, MessageType> = {
     $TPL: Of("$TPL"),
   };
 
-  public constructor(private $src: EventType<string> = Of("")) {}
+  public constructor(private $src: MessageType<string> = Of("")) {}
 
-  public event(transport: TransportType<string, null>): this {
-    const $vars = RecordOf(this.vars);
+  public to(transport: TransportType<string, null>): this {
+    const $vars = Record(this.vars);
     const localsDC = DestroyContainer();
     this.dc.add(localsDC);
     const $actualVars = Transaction(Task($vars, 1), () => {
@@ -39,14 +39,14 @@ class StencilEvent implements EventType<string>, DestroyableType {
           return [entry[0], localsDC.add(entry[1])];
         }),
       );
-      return Local(RecordOf(vars));
+      return Local(Record(vars));
     });
     Applied(All(this.$src, $actualVars), ([base, vars]) => {
       Object.entries(vars).forEach(([ph, val]) => {
         base = base.replaceAll(ph, String(val));
       });
       return base;
-    }).event(transport);
+    }).to(transport);
     return this;
   }
 
@@ -58,7 +58,7 @@ class StencilEvent implements EventType<string>, DestroyableType {
    * Ability to register variable
    * in concrete place Of template
    */
-  public var(src: EventType<string>) {
+  public var(src: MessageType<string>) {
     const places = Object.keys(this.vars).length;
     const varName = `$var${places}`;
     if (isDestroyable(src)) {

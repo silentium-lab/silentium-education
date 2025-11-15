@@ -1,12 +1,12 @@
-import { Event, type EventType, Of } from "silentium";
-import { Template } from "silentium-components";
-import { Link } from "@/components/Link";
-import { i18n } from "@/store";
 import { Lang } from "@/chunks/Lang";
 import { logoSrc } from "@/chunks/Logo";
+import { Link } from "@/components/Link";
+import { i18n } from "@/store";
+import { Message, Of } from "silentium";
+import { Template } from "silentium-components";
 
-export function Header(): EventType<string> {
-  return Event((transport) => {
+export function Header() {
+  return Message<string>((transport) => {
     const t = Template();
     t.template(
       `<header class="mb-2 flex justify-between py-2 gap-2 min-h-10 flex-wrap items-center">
@@ -19,6 +19,6 @@ export function Header(): EventType<string> {
           </nav>
         </header>`,
     );
-    t.event(transport);
+    t.to(transport);
   });
 }

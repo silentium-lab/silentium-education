@@ -1,9 +1,9 @@
-import { type EventType, FromEvent, Of } from "silentium";
+import { FromEvent, MessageType, Of } from "silentium";
 
 /**
  * DOM element click even
  */
-export function Clicked($el: EventType<HTMLElement>) {
+export function Clicked($el: MessageType<HTMLElement>) {
   return FromEvent<Event>(
     $el,
     Of("click"),

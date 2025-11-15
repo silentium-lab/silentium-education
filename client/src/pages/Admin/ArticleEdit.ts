@@ -8,7 +8,7 @@ import { ArticleForm } from "@/pages/Admin/ArticleForm";
 import { $title, $url, i18n } from "@/store";
 import type { ArticleType } from "@/types/ArticleType";
 import { omit, partialRight } from "lodash-es";
-import { Any, Applied, Event, LateShared, Of, Shared } from "silentium";
+import { Any, Applied, LateShared, Message, Of, Shared } from "silentium";
 import {
   Branch,
   Constant,
@@ -20,9 +20,9 @@ import {
 } from "silentium-components";
 
 export function ArticleEdit() {
-  return Event<string>((transport) => {
+  return Message<string>((transport) => {
     const title = i18n.tr("Article");
-    title.event($title);
+    title.to($title);
 
     const $localUrl = Detached($url);
     const $id = Shared(SplitPart($localUrl, Of("/"), Of(3)));
@@ -47,12 +47,11 @@ export function ArticleEdit() {
         content: "Успешно изменено",
       } as const,
       $formUpdated,
-    ).event($notification);
+    ).to($notification);
 
-    Applied(
-      Any($article, Task($formUpdated)),
-      partialRight(omit, ["_id"]),
-    ).event($form);
+    Applied(Any($article, Task($formUpdated)), partialRight(omit, ["_id"])).to(
+      $form,
+    );
 
     const t = Template();
     t.template(`<div class="article">
@@ -73,7 +72,7 @@ export function ArticleEdit() {
           ),
         )}
       </div>`);
-    t.event(transport);
+    t.to(transport);
 
     return () => {
       t.destroy();

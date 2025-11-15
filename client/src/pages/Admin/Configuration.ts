@@ -7,22 +7,21 @@ import {
   startRegistration,
 } from "@simplewebauthn/browser";
 import {
-  Event,
-  EventType,
   FromPromise,
   LateShared,
+  Message,
   Of,
   Primitive,
   Shared,
 } from "silentium";
-import { RecordOf, Shot, Template, Transaction } from "silentium-components";
+import { Record, Shot, Template, Transaction } from "silentium-components";
 import { Log } from "silentium-web-api";
 
 /**
  * Configuration page
  */
-export function Configuration(): EventType<string> {
-  return Event((transport) => {
+export function Configuration() {
+  return Message<string>((transport) => {
     i18n.tr("Configuration");
 
     const $register = LateShared();
@@ -49,17 +48,17 @@ export function Configuration(): EventType<string> {
       ServerResponse(
         CRUD(Of("auth/registration/finish"))
           .created(
-            RecordOf({
+            Record({
               data: $fidoData,
-              username: Of(username),
+              username,
             }),
           )
           .result(),
       ),
     );
 
-    $regStart.event(Log("formUpdated"));
-    $regFinish.event(Log("regFinish"));
+    $regStart.to(Log("formUpdated"));
+    $regFinish.to(Log("regFinish"));
 
     const $authenticated = LateShared();
 
@@ -83,9 +82,9 @@ export function Configuration(): EventType<string> {
       ServerResponse(
         CRUD(Of("auth/login/finish"))
           .created(
-            RecordOf({
+            Record({
               data: $fidoAuthData,
-              username: Of(username),
+              username,
             }),
             Of("include"),
           )
@@ -93,8 +92,8 @@ export function Configuration(): EventType<string> {
       ),
     );
 
-    $authenticated.event(Log("authenticated"));
-    $loginFinish.event(Log("loginFinish"));
+    $authenticated.to(Log("authenticated"));
+    $loginFinish.to(Log("loginFinish"));
 
     const t = Template();
     t.template(`<div class="article">
@@ -111,7 +110,7 @@ export function Configuration(): EventType<string> {
         ${t.var(Button(Of("Регистрация"), Of("btn"), $register))}
       </div>
 		</div>`);
-    t.event(transport);
+    t.to(transport);
 
     return () => {
       t.destroy();

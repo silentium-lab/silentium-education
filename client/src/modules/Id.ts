@@ -1,9 +1,9 @@
-import { Applied, type EventType, Of } from "silentium";
+import { Applied, MessageType, Of } from "silentium";
 import { v4 } from "uuid";
 
 /**
  * Representation of a unique id
  */
-export function Id(baseSrc: EventType<string> = Of("id")): EventType<string> {
+export function Id(baseSrc: MessageType<string> = Of("id")) {
   return Applied(baseSrc, (base) => `${base}_${v4()}`);
 }

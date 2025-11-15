@@ -1,39 +1,39 @@
-import { Of, Shared, TransportEvent } from "silentium";
-import { Router } from "silentium-components";
 import { About } from "@/pages/About";
 import { Admin } from "@/pages/Admin";
 import { AdminConfigGuard } from "@/pages/Admin/AdminConfigGuard";
 import { Blog } from "@/pages/Blog";
 import { Documentation } from "@/pages/Documentation";
 import { Home } from "@/pages/Home";
+import { Of, Shared, TransportMessage } from "silentium";
+import { Router } from "silentium-components";
 import { NotFound } from "./pages/NotFound";
 import { $url } from "./store";
 
-export const routerSrc = Shared(
+export const $router = Shared(
   Router(
     $url,
     Of([
       {
         pattern: "^/?$",
-        event: TransportEvent(Home),
+        message: TransportMessage(Home),
       },
       {
         pattern: "/about",
-        event: TransportEvent(About),
+        message: TransportMessage(About),
       },
       {
         pattern: "/documentation",
-        event: TransportEvent(Documentation),
+        message: TransportMessage(Documentation),
       },
       {
         pattern: "/blog",
-        event: TransportEvent(Blog),
+        message: TransportMessage(Blog),
       },
       {
         pattern: "/admin.*",
-        event: TransportEvent(() => AdminConfigGuard(Admin())),
+        message: TransportMessage(() => AdminConfigGuard(Admin())),
       },
     ]),
-    TransportEvent(NotFound),
+    TransportMessage(NotFound),
   ),
 );

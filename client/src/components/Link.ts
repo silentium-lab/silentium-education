@@ -1,6 +1,10 @@
+import { ClassName } from "@/modules/ClassName";
+import { Clicked } from "@/modules/Clicked";
+import { Id } from "@/modules/Id";
+import { $url } from "@/store";
 import {
-  Event,
-  type EventType,
+  Message,
+  MessageType,
   Of,
   Primitive,
   Shared,
@@ -8,21 +12,17 @@ import {
 } from "silentium";
 import { First, Template } from "silentium-components";
 import { Elements } from "silentium-web-api";
-import { ClassName } from "@/modules/ClassName";
-import { Clicked } from "@/modules/Clicked";
-import { Id } from "@/modules/Id";
-import { $url } from "@/store";
 
 export function Link(
-  $linkUrl: EventType<string>,
-  $text: EventType<string>,
-  $class: EventType<string> = Of(""),
+  $linkUrl: MessageType<string>,
+  $text: MessageType<string>,
+  $class: MessageType<string> = Of(""),
 ) {
-  return Event<string>((transport) => {
+  return Message<string>((transport) => {
     const $id = Shared(Id());
     const url = Primitive($linkUrl);
 
-    const clicked = Clicked(First(Elements(ClassName($id)))).event(
+    const clicked = Clicked(First(Elements(ClassName($id)))).to(
       Transport((e: Event) => {
         e.preventDefault();
         $url.use(url.primitive() as string);
@@ -38,7 +38,7 @@ export function Link(
         ${t.var($text)}
       </a>`,
     );
-    t.event(transport);
+    t.to(transport);
 
     return () => {
       clicked.destroy();

@@ -1,8 +1,8 @@
 import http, { IncomingMessage } from "node:http";
 import {
   ConstructorType,
-  Event,
-  EventType,
+  Message,
+  MessageType,
   Of,
   Shared,
   Transport,
@@ -10,13 +10,13 @@ import {
 
 export function WebServer(
   processSrc: ConstructorType<
-    [EventType<IncomingMessage>],
-    EventType<Record<string, unknown>>
+    [MessageType<IncomingMessage>],
+    MessageType<Record<string, unknown>>
   >,
   hostname: string = "0.0.0.0",
   port: number = 4000,
-): EventType<string> {
-  return Event((transport) => {
+) {
+  return Message<string>((transport) => {
     const config = {
       port,
       hostname,
@@ -24,7 +24,7 @@ export function WebServer(
 
     const server = http.createServer((req, res) => {
       const process = Shared(processSrc(Of(req)));
-      process.event(
+      process.to(
         Transport((v) => {
           res.setHeader("content-type", "application/json");
           res.setHeader("Access-Control-Allow-Origin", "*");

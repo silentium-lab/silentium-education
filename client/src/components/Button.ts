@@ -2,8 +2,8 @@ import { ClassName } from "@/modules/ClassName";
 import { Clicked } from "@/modules/Clicked";
 import { Id } from "@/modules/Id";
 import {
-  Event,
-  type EventType,
+  Message,
+  MessageType,
   Of,
   Shared,
   Transport,
@@ -14,14 +14,14 @@ import { First, Template } from "silentium-components";
 import { Elements } from "silentium-web-api";
 
 export function Button(
-  $label: EventType<string>,
-  $class: EventType<string> = Of(""),
+  $label: MessageType<string>,
+  $class: MessageType<string> = Of(""),
   clickTransport: TransportType = Void(),
-): EventType<string> {
-  return Event((transport) => {
+) {
+  return Message<string>((transport) => {
     const $id = Shared(Id());
 
-    const clicked = Clicked(First(Elements(ClassName($id)))).event(
+    const clicked = Clicked(First(Elements(ClassName($id)))).to(
       Transport((e) => {
         e.preventDefault();
         clickTransport.use(e);
@@ -34,7 +34,7 @@ export function Button(
         ${t.var($label)}
       </button>`,
     );
-    t.event(transport);
+    t.to(transport);
 
     return () => {
       clicked.destroy();

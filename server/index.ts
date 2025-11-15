@@ -3,4 +3,4 @@ import { router } from "./router";
 import { WebServer } from "./src/modules/WebServer";
 import "./bootstrap";
 
-WebServer(router).event(Transport(console.log));
+WebServer(router).to(Transport(console.log));

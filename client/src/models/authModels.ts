@@ -1,7 +1,7 @@
-import { EventType, Of } from "silentium";
+import { MessageType, Of } from "silentium";
 
 export const authModels = {
-  hasAuth(): EventType<boolean> {
+  hasAuth(): MessageType<boolean> {
     return Of(true);
   },
 };

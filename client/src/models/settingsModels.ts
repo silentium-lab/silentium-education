@@ -1,12 +1,12 @@
-import { Of, type EventType } from "silentium";
-import { FromJson, Path } from "silentium-components";
 import { CRUD } from "@/modules/app/CRUD";
+import { MessageType, Of } from "silentium";
+import { FromJson, Path } from "silentium-components";
 
 export const settingsModels = {
   /**
    * Application is configured
    */
-  hasSettings(): EventType<boolean> {
+  hasSettings(): MessageType<boolean> {
     return Path(
       FromJson(CRUD(Of("configured")).custom().result()),
       Of("data.configured"),

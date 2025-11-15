@@ -13,8 +13,8 @@ export function HistoryUrl(): SourceType<string> {
       history.pushState(state, title, url);
       $url.use(value);
     },
-    event(u) {
-      $url.event(u);
+    to(u) {
+      $url.to(u);
       return this;
     },
   };

@@ -13,7 +13,7 @@ AppliedDestructured(
     }),
   ),
   merge,
-).event(FetchAPITransport());
+).to(FetchAPITransport());
 
 export const $notification = LateShared<{
   type: "error" | "success" | "info";

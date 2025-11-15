@@ -2,32 +2,31 @@ import { ObjectId } from "mongodb";
 import {
   All,
   Applied,
-  Event,
-  EventType,
-  Of,
+  Message,
+  MessageType,
   RPC,
   TransportOptional,
   TransportType,
 } from "silentium";
-import { RecordOf } from "silentium-components";
+import { Record } from "silentium-components";
 import { UrlId } from "../string/UrlId";
 
 // TODO move $url outside
 export function Entity<T>(
-  $url: EventType<string>,
+  $url: MessageType<string>,
   collection: string,
   error?: TransportType,
-): EventType<T> {
-  return Event((transport) => {
+) {
+  return Message<T>((transport) => {
     const $id = UrlId($url);
     const rpc = RPC(
-      RecordOf({
-        transport: Of("db"),
-        method: Of("findOne"),
-        params: RecordOf({
-          collection: Of(collection),
+      Record({
+        transport: "db",
+        method: "findOne",
+        params: Record({
+          collection,
           args: All(
-            RecordOf({
+            Record({
               _id: Applied($id, (id) => new ObjectId(id)),
             }),
           ),
@@ -35,6 +34,6 @@ export function Entity<T>(
       }),
     );
     TransportOptional(error).wait(rpc.error());
-    rpc.result().event(transport);
+    rpc.result().to(transport);
   });
 }

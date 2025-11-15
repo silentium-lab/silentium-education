@@ -13,11 +13,11 @@ AppliedDestructured(
     }),
   ),
   merge,
-).event(MongoTransport(process.env.MONGODB_URI ?? ""));
+).to(MongoTransport(process.env.MONGODB_URI ?? ""));
 
-RPCOf("cache").event(CacheTransport());
+RPCOf("cache").to(CacheTransport());
 
-RPCOf("config").event(
+RPCOf("config").to(
   RPCChain(
     Of({
       rpName: "TestApp",

@@ -2,11 +2,11 @@ import { Counter } from "@/chunks/Counter";
 import { Link } from "@/components/Link";
 import { Stencil } from "@/modules/render/Stencil";
 import { $lang, $title, i18n } from "@/store";
-import { Event, type EventType, Of } from "silentium";
+import { Message, Of } from "silentium";
 
-export function Home(): EventType<string> {
-  return Event((transport) => {
-    i18n.tr("home").event($title);
+export function Home() {
+  return Message<string>((transport) => {
+    i18n.tr("home").to($title);
     const t = Stencil();
     t.template(
       `<section class="article">
@@ -22,7 +22,7 @@ export function Home(): EventType<string> {
 			</div>
 		</section>`,
     );
-    t.event(transport);
+    t.to(transport);
     return function homeDestroy() {
       t.destroy();
     };

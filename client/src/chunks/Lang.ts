@@ -1,18 +1,18 @@
-import { Applied, Event, EventType, LateShared, Of } from "silentium";
-import { $lang } from "@/store";
-import { Constant, Template } from "silentium-components";
 import { Button } from "@/components/Button";
+import { $lang } from "@/store";
+import { Applied, LateShared, Message, MessageType, Of } from "silentium";
+import { Constant, Template } from "silentium-components";
 
 const Active = (lang: string) =>
   Applied($lang, (l) => (l === lang ? "font-bold" : ""));
 
-export function Lang($class: EventType<string>): EventType<string> {
-  return Event((transport) => {
+export function Lang($class: MessageType<string>): MessageType<string> {
+  return Message((transport) => {
     const $ru = LateShared();
     const $en = LateShared();
 
-    Constant("ru", $ru).event($lang);
-    Constant("en", $en).event($lang);
+    Constant("ru", $ru).to($lang);
+    Constant("en", $en).to($lang);
 
     const t = Template();
     t.template(
@@ -21,6 +21,6 @@ export function Lang($class: EventType<string>): EventType<string> {
 			${t.var(Button(Of("en"), Active("en"), $en))}
 		</nav>`,
     );
-    t.event(transport);
+    t.to(transport);
   });
 }

@@ -4,7 +4,7 @@ export function FetchAPITransport() {
   return Transport<RPCType>((r) => {
     const abortController = new AbortController();
     if (r.params?.abort) {
-      r.params.abort.event(
+      r.params.abort.to(
         Transport((abort) => {
           if (abort) {
             abortController.abort();

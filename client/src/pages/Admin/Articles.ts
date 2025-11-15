@@ -10,28 +10,27 @@ import {
   Applied,
   Chain,
   DestroyContainer,
-  Event,
   LateShared,
   Map,
+  Message,
   Of,
   Once,
   Shared,
-  TransportEvent,
-  type EventType,
+  TransportMessage,
 } from "silentium";
 import {
   Constant,
   Detached,
   Path,
-  RecordOf,
+  Record,
   Shot,
   Template,
 } from "silentium-components";
 
-export function Articles(): EventType<string> {
-  return Event((transport) => {
+export function Articles() {
+  return Message<string>((transport) => {
     const title = i18n.tr("Articles");
-    title.event($title);
+    title.to($title);
 
     const $articlesSearch = LateShared({});
     const $articles = Shared(
@@ -52,7 +51,7 @@ export function Articles(): EventType<string> {
               Chain($articlesSearch, Of([])),
               Map(
                 $articles,
-                TransportEvent((article) => {
+                TransportMessage((article) => {
                   const removeTrigger = LateShared();
 
                   const localArticle = Detached<ArticleType>(article);
@@ -66,7 +65,7 @@ export function Articles(): EventType<string> {
                       )
                       .result(),
                   );
-                  Constant({}, Once(removedSrc)).event($articlesSearch);
+                  Constant({}, Once(removedSrc)).to($articlesSearch);
 
                   Constant(
                     {
@@ -74,18 +73,18 @@ export function Articles(): EventType<string> {
                       content: "Успешно удалено",
                     } as const,
                     removedSrc,
-                  ).event($notification);
+                  ).to($notification);
 
                   return Template(
                     Of(`<div class="flex gap-2">
                       $link
                       <div class="cursor-pointer $removeId">&times;</div>
                     </div>`),
-                    RecordOf({
+                    Record({
                       $link: Link(
                         Template(
                           Of("/admin/articles/$id/"),
-                          RecordOf({ $id: Path(article, Of("_id")) }),
+                          Record({ $id: Path(article, Of("_id")) }),
                         ),
                         Path(article, Of("title")),
                         Of("underline"),
@@ -100,7 +99,7 @@ export function Articles(): EventType<string> {
           ),
         )}
       </div>`);
-    t.event(transport);
+    t.to(transport);
 
     return () => {
       dc.destroy();

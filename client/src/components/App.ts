@@ -2,13 +2,13 @@ import { Footer } from "@/chunks/Footer";
 import { Header } from "@/chunks/Header";
 import { Notifications } from "@/components/Notifications";
 import { MountPoint } from "@/modules/render/MountPoint";
-import { Event, type EventType, Of } from "silentium";
+import { Message, MessageType, Of } from "silentium";
 import { First, Template } from "silentium-components";
 import { Render } from "silentium-morphdom";
 import { Elements } from "silentium-web-api";
 
-export function App($route: EventType<string>): EventType<HTMLElement> {
-  return Event((transport) => {
+export function App($route: MessageType<string>) {
+  return Message<HTMLElement>((transport) => {
     const t = Template();
     t.template(
       `<div class="container mx-auto px-3 h-full flex flex-col">
@@ -19,7 +19,7 @@ export function App($route: EventType<string>): EventType<HTMLElement> {
 			</div>`,
     );
     const $el = First(Elements(Of("body .app")));
-    Render($el, t).event(transport);
+    Render($el, t).to(transport);
   });
 }
 

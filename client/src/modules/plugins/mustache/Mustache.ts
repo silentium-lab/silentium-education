@@ -1,12 +1,12 @@
 import MustacheTemplate from "mustache";
-import { All, Event, Transport, type EventType } from "silentium";
+import { All, Message, MessageType, Transport } from "silentium";
 
 export function Mustache(
-  $template: EventType<string>,
-  $values: EventType<Record<string, unknown>>,
-): EventType<string> {
-  return Event((transport) => {
-    All($template, $values).event(
+  $template: MessageType<string>,
+  $values: MessageType<Record<string, unknown>>,
+) {
+  return Message<string>((transport) => {
+    All($template, $values).to(
       Transport(([template, values]) => {
         transport.use(MustacheTemplate.render(template, values));
       }),

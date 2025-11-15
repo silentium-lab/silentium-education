@@ -1,13 +1,13 @@
-import { Event, type EventType, Of, TransportEvent } from "silentium";
-import { Detached, Router } from "silentium-components";
-import { $title, $url } from "@/store";
 import { ArticleEdit } from "@/pages/Admin/ArticleEdit";
 import { ArticleNew } from "@/pages/Admin/ArticleNew";
 import { Articles } from "@/pages/Admin/Articles";
 import { Auth } from "@/pages/Admin/Auth";
+import { $title, $url } from "@/store";
+import { Message, Of, TransportMessage } from "silentium";
+import { Detached, Router } from "silentium-components";
 
-export function Admin(): EventType<string> {
-  return Event((transport) => {
+export function Admin() {
+  return Message<string>((transport) => {
     $title.use("Админ панель");
 
     const $localUrl = Detached($url);
@@ -17,26 +17,26 @@ export function Admin(): EventType<string> {
       Of([
         {
           pattern: "^/admin$",
-          event: TransportEvent(Auth),
+          message: TransportMessage(Auth),
         },
         {
           pattern: "^/admin/articles$",
           name: "list",
-          event: TransportEvent(Articles),
+          message: TransportMessage(Articles),
         },
         {
           pattern: "^/admin/articles/create$",
           name: "create",
-          event: TransportEvent(ArticleNew),
+          message: TransportMessage(ArticleNew),
         },
         {
           pattern: String.raw`^/admin/articles/.+/$`,
           name: "edit",
-          event: TransportEvent(ArticleEdit),
+          message: TransportMessage(ArticleEdit),
         },
       ]),
-      TransportEvent(() => Of("Admin not found")),
-    ).event(transport);
+      TransportMessage(() => Of("Admin not found")),
+    ).to(transport);
 
     return function AdminDestroy() {
       rd.destroy();

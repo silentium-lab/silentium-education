@@ -1,26 +1,26 @@
-import { Any, Event, LateShared, Of, Shared } from "silentium";
+import { $notification } from "@/bootstrap";
+import { Button } from "@/components/Button";
+import { Link } from "@/components/Link";
+import { CRUD } from "@/modules/app/CRUD";
+import { ServerResponse } from "@/modules/app/ServerResponse";
+import { ArticleForm } from "@/pages/Admin/ArticleForm";
+import { $title, $url, i18n } from "@/store";
+import { Any, LateShared, Message, Of, Shared } from "silentium";
 import {
   Branch,
   Constant,
   Loading,
   Path,
-  RecordOf,
+  Record,
   Shot,
   Task,
   Template,
 } from "silentium-components";
-import { $notification } from "@/bootstrap";
-import { Button } from "@/components/Button";
-import { Link } from "@/components/Link";
-import { i18n, $title, $url } from "@/store";
-import { ArticleForm } from "@/pages/Admin/ArticleForm";
-import { CRUD } from "@/modules/app/CRUD";
-import { ServerResponse } from "@/modules/app/ServerResponse";
 
 export function ArticleNew() {
-  return Event<string>((transport) => {
+  return Message<string>((transport) => {
     const title = i18n.tr("Create Article");
-    title.event($title);
+    title.to($title);
 
     const clickedSrc = LateShared();
     const formSrc = LateShared({
@@ -44,12 +44,12 @@ export function ArticleNew() {
     Task(
       Template(
         Of("/admin/articles/$id/"),
-        RecordOf({
+        Record({
           $id: insertedIdSrc,
         }),
       ),
       900,
-    ).event($url);
+    ).to($url);
 
     Constant(
       {
@@ -57,7 +57,7 @@ export function ArticleNew() {
         content: "Успешно создано",
       } as const,
       $formUpdated,
-    ).event($notification);
+    ).to($notification);
 
     const t = Template();
     t.template(`<div class="article">
@@ -72,7 +72,7 @@ export function ArticleNew() {
       ),
     )}
       </div>`);
-    t.event(transport);
+    t.to(transport);
 
     return () => {
       t.destroy();

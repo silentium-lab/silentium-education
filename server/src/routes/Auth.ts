@@ -6,30 +6,30 @@ import {
   verifyAuthenticationResponse,
   verifyRegistrationResponse,
 } from "@simplewebauthn/server";
+import cookie from "cookie";
 import { IncomingMessage } from "http";
 import { ObjectId } from "mongodb";
 import {
   All,
-  Event,
-  EventType,
+  Message,
+  MessageType,
   Of,
   RPC,
   Transport,
-  TransportEvent,
+  TransportMessage,
 } from "silentium";
 import {
   Concatenated,
   First,
   Path,
-  RecordOf,
+  Record,
   Router,
 } from "silentium-components";
+import { v4 as uuidv4 } from "uuid";
 import { List } from "../modules/mongo/List";
 import { RequestBody } from "../modules/node/RequestBody";
 import { Query } from "../modules/string/Query";
 import { PassKeyConfigType } from "../types/PassKeyConfigType";
-import { v4 as uuidv4 } from "uuid";
-import cookie from "cookie";
 
 type UserModel = {
   id: any;
@@ -49,20 +49,20 @@ type Passkey = {
 
 type PassKeyChallenge = { challenge: any; user: any };
 
-function UserPasskeys($username: EventType<string>): EventType<Passkey[]> {
+function UserPasskeys($username: MessageType<string>): MessageType<Passkey[]> {
   return List(
     "user-passkeys",
-    RecordOf({
+    Record({
       "user.username": $username,
     }),
   );
 }
 
-function ConcretePassKey($username: EventType): EventType<Passkey> {
+function ConcretePassKey($username: MessageType): MessageType<Passkey> {
   return First(
     List(
       "user-passkeys",
-      RecordOf({
+      Record({
         "user.username": $username,
       }),
     ),
@@ -70,21 +70,21 @@ function ConcretePassKey($username: EventType): EventType<Passkey> {
 }
 
 function UpdateCounter(
-  $passkey: EventType<Passkey>,
-  $counter: EventType<number>,
+  $passkey: MessageType<Passkey>,
+  $counter: MessageType<number>,
 ) {
   return RPC(
-    RecordOf({
+    Record({
       transport: Of("db"),
       method: Of("updateOne"),
-      params: RecordOf({
+      params: Record({
         collection: Of("user-passkeys"),
         args: All(
-          RecordOf({
+          Record({
             _id: Path($passkey, Of("_id")),
           }),
-          RecordOf({
-            $set: RecordOf({
+          Record({
+            $set: Record({
               counter: $counter,
             }),
           }),
@@ -94,12 +94,12 @@ function UpdateCounter(
   );
 }
 
-function NewPassKey($form: EventType) {
+function NewPassKey($form: MessageType) {
   return RPC(
-    RecordOf({
+    Record({
       transport: Of("db"),
       method: Of("insertOne"),
-      params: RecordOf({
+      params: Record({
         collection: Of("user-passkeys"),
         args: All($form),
       }),
@@ -113,12 +113,12 @@ function PassKeyConfig() {
   ).result();
 }
 
-function NewCookie($key: EventType, $value: EventType, $ttl?: EventType) {
+function NewCookie($key: MessageType, $value: MessageType, $ttl?: MessageType) {
   return RPC(
-    RecordOf({
+    Record({
       transport: Of("cookie"),
       method: Of("set"),
-      params: RecordOf({
+      params: Record({
         key: $key,
         value: $value,
         ttl: $ttl ?? Of(86400),
@@ -127,12 +127,16 @@ function NewCookie($key: EventType, $value: EventType, $ttl?: EventType) {
   );
 }
 
-function NewSession($key: EventType, $value: EventType, $ttl?: EventType) {
+function NewSession(
+  $key: MessageType,
+  $value: MessageType,
+  $ttl?: MessageType,
+) {
   return RPC(
-    RecordOf({
+    Record({
       transport: Of("cache"),
       method: Of("put"),
-      params: RecordOf({
+      params: Record({
         key: $key,
         value: $value,
         ttl: $ttl ?? Of(86400),
@@ -141,8 +145,8 @@ function NewSession($key: EventType, $value: EventType, $ttl?: EventType) {
   );
 }
 
-export function Auth($req: EventType<IncomingMessage>): EventType {
-  return Event((transport) => {
+export function Auth($req: MessageType<IncomingMessage>) {
+  return Message((transport) => {
     const $config = RPC<PassKeyConfigType>(
       Of({ transport: "config", method: "get" }),
     ).result();
@@ -152,11 +156,11 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
       Of([
         {
           pattern: "^POST:/auth/registration/start$",
-          event: TransportEvent(() =>
-            Event<unknown>((transport) => {
+          message: TransportMessage(() =>
+            Message<unknown>((transport) => {
               const $body = RequestBody($req);
               const $passkeys = UserPasskeys(Path($body, Of("username")));
-              All($config, $body, $passkeys).event(
+              All($config, $body, $passkeys).to(
                 Transport(async ([config, body, passkeys]) => {
                   const { username } = body;
                   const options: PublicKeyCredentialCreationOptionsJSON =
@@ -195,22 +199,22 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
         },
         {
           pattern: "^POST:/auth/registration/finish$",
-          event: TransportEvent(() =>
-            Event<unknown>((transport) => {
+          message: TransportMessage(() =>
+            Message<unknown>((transport) => {
               const $config = RPC<PassKeyConfigType>(
                 Of({ transport: "config", method: "get" }),
               ).result();
               const $body = RequestBody<Record<string, any>>($req);
               const $options = RPC<PassKeyChallenge>(
-                RecordOf({
+                Record({
                   transport: Of("cache"),
                   method: Of("get"),
-                  params: RecordOf({
+                  params: Record({
                     key: Path($body, Of("username")),
                   }),
                 }),
               ).result();
-              All($body, $options, $config).event(
+              All($body, $options, $config).to(
                 Transport(async ([data, options, config]) => {
                   let verification;
                   try {
@@ -266,12 +270,12 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
         },
         {
           pattern: "^POST:/auth/login/start$",
-          event: TransportEvent(() =>
-            Event<unknown>((transport) => {
+          message: TransportMessage(() =>
+            Message<unknown>((transport) => {
               const $body = RequestBody<Record<string, any>>($req);
               const $passkeys = UserPasskeys(Path($body, Of("username")));
               const $config = PassKeyConfig();
-              All($body, $passkeys, $config).event(
+              All($body, $passkeys, $config).to(
                 Transport(async ([body, passkeys, config]) => {
                   const options: PublicKeyCredentialRequestOptionsJSON =
                     await generateAuthenticationOptions({
@@ -301,22 +305,22 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
         },
         {
           pattern: "^POST:/auth/login/finish$",
-          event: TransportEvent(() =>
-            Event<unknown>((transport) => {
+          message: TransportMessage(() =>
+            Message<unknown>((transport) => {
               const $body = RequestBody<Record<string, any>>($req);
               const $username = Path($body, Of("username"));
               const $passkey = ConcretePassKey($username);
               const $options = RPC<PassKeyChallenge>(
-                RecordOf({
+                Record({
                   transport: Of("cache"),
                   method: Of("get"),
-                  params: RecordOf({
+                  params: Record({
                     key: Concatenated([$username, Of("-login")]),
                   }),
                 }),
               ).result();
               const $config = PassKeyConfig();
-              All($body, $passkey, $options, $config).event(
+              All($body, $passkey, $options, $config).to(
                 Transport(async ([body, passkey, options, config]) => {
                   try {
                     const verification = await verifyAuthenticationResponse({
@@ -378,13 +382,13 @@ export function Auth($req: EventType<IncomingMessage>): EventType {
           ),
         },
       ]),
-      TransportEvent(() =>
+      TransportMessage(() =>
         Of({
           error: "Auth route not found",
           status: 404,
         }),
       ),
-    ).event(transport);
+    ).to(transport);
 
     return () => {
       rd.destroy();

@@ -1,12 +1,12 @@
-import { Event, type EventType } from "silentium";
-import { Template } from "silentium-components";
 import { $title } from "@/store";
+import { Message } from "silentium";
+import { Template } from "silentium-components";
 
-export function NotFound(): EventType<string> {
-  return Event((transport) => {
+export function NotFound() {
+  return Message<string>((transport) => {
     $title.use("Не найдено");
     const t = Template();
     t.template("<div>Not found</div>");
-    t.event(transport);
+    t.to(transport);
   });
 }

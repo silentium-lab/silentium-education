@@ -1,6 +1,6 @@
-import { EventType, Of } from "silentium";
+import { Of } from "silentium";
 
-export function Health(): EventType {
+export function Health() {
   return Of({
     time: Date.now(),
   });

@@ -1,13 +1,13 @@
 import { IncomingMessage } from "http";
 import {
   Any,
-  EventType,
   LateShared,
+  MessageType,
   Of,
   Shared,
-  TransportEvent,
+  TransportMessage,
 } from "silentium";
-import { Detached, RecordOf, Router, Shot } from "silentium-components";
+import { Detached, Record, Router, Shot } from "silentium-components";
 import { NotFoundSrc } from "../../store";
 import { Created } from "../modules/mongo/Created";
 import { Entity } from "../modules/mongo/Entity";
@@ -19,21 +19,21 @@ import { UrlFromMessage } from "../modules/string/UrlFromMessage";
 import { Truncated } from "../modules/structure/Truncated";
 
 export const CRUDRouter = (
-  req: EventType<IncomingMessage>,
+  req: MessageType<IncomingMessage>,
   baseUrl: string,
   collectionName: string,
-): EventType<string> => {
+): MessageType<string> => {
   const detachedReq = Detached<any>(req);
   return Router<string>(
     Query(detachedReq),
     Of([
       {
         pattern: `^GET:${baseUrl}$`,
-        event: TransportEvent(() => {
+        message: TransportMessage(() => {
           const $error = LateShared();
           const $data = Shared(List(collectionName, $error));
           return Truncated(
-            RecordOf({
+            Record({
               data: Any($data, Shot<unknown>(Of(""), $error)),
               error: Any($error, Shot(Of(""), $data)),
             }),
@@ -43,12 +43,12 @@ export const CRUDRouter = (
       },
       {
         pattern: `^GET:${baseUrl}/.+/$`,
-        event: TransportEvent(() => {
+        message: TransportMessage(() => {
           const $url = UrlFromMessage(detachedReq);
           const $error = LateShared();
           const $data = Shared(Entity($url, collectionName, $error));
           return Truncated(
-            RecordOf({
+            Record({
               data: Any($data, Shot(Of(""), $error)),
               error: Any($error, Shot(Of(""), $data)),
             }),
@@ -58,11 +58,11 @@ export const CRUDRouter = (
       },
       {
         pattern: `^POST:${baseUrl}$`,
-        event: TransportEvent(() => {
+        message: TransportMessage(() => {
           const $error = LateShared();
           const $data = Shared(Created(detachedReq, collectionName, $error));
           return Truncated(
-            RecordOf({
+            Record({
               data: Any($data, Shot(Of(""), $error)),
               error: Any($error, Shot(Of(""), $data)),
             }),
@@ -72,11 +72,11 @@ export const CRUDRouter = (
       },
       {
         pattern: `^PUT:${baseUrl}/.+/$`,
-        event: TransportEvent(() => {
+        message: TransportMessage(() => {
           const $error = LateShared();
           const $data = Shared(Updated(detachedReq, collectionName, $error));
           return Truncated(
-            RecordOf({
+            Record({
               data: Any($data, Shot(Of(""), $error)),
               error: Any($error, Shot(Of(""), $data)),
             }),
@@ -86,12 +86,12 @@ export const CRUDRouter = (
       },
       {
         pattern: `^DELETE:${baseUrl}.*$`,
-        event: TransportEvent(() => {
+        message: TransportMessage(() => {
           const $error = LateShared();
           const $url = UrlFromMessage(detachedReq);
           const $data = Shared(Removed($url, collectionName, $error));
           return Truncated(
-            RecordOf({
+            Record({
               data: Any($data, Shot(Of(""), $error)),
               error: Any($error, Shot(Of(""), $data)),
             }),

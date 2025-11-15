@@ -1,8 +1,8 @@
 import { IncomingMessage } from "http";
 import getRawBody from "raw-body";
 import {
-  Event,
-  EventType,
+  Message,
+  MessageType,
   Of,
   RPC,
   Transport,
@@ -11,12 +11,12 @@ import {
 } from "silentium";
 
 export function Created<T>(
-  $req: EventType<IncomingMessage>,
+  $req: MessageType<IncomingMessage>,
   collection: string,
   error?: TransportType,
-): EventType<T> {
-  return Event((transport) => {
-    $req.event(
+) {
+  return Message<T>((transport) => {
+    $req.to(
       Transport(async (req) => {
         try {
           const body = await getRawBody(req);
@@ -32,7 +32,7 @@ export function Created<T>(
             }),
           );
           TransportOptional(error).wait(rpc.error());
-          rpc.result().event(transport);
+          rpc.result().to(transport);
         } catch (e) {
           error?.use(e);
         }

@@ -1,8 +1,8 @@
-import { Applied, type EventType } from "silentium";
+import { Applied, MessageType } from "silentium";
 
 /**
  * CSS class name representation
  */
-export function ClassName(s: EventType<string>): EventType<string> {
+export function ClassName(s: MessageType<string>) {
   return Applied(s, (s) => `.${s}`);
 }

@@ -1,5 +1,5 @@
-import { type EventType, Of, RPC } from "silentium";
-import { Concatenated, RecordOf } from "silentium-components";
+import { MessageType, Of, RPC } from "silentium";
+import { Concatenated, Record } from "silentium-components";
 
 /**
  * Represents a set of CRUD operations
@@ -7,29 +7,29 @@ import { Concatenated, RecordOf } from "silentium-components";
  * named $transport
  */
 export function CRUD(
-  $model: EventType<string>,
-  $transport: EventType<string> = Of("request"),
+  $model: MessageType<string>,
+  $transport: MessageType<string> = Of("request"),
 ) {
   return new CRUDImpl($model, $transport);
 }
 
 class CRUDImpl {
   public constructor(
-    private $model: EventType<string>,
-    private $transport: EventType<string>,
+    private $model: MessageType<string>,
+    private $transport: MessageType<string>,
   ) {}
 
   /**
    * List of entities from external system
    */
-  public list<R = unknown>($search?: EventType<Record<string, unknown>>) {
+  public list<R = unknown>($search?: MessageType<Record<string, unknown>>) {
     return RPC<R>(
-      RecordOf({
+      Record({
         transport: this.$transport,
-        method: Of("get"),
-        params: RecordOf({
+        method: "get",
+        params: Record({
           model: this.$model,
-          query: $search ?? Of({}),
+          query: $search ?? {},
         }),
       }),
     );
@@ -38,12 +38,12 @@ class CRUDImpl {
   /**
    * One entity from external system
    */
-  public entity<R = unknown>($id: EventType<string>) {
+  public entity<R = unknown>($id: MessageType<string>) {
     return RPC<R>(
-      RecordOf({
+      Record({
         transport: this.$transport,
-        method: Of("get"),
-        params: RecordOf({
+        method: "get",
+        params: Record({
           model: Concatenated([this.$model, Of("/"), $id, Of("/")]),
         }),
       }),
@@ -53,14 +53,14 @@ class CRUDImpl {
   /**
    * Custom query
    */
-  public custom<R = unknown>($search?: EventType<Record<string, unknown>>) {
+  public custom<R = unknown>($search?: MessageType<Record<string, unknown>>) {
     return RPC<R>(
-      RecordOf({
+      Record({
         transport: this.$transport,
-        method: Of("get"),
-        params: RecordOf({
+        method: "get",
+        params: Record({
           model: this.$model,
-          query: $search ?? Of({}),
+          query: $search ?? {},
         }),
       }),
     );
@@ -70,14 +70,14 @@ class CRUDImpl {
    * Creating a new entity
    */
   public created<R = unknown>(
-    $form: EventType,
-    $credentials?: EventType<string>,
+    $form: MessageType,
+    $credentials?: MessageType<string>,
   ) {
     return RPC<R>(
-      RecordOf({
+      Record({
         transport: this.$transport,
-        method: Of("post"),
-        params: RecordOf({
+        method: "post",
+        params: Record({
           model: this.$model,
           body: $form,
           ...($credentials
@@ -93,12 +93,12 @@ class CRUDImpl {
   /**
    * Updating an entity
    */
-  public updated<R = unknown>($id: EventType<string>, $form: EventType) {
+  public updated<R = unknown>($id: MessageType<string>, $form: MessageType) {
     return RPC<R>(
-      RecordOf({
+      Record({
         transport: this.$transport,
-        method: Of("put"),
-        params: RecordOf({
+        method: "put",
+        params: Record({
           model: Concatenated([this.$model, Of("/"), $id, Of("/")]),
           body: $form,
         }),
@@ -109,14 +109,14 @@ class CRUDImpl {
   /**
    * Deleting an entity
    */
-  public deleted<R = unknown>($id: EventType<string>) {
+  public deleted<R = unknown>($id: MessageType<string>) {
     return RPC<R>(
-      RecordOf({
+      Record({
         transport: this.$transport,
-        method: Of("delete"),
-        params: RecordOf({
+        method: "delete",
+        params: Record({
           model: this.$model,
-          query: RecordOf({
+          query: Record({
             id: $id,
           }),
         }),

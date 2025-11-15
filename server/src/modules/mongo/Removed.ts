@@ -2,31 +2,31 @@ import { ObjectId } from "mongodb";
 import {
   All,
   Applied,
-  Event,
-  EventType,
+  Message,
+  MessageType,
   Of,
   RPC,
   TransportOptional,
   TransportType,
 } from "silentium";
-import { RecordOf } from "silentium-components";
+import { Record } from "silentium-components";
 import { UrlParam } from "../string/UrlParam";
 
 export function Removed<T>(
-  $url: EventType<string>,
+  $url: MessageType<string>,
   collection: string,
   error?: TransportType,
-): EventType<T> {
-  return Event((transport) => {
+) {
+  return Message<T>((transport) => {
     const $id = UrlParam($url, Of("id"));
     const rpc = RPC(
-      RecordOf({
+      Record({
         transport: Of("db"),
         method: Of("deleteOne"),
-        params: RecordOf({
+        params: Record({
           collection: Of(collection),
           args: All(
-            RecordOf({
+            Record({
               _id: Applied($id, (id) => new ObjectId(id)),
             }),
           ),
@@ -34,6 +34,6 @@ export function Removed<T>(
       }),
     );
     TransportOptional(error).wait(rpc.error());
-    rpc.result().event(transport);
+    rpc.result().to(transport);
   });
 }

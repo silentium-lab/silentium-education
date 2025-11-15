@@ -37,10 +37,10 @@
     "@simplewebauthn/browser": "^13.2.2",
     "lodash-es": "^4.17.21",
     "mustache": "^4.2.0",
-    "silentium": "^0.0.137",
-    "silentium-components": "^0.0.80",
-    "silentium-morphdom": "^0.0.14",
-    "silentium-web-api": "^0.0.29",
+    "silentium": "^0.0.138",
+    "silentium-components": "^0.0.81",
+    "silentium-morphdom": "^0.0.15",
+    "silentium-web-api": "^0.0.30",
     "uuid": "^11.1.0"
   },
   "@parcel/transformer-js": {

@@ -4,39 +4,39 @@ import getRawBody from "raw-body";
 import {
   All,
   Applied,
-  Event,
-  EventType,
+  Message,
+  MessageType,
   Of,
   RPC,
   Transport,
   TransportOptional,
   TransportType,
 } from "silentium";
-import { RecordOf } from "silentium-components";
+import { Record } from "silentium-components";
 import { UrlFromMessage } from "../string/UrlFromMessage";
 import { UrlId } from "../string/UrlId";
 
 export function Updated<T>(
-  $req: EventType<IncomingMessage>,
+  $req: MessageType<IncomingMessage>,
   collection: string,
   error?: TransportType,
-): EventType<T> {
-  return Event((transport) => {
+) {
+  return Message<T>((transport) => {
     const $id = UrlId(UrlFromMessage($req));
 
-    $req.event(
+    $req.to(
       Transport(async (req) => {
         try {
           const body = await getRawBody(req);
           const bodyText = body.toString("utf8");
           const rpc = RPC(
-            RecordOf({
+            Record({
               transport: Of("db"),
               method: Of("findOneAndUpdate"),
-              params: RecordOf({
+              params: Record({
                 collection: Of(collection),
                 args: All(
-                  RecordOf({
+                  Record({
                     _id: Applied($id, (id) => new ObjectId(id)),
                   }),
                   Of({ $set: JSON.parse(bodyText) }),
@@ -46,7 +46,7 @@ export function Updated<T>(
             }),
           );
           TransportOptional(error).wait(rpc.error());
-          rpc.result().event(transport);
+          rpc.result().to(transport);
         } catch (e) {
           error?.use(e);
         }

@@ -1,35 +1,35 @@
 import { IncomingMessage } from "http";
-import { Event, EventType, Of, TransportEvent } from "silentium";
+import { Message, MessageType, Of, TransportMessage } from "silentium";
 import { Router } from "silentium-components";
 import { CRUDRouter } from "../app/CRUDRouter";
 import { Query } from "../modules/string/Query";
 
-export function Private(req: EventType<IncomingMessage>): EventType {
-  return Event((transport) => {
+export function Private(req: MessageType<IncomingMessage>) {
+  return Message((transport) => {
     const rd = Router(
       Query(req),
       Of([
         {
           pattern: "^.+:/private/articles.*$",
-          event: TransportEvent(() =>
+          message: TransportMessage(() =>
             CRUDRouter(req, "/private/articles", "documents"),
           ),
         },
         {
           pattern: "^.+:/private/categories.*$",
-          event: TransportEvent(() =>
+          message: TransportMessage(() =>
             CRUDRouter(req, "/private/categories", "categories"),
           ),
         },
         {
           pattern: "^.+:/private/settings.*$",
-          event: TransportEvent(() =>
+          message: TransportMessage(() =>
             CRUDRouter(req, "/private/settings", "settings"),
           ),
         },
       ]),
-      TransportEvent(() => Of("Private not found")),
-    ).event(transport);
+      TransportMessage(() => Of("Private not found")),
+    ).to(transport);
 
     return function AdminDestroy() {
       rd.destroy();
