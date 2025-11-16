@@ -86,7 +86,6 @@ export function Configuration() {
               data: $fidoAuthData,
               username,
             }),
-            Of("include"),
           )
           .result(),
       ),

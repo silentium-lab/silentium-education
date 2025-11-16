@@ -113,20 +113,6 @@ function PassKeyConfig() {
   ).result();
 }
 
-function NewCookie($key: MessageType, $value: MessageType, $ttl?: MessageType) {
-  return RPC(
-    Record({
-      transport: Of("cookie"),
-      method: Of("set"),
-      params: Record({
-        key: $key,
-        value: $value,
-        ttl: $ttl ?? Of(86400),
-      }),
-    }),
-  );
-}
-
 function NewSession(
   $key: MessageType,
   $value: MessageType,

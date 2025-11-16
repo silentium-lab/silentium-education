@@ -32,7 +32,15 @@ export function FetchAPITransport() {
       signal: abortController.signal,
     };
     fetch(urlWithQuery.toString(), options)
-      .then((response) => response.text())
+      .then(async (response) => {
+        if (response.status >= 300) {
+          return Promise.reject({
+            status: response.status,
+            response: await response.json(),
+          });
+        }
+        return response.text();
+      })
       .then((data) => r.result?.use(data))
       .catch((error) => {
         r.error?.use(error);

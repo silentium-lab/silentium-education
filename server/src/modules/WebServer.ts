@@ -27,7 +27,8 @@ export function WebServer(
       process.to(
         Transport((v) => {
           res.setHeader("content-type", "application/json");
-          res.setHeader("Access-Control-Allow-Origin", "*");
+          res.setHeader("Access-Control-Allow-Origin", "http://localhost:1234");
+          res.setHeader("Access-Control-Allow-Credentials", "true");
           res.setHeader("Access-Control-Allow-Headers", "*");
           res.setHeader(
             "Access-Control-Allow-Methods",

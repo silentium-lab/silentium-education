@@ -7,6 +7,7 @@ import { Configured } from "./src/routes/Configured";
 import { Health } from "./src/routes/Health";
 import { Private } from "./src/routes/Private";
 import { NotFoundSrc } from "./store";
+import { AuthGuard } from "./src/guards/AuthGuard";
 
 export const router = (req: MessageType<IncomingMessage>) => {
   const subReq = Detached(req);
@@ -28,7 +29,7 @@ export const router = (req: MessageType<IncomingMessage>) => {
         },
         {
           pattern: "^.+:/private.+$",
-          message: TransportMessage(() => Private(subReq)),
+          message: TransportMessage(() => AuthGuard(subReq, Private(subReq))),
         },
       ]),
       NotFoundSrc,
