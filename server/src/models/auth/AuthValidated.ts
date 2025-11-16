@@ -1,14 +1,14 @@
-import { All, Any, Applied, MessageType, Of } from "silentium";
-import { Session } from "../session/Session";
 import cookie from "cookie";
+import { All, Applied, MessageType } from "silentium";
+import { Sid } from "./Sid";
 
 export function AuthValidated($headers: MessageType<Record<string, any>>) {
-  const $sessionID = Any(Of("none"), Session(Of("sid")).result());
-  return Applied(All($sessionID, $headers), ([sid, headers]) => {
+  const $sids = Sid();
+  return Applied(All($sids, $headers), ([sids, headers]) => {
     if (!headers.cookie) {
       return false;
     }
     const data = cookie.parse(headers.cookie);
-    return sid === data.sid;
+    return sids.includes(String(data.sid));
   });
 }

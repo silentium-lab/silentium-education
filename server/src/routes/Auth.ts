@@ -30,6 +30,7 @@ import { List } from "../modules/mongo/List";
 import { RequestBody } from "../modules/node/RequestBody";
 import { Query } from "../modules/string/Query";
 import { PassKeyConfigType } from "../types/PassKeyConfigType";
+import { NewSid } from "../models/auth/Sid";
 
 type UserModel = {
   id: any;
@@ -332,7 +333,7 @@ export function Auth($req: MessageType<IncomingMessage>) {
                       const { newCounter } = authenticationInfo;
                       UpdateCounter(Of(passkey), Of(newCounter)).result();
                       authId = uuidv4();
-                      NewSession(Of("sid"), Of(authId), Of(3600)).result();
+                      NewSid(Of(authId)).result();
                     }
 
                     transport.use({
