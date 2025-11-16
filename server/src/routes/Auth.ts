@@ -114,24 +114,6 @@ function PassKeyConfig() {
   ).result();
 }
 
-function NewSession(
-  $key: MessageType,
-  $value: MessageType,
-  $ttl?: MessageType,
-) {
-  return RPC(
-    Record({
-      transport: Of("cache"),
-      method: Of("put"),
-      params: Record({
-        key: $key,
-        value: $value,
-        ttl: $ttl ?? Of(86400),
-      }),
-    }),
-  );
-}
-
 export function Auth($req: MessageType<IncomingMessage>) {
   return Message((transport) => {
     const $config = RPC<PassKeyConfigType>(
@@ -349,7 +331,7 @@ export function Auth($req: MessageType<IncomingMessage>) {
                                 sameSite: "lax",
                                 path: "/",
                                 secure: false,
-                                expires: new Date(Date.now() + 3600000000),
+                                expires: new Date(Date.now() + 3600000),
                               }),
                             },
                           }
