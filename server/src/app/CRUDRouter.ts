@@ -31,7 +31,7 @@ export const CRUDRouter = (
         pattern: `^GET:${baseUrl}$`,
         message: TransportMessage(() => {
           const $error = LateShared();
-          const $data = Shared(List(collectionName, $error));
+          const $data = Shared(List(collectionName, Of([]), $error));
           return Truncated(
             Record({
               data: Any($data, Shot<unknown>(Of(""), $error)),
