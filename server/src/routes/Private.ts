@@ -1,5 +1,5 @@
 import { IncomingMessage } from "http";
-import { Message, MessageType, Of, TransportMessage } from "silentium";
+import { Message, MessageType, Of, TapMessage } from "silentium";
 import { Router } from "silentium-components";
 import { CRUDRouter } from "../app/CRUDRouter";
 import { Query } from "../modules/string/Query";
@@ -11,25 +11,25 @@ export function Private(req: MessageType<IncomingMessage>) {
       Of([
         {
           pattern: "^.+:/private/articles.*$",
-          message: TransportMessage(() =>
+          message: TapMessage(() =>
             CRUDRouter(req, "/private/articles", "documents"),
           ),
         },
         {
           pattern: "^.+:/private/categories.*$",
-          message: TransportMessage(() =>
+          message: TapMessage(() =>
             CRUDRouter(req, "/private/categories", "categories"),
           ),
         },
         {
           pattern: "^.+:/private/settings.*$",
-          message: TransportMessage(() =>
+          message: TapMessage(() =>
             CRUDRouter(req, "/private/settings", "settings"),
           ),
         },
       ]),
-      TransportMessage(() => Of("Private not found")),
-    ).to(transport);
+      TapMessage(() => Of("Private not found")),
+    ).pipe(transport);
 
     return function AdminDestroy() {
       rd.destroy();

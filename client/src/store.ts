@@ -11,7 +11,7 @@ import {
   Of,
   Shared,
   SharedSource,
-  Transport,
+  Tap,
 } from "silentium";
 import { Memo } from "silentium-components";
 
@@ -19,7 +19,7 @@ import { Memo } from "silentium-components";
   Applied(All(...messages.map((e) => Shared(e))), (r) => ({
     name,
     ...r,
-  })).to(Transport(console.table));
+  })).pipe(Tap(console.table));
 };
 
 export const $lang = SharedSource(StorageRecord(Of("lang"), "ru"));

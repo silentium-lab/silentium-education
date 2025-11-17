@@ -7,6 +7,6 @@ export function NotFound() {
     $title.use("Не найдено");
     const t = Template();
     t.template("<div>Not found</div>");
-    t.to(transport);
+    t.pipe(transport);
   });
 }

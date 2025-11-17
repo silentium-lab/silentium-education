@@ -10,6 +10,6 @@ export function KeyPressed<T extends Event>($el: MessageType<HTMLElement>) {
       Of("keyup"),
       Of("addEventListener"),
       Of("removeEventListener"),
-    ).to(transport);
+    ).pipe(transport);
   });
 }

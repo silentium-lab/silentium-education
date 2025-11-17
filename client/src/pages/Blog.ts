@@ -5,7 +5,7 @@ import { Template } from "silentium-components";
 export function Blog() {
   return Message<string>((u) => {
     const title = i18n.tr("blog");
-    title.to($title);
+    title.pipe($title);
 
     const t = Template();
     t.template(
@@ -13,6 +13,6 @@ export function Blog() {
         <h1 class="title-1">${t.var(title)}</h1>
       </div>`,
     );
-    t.to(u);
+    t.pipe(u);
   });
 }

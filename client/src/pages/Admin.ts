@@ -4,7 +4,7 @@ import { ArticleNew } from "@/pages/Admin/ArticleNew";
 import { Articles } from "@/pages/Admin/Articles";
 import { Auth } from "@/pages/Admin/Auth";
 import { $title, $url } from "@/store";
-import { Filtered, Message, Of, TransportMessage } from "silentium";
+import { Filtered, Message, Of, TapMessage } from "silentium";
 import { Detached, Router, Shot } from "silentium-components";
 
 export function Admin() {
@@ -14,33 +14,33 @@ export function Admin() {
     const $localUrl = Detached($url);
     const $error = Filtered(Context("error"), (e: any) => e.status === 401);
 
-    Shot(Auth(), $error).to(transport);
+    Shot(Auth(), $error).pipe(transport);
 
     const rd = Router(
       $localUrl,
       Of([
         {
           pattern: "^/admin$",
-          message: TransportMessage(Auth),
+          message: TapMessage(Auth),
         },
         {
           pattern: "^/admin/articles$",
           name: "list",
-          message: TransportMessage(Articles),
+          message: TapMessage(Articles),
         },
         {
           pattern: "^/admin/articles/create$",
           name: "create",
-          message: TransportMessage(ArticleNew),
+          message: TapMessage(ArticleNew),
         },
         {
           pattern: String.raw`^/admin/articles/.+/$`,
           name: "edit",
-          message: TransportMessage(ArticleEdit),
+          message: TapMessage(ArticleEdit),
         },
       ]),
-      TransportMessage(() => Of("Admin not found")),
-    ).to(transport);
+      TapMessage(() => Of("Admin not found")),
+    ).pipe(transport);
 
     return function AdminDestroy() {
       rd.destroy();

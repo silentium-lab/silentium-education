@@ -19,7 +19,7 @@ export function App($route: MessageType<string>) {
 			</div>`,
     );
     const $el = First(Elements(Of("body .app")));
-    Render($el, t).to(transport);
+    Render($el, t).pipe(transport);
   });
 }
 

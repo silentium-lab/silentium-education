@@ -11,9 +11,9 @@ export function ClickedId($click: SourceType<unknown>) {
     const $el = First(Elements(ClassName($id)));
 
     const d = Clicked($el);
-    d.to($click);
+    d.pipe($click);
 
-    $id.to(transport);
+    $id.pipe(transport);
 
     return () => {
       d.destroy();

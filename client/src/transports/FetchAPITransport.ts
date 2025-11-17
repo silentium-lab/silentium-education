@@ -1,11 +1,11 @@
-import { RPCType, Transport } from "silentium";
+import { RPCType, Tap } from "silentium";
 
 export function FetchAPITransport() {
-  return Transport<RPCType>((r) => {
+  return Tap<RPCType>((r) => {
     const abortController = new AbortController();
     if (r.params?.abort) {
-      r.params.abort.to(
-        Transport((abort) => {
+      r.params.abort.pipe(
+        Tap((abort) => {
           if (abort) {
             abortController.abort();
           }

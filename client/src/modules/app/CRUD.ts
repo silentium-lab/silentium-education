@@ -36,7 +36,7 @@ class CRUDImpl {
       }),
     );
 
-    $r.error().to(NewContext("error"));
+    $r.error().pipe(NewContext("error"));
 
     return $r;
   }
@@ -56,7 +56,7 @@ class CRUDImpl {
       }),
     );
 
-    $r.error().to(NewContext("error"));
+    $r.error().pipe(NewContext("error"));
 
     return $r;
   }
@@ -77,7 +77,7 @@ class CRUDImpl {
       }),
     );
 
-    $r.error().to(NewContext("error"));
+    $r.error().pipe(NewContext("error"));
 
     return $r;
   }
@@ -98,7 +98,7 @@ class CRUDImpl {
       }),
     );
 
-    $r.error().to(NewContext("error"));
+    $r.error().pipe(NewContext("error"));
 
     return $r;
   }
@@ -119,7 +119,7 @@ class CRUDImpl {
       }),
     );
 
-    $r.error().to(NewContext("error"));
+    $r.error().pipe(NewContext("error"));
 
     return $r;
   }
@@ -142,7 +142,7 @@ class CRUDImpl {
       }),
     );
 
-    $r.error().to(NewContext("error"));
+    $r.error().pipe(NewContext("error"));
 
     return $r;
   }

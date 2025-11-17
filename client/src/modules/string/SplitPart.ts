@@ -12,6 +12,6 @@ export function SplitPart(
         return parts[index];
       }),
       (r) => r !== undefined,
-    ).to(transport);
+    ).pipe(transport);
   });
 }

@@ -9,15 +9,7 @@ import {
 import cookie from "cookie";
 import { IncomingMessage } from "http";
 import { ObjectId } from "mongodb";
-import {
-  All,
-  Message,
-  MessageType,
-  Of,
-  RPC,
-  Transport,
-  TransportMessage,
-} from "silentium";
+import { All, Message, MessageType, Of, RPC, Tap, TapMessage } from "silentium";
 import {
   Concatenated,
   First,
@@ -125,12 +117,12 @@ export function Auth($req: MessageType<IncomingMessage>) {
       Of([
         {
           pattern: "^POST:/auth/registration/start$",
-          message: TransportMessage(() =>
+          message: TapMessage(() =>
             Message<unknown>((transport) => {
               const $body = RequestBody($req);
               const $passkeys = UserPasskeys(Path($body, Of("username")));
-              All($config, $body, $passkeys).to(
-                Transport(async ([config, body, passkeys]) => {
+              All($config, $body, $passkeys).pipe(
+                Tap(async ([config, body, passkeys]) => {
                   const { username } = body;
                   const options: PublicKeyCredentialCreationOptionsJSON =
                     await generateRegistrationOptions({
@@ -168,7 +160,7 @@ export function Auth($req: MessageType<IncomingMessage>) {
         },
         {
           pattern: "^POST:/auth/registration/finish$",
-          message: TransportMessage(() =>
+          message: TapMessage(() =>
             Message<unknown>((transport) => {
               const $config = RPC<PassKeyConfigType>(
                 Of({ transport: "config", method: "get" }),
@@ -183,8 +175,8 @@ export function Auth($req: MessageType<IncomingMessage>) {
                   }),
                 }),
               ).result();
-              All($body, $options, $config).to(
-                Transport(async ([data, options, config]) => {
+              All($body, $options, $config).pipe(
+                Tap(async ([data, options, config]) => {
                   let verification;
                   try {
                     verification = await verifyRegistrationResponse({
@@ -239,13 +231,13 @@ export function Auth($req: MessageType<IncomingMessage>) {
         },
         {
           pattern: "^POST:/auth/login/start$",
-          message: TransportMessage(() =>
+          message: TapMessage(() =>
             Message<unknown>((transport) => {
               const $body = RequestBody<Record<string, any>>($req);
               const $passkeys = UserPasskeys(Path($body, Of("username")));
               const $config = PassKeyConfig();
-              All($body, $passkeys, $config).to(
-                Transport(async ([body, passkeys, config]) => {
+              All($body, $passkeys, $config).pipe(
+                Tap(async ([body, passkeys, config]) => {
                   const options: PublicKeyCredentialRequestOptionsJSON =
                     await generateAuthenticationOptions({
                       rpID: config.rpID,
@@ -274,7 +266,7 @@ export function Auth($req: MessageType<IncomingMessage>) {
         },
         {
           pattern: "^POST:/auth/login/finish$",
-          message: TransportMessage(() =>
+          message: TapMessage(() =>
             Message<unknown>((transport) => {
               const $body = RequestBody<Record<string, any>>($req);
               const $username = Path($body, Of("username"));
@@ -289,8 +281,8 @@ export function Auth($req: MessageType<IncomingMessage>) {
                 }),
               ).result();
               const $config = PassKeyConfig();
-              All($body, $passkey, $options, $config).to(
-                Transport(async ([body, passkey, options, config]) => {
+              All($body, $passkey, $options, $config).pipe(
+                Tap(async ([body, passkey, options, config]) => {
                   try {
                     const verification = await verifyAuthenticationResponse({
                       response: body.data as any,
@@ -351,13 +343,13 @@ export function Auth($req: MessageType<IncomingMessage>) {
           ),
         },
       ]),
-      TransportMessage(() =>
+      TapMessage(() =>
         Of({
           error: "Auth route not found",
           status: 404,
         }),
       ),
-    ).to(transport);
+    ).pipe(transport);
 
     return () => {
       rd.destroy();

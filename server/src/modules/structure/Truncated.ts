@@ -13,6 +13,6 @@ export function Truncated(
       return Object.fromEntries(
         Object.entries(r).filter((e) => !excludeValues.includes(e[1])),
       );
-    }).to(transport);
+    }).pipe(transport);
   });
 }

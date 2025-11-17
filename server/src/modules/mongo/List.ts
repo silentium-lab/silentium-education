@@ -4,15 +4,15 @@ import {
   MessageType,
   Of,
   RPC,
-  TransportOptional,
-  TransportType,
+  TapOptional,
+  TapType,
 } from "silentium";
 import { Record } from "silentium-components";
 
 export function List<T>(
   collection: string,
   conditions?: MessageType,
-  error?: TransportType,
+  error?: TapType,
 ): MessageType<T[]> {
   return Message((transport) => {
     const rpc = RPC(
@@ -26,7 +26,7 @@ export function List<T>(
         }),
       }),
     );
-    TransportOptional(error).wait(rpc.error());
-    rpc.result().to(transport);
+    TapOptional(error).wait(rpc.error());
+    rpc.result().pipe(transport);
   });
 }

@@ -17,6 +17,6 @@ export function LinkExternal(
 			${t.var($text)}
 		</a>`,
     );
-    t.to(transport);
+    t.pipe(transport);
   });
 }

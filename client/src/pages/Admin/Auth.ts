@@ -11,7 +11,7 @@ import {
   Of,
   Primitive,
   Shared,
-  Transport,
+  Tap,
 } from "silentium";
 import { Record, Shot, Template, Transaction } from "silentium-components";
 import { Log } from "silentium-web-api";
@@ -49,18 +49,18 @@ export function Auth() {
     ),
   );
 
-  $authenticated.to(Log("authenticated"));
-  $loginFinish.to(Log("loginFinish"));
+  $authenticated.pipe(Log("authenticated"));
+  $loginFinish.pipe(Log("loginFinish"));
 
-  $loginFinish.to(
-    Transport(() => {
+  $loginFinish.pipe(
+    Tap(() => {
       location.reload();
     }),
   );
 
   return Message((transport) => {
     const title = i18n.tr("Auth");
-    title.to($title);
+    title.pipe($title);
     const t = Template();
     t.template(`<div class="article">
 			<h1 class="title-1">${t.var(title)}</h1>
@@ -71,6 +71,6 @@ export function Auth() {
         ${t.var(Button(Of("Войти"), Of("btn"), $authenticated))}
       </div>
 		</div>`);
-    t.to(transport);
+    t.pipe(transport);
   });
 }

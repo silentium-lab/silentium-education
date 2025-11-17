@@ -8,9 +8,9 @@ import {
   MessageType,
   Of,
   RPC,
-  Transport,
-  TransportOptional,
-  TransportType,
+  Tap,
+  TapOptional,
+  TapType,
 } from "silentium";
 import { Record } from "silentium-components";
 import { UrlFromMessage } from "../string/UrlFromMessage";
@@ -19,13 +19,13 @@ import { UrlId } from "../string/UrlId";
 export function Updated<T>(
   $req: MessageType<IncomingMessage>,
   collection: string,
-  error?: TransportType,
+  error?: TapType,
 ) {
   return Message<T>((transport) => {
     const $id = UrlId(UrlFromMessage($req));
 
-    $req.to(
-      Transport(async (req) => {
+    $req.pipe(
+      Tap(async (req) => {
         try {
           const body = await getRawBody(req);
           const bodyText = body.toString("utf8");
@@ -45,8 +45,8 @@ export function Updated<T>(
               }),
             }),
           );
-          TransportOptional(error).wait(rpc.error());
-          rpc.result().to(transport);
+          TapOptional(error).wait(rpc.error());
+          rpc.result().pipe(transport);
         } catch (e) {
           error?.use(e);
         }

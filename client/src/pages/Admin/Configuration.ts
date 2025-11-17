@@ -3,10 +3,7 @@ import { Input } from "@/components/Input";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { i18n } from "@/store";
-import {
-  startAuthentication,
-  startRegistration,
-} from "@simplewebauthn/browser";
+import { startRegistration } from "@simplewebauthn/browser";
 import {
   FromPromise,
   LateShared,
@@ -58,8 +55,8 @@ export function Configuration() {
       ),
     );
 
-    $regStart.to(Log("formUpdated"));
-    $regFinish.to(Log("regFinish"));
+    $regStart.pipe(Log("formUpdated"));
+    $regFinish.pipe(Log("regFinish"));
 
     const t = Template();
     t.template(`<div class="article">
@@ -76,7 +73,7 @@ export function Configuration() {
         ${t.var(Button(Of("Регистрация"), Of("btn"), $register))}
       </div>
 		</div>`);
-    t.to(transport);
+    t.pipe(transport);
 
     return () => {
       t.destroy();

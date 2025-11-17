@@ -1,5 +1,5 @@
 import { Button } from "@/components/Button";
-import { Applied, LateShared, Message, Of, Transport } from "silentium";
+import { Applied, LateShared, Message, Of, Tap } from "silentium";
 import { Concatenated, Template } from "silentium-components";
 
 export function Counter() {
@@ -8,14 +8,14 @@ export function Counter() {
     const $clicked = LateShared();
     const $reset = LateShared();
 
-    $clicked.to(
-      Transport(() => {
+    $clicked.pipe(
+      Tap(() => {
         $count.use($count.value().primitiveWithException() + 1);
       }),
     );
 
-    $reset.to(
-      Transport(() => {
+    $reset.pipe(
+      Tap(() => {
         $count.use(1);
       }),
     );
@@ -33,7 +33,7 @@ export function Counter() {
         ${t.var(Button(Of("reset"), Of("btn"), $reset))}
       </div>`,
     );
-    t.to(transport);
+    t.pipe(transport);
 
     return () => {
       t.destroy();

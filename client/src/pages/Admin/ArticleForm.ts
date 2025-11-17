@@ -19,7 +19,7 @@ export function ArticleForm($form: SourceType<ArticleType>) {
 				<textarea rows="20" class="${t.var(Input($content))} border-1 p-2 rounded-sm w-full"></textarea>
 			</div>
 		</div>`);
-    t.to(transport);
+    t.pipe(transport);
 
     return () => {
       t.destroy();

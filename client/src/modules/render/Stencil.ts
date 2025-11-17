@@ -7,7 +7,7 @@ import {
   Local,
   MessageType,
   Of,
-  TransportType,
+  TapType,
 } from "silentium";
 import { Record, Task, Transaction } from "silentium-components";
 
@@ -28,7 +28,7 @@ class StencilImpl implements MessageType<string>, DestroyableType {
 
   public constructor(private $src: MessageType<string> = Of("")) {}
 
-  public to(transport: TransportType<string, null>): this {
+  public pipe(transport: TapType<string, null>): this {
     const $vars = Record(this.vars);
     const localsDC = DestroyContainer();
     this.dc.add(localsDC);
@@ -46,7 +46,7 @@ class StencilImpl implements MessageType<string>, DestroyableType {
         base = base.replaceAll(ph, String(val));
       });
       return base;
-    }).to(transport);
+    }).pipe(transport);
     return this;
   }
 

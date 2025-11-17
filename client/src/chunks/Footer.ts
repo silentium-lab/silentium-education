@@ -19,6 +19,6 @@ export function Footer() {
           ${t.var(logoSrc)}
         </footer>`,
     );
-    t.to(transport);
+    t.pipe(transport);
   });
 }

@@ -5,8 +5,8 @@ import {
   Message,
   MessageType,
   RPC,
-  TransportOptional,
-  TransportType,
+  TapOptional,
+  TapType,
 } from "silentium";
 import { Record } from "silentium-components";
 import { UrlId } from "../string/UrlId";
@@ -15,7 +15,7 @@ import { UrlId } from "../string/UrlId";
 export function Entity<T>(
   $url: MessageType<string>,
   collection: string,
-  error?: TransportType,
+  error?: TapType,
 ) {
   return Message<T>((transport) => {
     const $id = UrlId($url);
@@ -33,7 +33,7 @@ export function Entity<T>(
         }),
       }),
     );
-    TransportOptional(error).wait(rpc.error());
-    rpc.result().to(transport);
+    TapOptional(error).wait(rpc.error());
+    rpc.result().pipe(transport);
   });
 }

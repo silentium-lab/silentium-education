@@ -6,7 +6,7 @@ import { Template } from "silentium-components";
 export function About() {
   return Message<string>((transport) => {
     const title = i18n.tr("about");
-    title.to($title);
+    title.pipe($title);
     const t = Template();
     t.template(
       `<section class="article">
@@ -17,7 +17,7 @@ export function About() {
         </div>
       </section>`,
     );
-    t.to(transport);
+    t.pipe(transport);
     return function AboutDestroy() {
       t.destroy();
     };

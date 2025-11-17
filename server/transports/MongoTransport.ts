@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-import { RPCType, Transport } from "silentium";
+import { RPCType, Tap } from "silentium";
 
 /**
  * method - method from collection
@@ -10,7 +10,7 @@ import { RPCType, Transport } from "silentium";
 export function MongoTransport(url: string) {
   const client = new MongoClient(url);
 
-  return Transport<RPCType>((rpc) => {
+  return Tap<RPCType>((rpc) => {
     const dbName = rpc.params?.dbName ?? "app";
     client
       .connect()

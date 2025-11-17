@@ -1,4 +1,4 @@
-import { LateShared, RPCType, SourceType, Transport } from "silentium";
+import { LateShared, RPCType, SourceType, Tap } from "silentium";
 
 /**
  * Lazy contexts
@@ -6,7 +6,7 @@ import { LateShared, RPCType, SourceType, Transport } from "silentium";
 export function ContextTransport() {
   const cache: Record<string, SourceType> = {};
 
-  return Transport<RPCType>((rpc) => {
+  return Tap<RPCType>((rpc) => {
     const key = rpc.params?.key ?? "none";
 
     if (!cache[key]) {
@@ -14,7 +14,7 @@ export function ContextTransport() {
     }
 
     if (rpc.method === "get" && rpc.result) {
-      cache[key].to(rpc.result);
+      cache[key].pipe(rpc.result);
     }
 
     if (rpc.method === "set") {

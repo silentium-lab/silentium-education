@@ -1,4 +1,3 @@
-import { head } from "lodash-es";
 import http, { IncomingMessage } from "node:http";
 import {
   ConstructorType,
@@ -6,7 +5,7 @@ import {
   MessageType,
   Of,
   Shared,
-  Transport,
+  Tap,
 } from "silentium";
 
 export function WebServer(
@@ -40,8 +39,8 @@ export function WebServer(
         res.end("");
       } else {
         const process = Shared(processSrc(Of(req)));
-        process.to(
-          Transport((v) => {
+        process.pipe(
+          Tap((v) => {
             headers();
             if (v.headers) {
               Object.entries(v.headers).forEach(([name, value]) => {

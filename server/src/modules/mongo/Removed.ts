@@ -6,8 +6,8 @@ import {
   MessageType,
   Of,
   RPC,
-  TransportOptional,
-  TransportType,
+  TapOptional,
+  TapType,
 } from "silentium";
 import { Record } from "silentium-components";
 import { UrlParam } from "../string/UrlParam";
@@ -15,7 +15,7 @@ import { UrlParam } from "../string/UrlParam";
 export function Removed<T>(
   $url: MessageType<string>,
   collection: string,
-  error?: TransportType,
+  error?: TapType,
 ) {
   return Message<T>((transport) => {
     const $id = UrlParam($url, Of("id"));
@@ -33,7 +33,7 @@ export function Removed<T>(
         }),
       }),
     );
-    TransportOptional(error).wait(rpc.error());
-    rpc.result().to(transport);
+    TapOptional(error).wait(rpc.error());
+    rpc.result().pipe(transport);
   });
 }

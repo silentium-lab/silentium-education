@@ -22,7 +22,7 @@ import {
 export function ArticleEdit() {
   return Message<string>((transport) => {
     const title = i18n.tr("Article");
-    title.to($title);
+    title.pipe($title);
 
     const $localUrl = Detached($url);
     const $id = Shared(SplitPart($localUrl, Of("/"), Of(3)));
@@ -47,11 +47,12 @@ export function ArticleEdit() {
         content: "Успешно изменено",
       } as const,
       $formUpdated,
-    ).to($notification);
+    ).pipe($notification);
 
-    Applied(Any($article, Task($formUpdated)), partialRight(omit, ["_id"])).to(
-      $form,
-    );
+    Applied(
+      Any($article, Task($formUpdated)),
+      partialRight(omit, ["_id"]),
+    ).pipe($form);
 
     const t = Template();
     t.template(`<div class="article">
@@ -72,7 +73,7 @@ export function ArticleEdit() {
           ),
         )}
       </div>`);
-    t.to(transport);
+    t.pipe(transport);
 
     return () => {
       t.destroy();

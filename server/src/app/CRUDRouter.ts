@@ -5,7 +5,7 @@ import {
   MessageType,
   Of,
   Shared,
-  TransportMessage,
+  TapMessage,
 } from "silentium";
 import { Detached, Record, Router, Shot } from "silentium-components";
 import { NotFoundSrc } from "../../store";
@@ -29,7 +29,7 @@ export const CRUDRouter = (
     Of([
       {
         pattern: `^GET:${baseUrl}$`,
-        message: TransportMessage(() => {
+        message: TapMessage(() => {
           const $error = LateShared();
           const $data = Shared(List(collectionName, Of([]), $error));
           return Truncated(
@@ -43,7 +43,7 @@ export const CRUDRouter = (
       },
       {
         pattern: `^GET:${baseUrl}/.+/$`,
-        message: TransportMessage(() => {
+        message: TapMessage(() => {
           const $url = UrlFromMessage(detachedReq);
           const $error = LateShared();
           const $data = Shared(Entity($url, collectionName, $error));
@@ -58,7 +58,7 @@ export const CRUDRouter = (
       },
       {
         pattern: `^POST:${baseUrl}$`,
-        message: TransportMessage(() => {
+        message: TapMessage(() => {
           const $error = LateShared();
           const $data = Shared(Created(detachedReq, collectionName, $error));
           return Truncated(
@@ -72,7 +72,7 @@ export const CRUDRouter = (
       },
       {
         pattern: `^PUT:${baseUrl}/.+/$`,
-        message: TransportMessage(() => {
+        message: TapMessage(() => {
           const $error = LateShared();
           const $data = Shared(Updated(detachedReq, collectionName, $error));
           return Truncated(
@@ -86,7 +86,7 @@ export const CRUDRouter = (
       },
       {
         pattern: `^DELETE:${baseUrl}.*$`,
-        message: TransportMessage(() => {
+        message: TapMessage(() => {
           const $error = LateShared();
           const $url = UrlFromMessage(detachedReq);
           const $data = Shared(Removed($url, collectionName, $error));

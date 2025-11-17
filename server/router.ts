@@ -1,5 +1,5 @@
 import type { IncomingMessage } from "node:http";
-import { MessageType, Of, TransportMessage } from "silentium";
+import { MessageType, Of, TapMessage } from "silentium";
 import { Detached, Router, Tick } from "silentium-components";
 import { Query } from "./src/modules/string/Query";
 import { Auth } from "./src/routes/Auth";
@@ -17,19 +17,19 @@ export const router = (req: MessageType<IncomingMessage>) => {
       Of([
         {
           pattern: "^GET:/?$",
-          message: TransportMessage(Health),
+          message: TapMessage(Health),
         },
         {
           pattern: "^.+:/auth.+$",
-          message: TransportMessage(() => Auth(subReq)),
+          message: TapMessage(() => Auth(subReq)),
         },
         {
           pattern: "^GET:/configured$",
-          message: TransportMessage(Configured),
+          message: TapMessage(Configured),
         },
         {
           pattern: "^.+:/private.+$",
-          message: TransportMessage(() => AuthGuard(subReq, Private(subReq))),
+          message: TapMessage(() => AuthGuard(subReq, Private(subReq))),
         },
       ]),
       NotFoundSrc,

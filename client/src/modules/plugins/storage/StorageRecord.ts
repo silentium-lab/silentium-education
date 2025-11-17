@@ -3,7 +3,7 @@ import {
   MessageType,
   Primitive,
   type SourceType,
-  Transport,
+  Tap,
 } from "silentium";
 
 /**
@@ -17,11 +17,11 @@ export function StorageRecord<T = string>(
   const nameSync = Primitive($name);
   const resultSrc = LateShared<T>();
   const result: SourceType<T> = {
-    to(u) {
-      resultSrc.to(u);
+    pipe(u) {
+      resultSrc.pipe(u);
       const storage = window[storageType];
-      $name.to(
-        Transport((name) => {
+      $name.pipe(
+        Tap((name) => {
           window.addEventListener("storage", (e) => {
             if (e.storageArea === storage) {
               if (e.key === name) {

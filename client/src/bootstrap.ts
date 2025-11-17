@@ -13,9 +13,9 @@ AppliedDestructured(
     }),
   ),
   merge,
-).to(FetchAPITransport());
+).pipe(FetchAPITransport());
 
-RPCOf("context").to(ContextTransport());
+RPCOf("context").pipe(ContextTransport());
 
 export const $notification = LateShared<{
   type: "error" | "success" | "info";

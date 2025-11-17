@@ -1,4 +1,4 @@
-import { isFilled, RPCType, Transport } from "silentium";
+import { isFilled, RPCType, Tap } from "silentium";
 
 /**
  * Simple memory cache
@@ -9,7 +9,7 @@ import { isFilled, RPCType, Transport } from "silentium";
 export function CacheTransport() {
   const cache: Record<string, unknown> = {};
 
-  return Transport<RPCType>((rpc) => {
+  return Tap<RPCType>((rpc) => {
     const key = rpc.params?.key ?? "none";
 
     // TODO ttl consider

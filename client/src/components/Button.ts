@@ -6,8 +6,8 @@ import {
   MessageType,
   Of,
   Shared,
-  Transport,
-  TransportType,
+  Tap,
+  TapType,
   Void,
 } from "silentium";
 import { First, Template } from "silentium-components";
@@ -16,15 +16,15 @@ import { Elements } from "silentium-web-api";
 export function Button(
   $label: MessageType<string>,
   $class: MessageType<string> = Of(""),
-  clickTransport: TransportType = Void(),
+  clickTap: TapType = Void(),
 ) {
   return Message<string>((transport) => {
     const $id = Shared(Id());
 
-    const clicked = Clicked(First(Elements(ClassName($id)))).to(
-      Transport((e) => {
+    const clicked = Clicked(First(Elements(ClassName($id)))).pipe(
+      Tap((e) => {
         e.preventDefault();
-        clickTransport.use(e);
+        clickTap.use(e);
       }),
     );
 
@@ -34,7 +34,7 @@ export function Button(
         ${t.var($label)}
       </button>`,
     );
-    t.to(transport);
+    t.pipe(transport);
 
     return () => {
       clicked.destroy();

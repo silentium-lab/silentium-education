@@ -6,7 +6,7 @@ import { Message, Of } from "silentium";
 
 export function Home() {
   return Message<string>((transport) => {
-    i18n.tr("home").to($title);
+    i18n.tr("home").pipe($title);
     const t = Stencil();
     t.template(
       `<section class="article">
@@ -22,7 +22,7 @@ export function Home() {
 			</div>
 		</section>`,
     );
-    t.to(transport);
+    t.pipe(transport);
     return function homeDestroy() {
       t.destroy();
     };

@@ -16,7 +16,7 @@ import {
   Of,
   Once,
   Shared,
-  TransportMessage,
+  TapMessage,
 } from "silentium";
 import {
   Constant,
@@ -30,7 +30,7 @@ import {
 export function Articles() {
   return Message<string>((transport) => {
     const title = i18n.tr("Articles");
-    title.to($title);
+    title.pipe($title);
 
     const $articlesSearch = LateShared({});
     const $articles = Shared(
@@ -51,7 +51,7 @@ export function Articles() {
               Chain($articlesSearch, Of([])),
               Map(
                 $articles,
-                TransportMessage((article) => {
+                TapMessage((article) => {
                   const removeTrigger = LateShared();
 
                   const localArticle = Detached<ArticleType>(article);
@@ -65,7 +65,7 @@ export function Articles() {
                       )
                       .result(),
                   );
-                  Constant({}, Once(removedSrc)).to($articlesSearch);
+                  Constant({}, Once(removedSrc)).pipe($articlesSearch);
 
                   Constant(
                     {
@@ -73,7 +73,7 @@ export function Articles() {
                       content: "Успешно удалено",
                     } as const,
                     removedSrc,
-                  ).to($notification);
+                  ).pipe($notification);
 
                   return Template(
                     Of(`<div class="flex gap-2">
@@ -99,7 +99,7 @@ export function Articles() {
           ),
         )}
       </div>`);
-    t.to(transport);
+    t.pipe(transport);
 
     return () => {
       dc.destroy();

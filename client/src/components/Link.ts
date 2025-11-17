@@ -2,14 +2,7 @@ import { ClassName } from "@/modules/ClassName";
 import { Clicked } from "@/modules/Clicked";
 import { Id } from "@/modules/Id";
 import { $url } from "@/store";
-import {
-  Message,
-  MessageType,
-  Of,
-  Primitive,
-  Shared,
-  Transport,
-} from "silentium";
+import { Message, MessageType, Of, Primitive, Shared, Tap } from "silentium";
 import { First, Template } from "silentium-components";
 import { Elements } from "silentium-web-api";
 
@@ -22,8 +15,8 @@ export function Link(
     const $id = Shared(Id());
     const url = Primitive($linkUrl);
 
-    const clicked = Clicked(First(Elements(ClassName($id)))).to(
-      Transport((e: Event) => {
+    const clicked = Clicked(First(Elements(ClassName($id)))).pipe(
+      Tap((e: Event) => {
         e.preventDefault();
         $url.use(url.primitive() as string);
       }),
@@ -38,7 +31,7 @@ export function Link(
         ${t.var($text)}
       </a>`,
     );
-    t.to(transport);
+    t.pipe(transport);
 
     return () => {
       clicked.destroy();

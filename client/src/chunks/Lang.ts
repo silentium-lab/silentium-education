@@ -11,8 +11,8 @@ export function Lang($class: MessageType<string>): MessageType<string> {
     const $ru = LateShared();
     const $en = LateShared();
 
-    Constant("ru", $ru).to($lang);
-    Constant("en", $en).to($lang);
+    Constant("ru", $ru).pipe($lang);
+    Constant("en", $en).pipe($lang);
 
     const t = Template();
     t.template(
@@ -21,6 +21,6 @@ export function Lang($class: MessageType<string>): MessageType<string> {
 			${t.var(Button(Of("en"), Active("en"), $en))}
 		</nav>`,
     );
-    t.to(transport);
+    t.pipe(transport);
   });
 }

@@ -20,7 +20,7 @@ import {
 export function ArticleNew() {
   return Message<string>((transport) => {
     const title = i18n.tr("Create Article");
-    title.to($title);
+    title.pipe($title);
 
     const clickedSrc = LateShared();
     const formSrc = LateShared({
@@ -49,7 +49,7 @@ export function ArticleNew() {
         }),
       ),
       900,
-    ).to($url);
+    ).pipe($url);
 
     Constant(
       {
@@ -57,7 +57,7 @@ export function ArticleNew() {
         content: "Успешно создано",
       } as const,
       $formUpdated,
-    ).to($notification);
+    ).pipe($notification);
 
     const t = Template();
     t.template(`<div class="article">
@@ -72,7 +72,7 @@ export function ArticleNew() {
       ),
     )}
       </div>`);
-    t.to(transport);
+    t.pipe(transport);
 
     return () => {
       t.destroy();

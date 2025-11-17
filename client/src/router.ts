@@ -4,7 +4,7 @@ import { AdminConfigGuard } from "@/pages/Admin/AdminConfigGuard";
 import { Blog } from "@/pages/Blog";
 import { Documentation } from "@/pages/Documentation";
 import { Home } from "@/pages/Home";
-import { Of, Shared, TransportMessage } from "silentium";
+import { Of, Shared, TapMessage } from "silentium";
 import { Router } from "silentium-components";
 import { NotFound } from "./pages/NotFound";
 import { $url } from "./store";
@@ -16,27 +16,27 @@ export const $router = Shared(
     Of([
       {
         pattern: "^/?$",
-        message: TransportMessage(Home),
+        message: TapMessage(Home),
       },
       {
         pattern: "/about",
-        message: TransportMessage(About),
+        message: TapMessage(About),
       },
       {
         pattern: "/documentation",
-        message: TransportMessage(Documentation),
+        message: TapMessage(Documentation),
       },
       {
         pattern: "/blog",
-        message: TransportMessage(Blog),
+        message: TapMessage(Blog),
       },
       {
         pattern: "/admin.*",
-        message: TransportMessage(() =>
+        message: TapMessage(() =>
           AdminConfigGuard(AdminAuthGuard(Admin())),
         ),
       },
     ]),
-    TransportMessage(NotFound),
+    TapMessage(NotFound),
   ),
 );

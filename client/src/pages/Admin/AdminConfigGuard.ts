@@ -1,6 +1,6 @@
 import { settingsModels } from "@/models/settingsModels";
 import { Configuration } from "@/pages/Admin/Configuration";
-import { MessageType, TransportMessage } from "silentium";
+import { MessageType, TapMessage } from "silentium";
 import { BranchLazy } from "silentium-components";
 
 /**
@@ -9,7 +9,7 @@ import { BranchLazy } from "silentium-components";
 export function AdminConfigGuard($child: MessageType<string>) {
   return BranchLazy(
     settingsModels.hasSettings(),
-    TransportMessage(() => $child),
-    TransportMessage(Configuration),
+    TapMessage(() => $child),
+    TapMessage(Configuration),
   );
 }

@@ -1,4 +1,4 @@
-import { Of, RPC, Transport } from "silentium";
+import { Of, RPC, Tap } from "silentium";
 
 export function Context(key: string, def?: any) {
   return RPC(
@@ -14,7 +14,7 @@ export function Context(key: string, def?: any) {
 }
 
 export function NewContext(key: string) {
-  return Transport((v) => {
+  return Tap((v) => {
     RPC(
       Of({
         transport: "context",
