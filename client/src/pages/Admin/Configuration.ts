@@ -1,4 +1,5 @@
 import { Button } from "@/components/Button";
+import { Input } from "@/components/Input";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { i18n } from "@/store";
@@ -26,11 +27,11 @@ export function Configuration() {
 
     const $register = LateShared();
 
-    const username = "Test";
+    const $username = LateShared();
     const $regStart = Shared(
       ServerResponse(
         CRUD(Of("auth/registration/start"))
-          .created(Shot(Of({ username }), $register))
+          .created(Shot(Record({ username: $username }), $register))
           .result(),
       ),
     );
@@ -50,7 +51,7 @@ export function Configuration() {
           .created(
             Record({
               data: $fidoData,
-              username,
+              username: $username,
             }),
           )
           .result(),
@@ -59,40 +60,6 @@ export function Configuration() {
 
     $regStart.to(Log("formUpdated"));
     $regFinish.to(Log("regFinish"));
-
-    const $authenticated = LateShared();
-
-    const $loginStart = Shared(
-      ServerResponse(
-        CRUD(Of("auth/login/start"))
-          .created(Shot(Of({ username }), $authenticated))
-          .result(),
-      ),
-    );
-    const $fidoAuthData = Transaction($loginStart, (data) => {
-      return FromPromise(
-        startAuthentication({
-          optionsJSON: Primitive(data).primitiveWithException() as any,
-        }),
-        Log("fido auth error"),
-      );
-    });
-
-    const $loginFinish = Shared(
-      ServerResponse(
-        CRUD(Of("auth/login/finish"))
-          .created(
-            Record({
-              data: $fidoAuthData,
-              username,
-            }),
-          )
-          .result(),
-      ),
-    );
-
-    $authenticated.to(Log("authenticated"));
-    $loginFinish.to(Log("loginFinish"));
 
     const t = Template();
     t.template(`<div class="article">
@@ -103,7 +70,7 @@ export function Configuration() {
           Укажите обязательные параметры
       </p>
       <div class="mb-2">
-        ${t.var(Button(Of("Войти"), Of("btn"), $authenticated))}
+        <input class="${t.var(Input($username))} border-1 p-2 rounded-sm w-full" name="username" />
       </div>
       <div>
         ${t.var(Button(Of("Регистрация"), Of("btn"), $register))}
