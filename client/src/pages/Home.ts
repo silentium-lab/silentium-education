@@ -6,7 +6,8 @@ import { Message, Of } from "silentium";
 
 export function Home() {
   return Message<string>((transport) => {
-    i18n.tr("home").pipe($title);
+    i18n.tr("home").then($title);
+    
     const t = Stencil();
     t.template(
       `<section class="article">

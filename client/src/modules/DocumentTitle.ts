@@ -1,16 +1,13 @@
-import { LateShared, type SourceType } from "silentium";
+import { LateShared } from "silentium";
 
 /**
  * Document header representation
  */
-export function DocumentTitle(): SourceType<string> {
+export function DocumentTitle() {
   const $src = LateShared(document.title);
+  $src.then((v) => {
+    document.title = v;
+  });
 
-  return {
-    pipe: $src.pipe.bind($src),
-    use: (v) => {
-      $src.use(v);
-      document.title = v;
-    },
-  };
+  return $src;
 }

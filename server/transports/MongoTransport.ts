@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-import { RPCType, Tap } from "silentium";
+import { ContextType } from "silentium";
 
 /**
  * method - method from collection
@@ -10,29 +10,31 @@ import { RPCType, Tap } from "silentium";
 export function MongoTransport(url: string) {
   const client = new MongoClient(url);
 
-  return Tap<RPCType>((rpc) => {
-    const dbName = rpc.params?.dbName ?? "app";
+  return (context: ContextType) => {
+    const dbName = context.params?.dbName ?? "app";
     client
       .connect()
       .then(async () => {
         try {
           const db = client.db(dbName);
-          const collection = db.collection(rpc.params?.collection ?? "unknown");
-          const args = rpc.params?.args ?? [];
-          const method = rpc.method;
+          const collection = db.collection(
+            context.params?.collection ?? "unknown",
+          );
+          const args = context.params?.args ?? [];
+          const method = context.params?.method;
           let result = await (collection as any)[method](...args);
-          const postProcess = rpc.params?.postProcess;
+          const postProcess = context.params?.postProcess;
           if (postProcess) {
-            const postProcessArgs = rpc.params?.postProcessArgs ?? [];
+            const postProcessArgs = context.params?.postProcessArgs ?? [];
             result = await result[postProcess](...postProcessArgs);
           }
-          rpc.result?.use(result);
+          context.result?.(result);
         } catch (e) {
-          rpc.error?.use(e);
+          context.error?.(e);
         }
       })
       .catch((e) => {
-        rpc.error?.use(e.message);
+        context.error?.(e.message);
       });
-  });
+  };
 }

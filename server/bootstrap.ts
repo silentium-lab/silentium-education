@@ -1,11 +1,17 @@
 import { merge } from "lodash-es";
-import { All, AppliedDestructured, Of, RPCChain, RPCOf } from "silentium";
-import { MongoTransport } from "./transports/MongoTransport";
+import {
+  All,
+  AppliedDestructured,
+  ContextChain,
+  ContextOf,
+  Of,
+} from "silentium";
 import { CacheTransport } from "./transports/CacheTransport";
+import { MongoTransport } from "./transports/MongoTransport";
 
 AppliedDestructured(
   All(
-    RPCOf("db"),
+    ContextOf("db"),
     Of({
       params: {
         dbName: "myapp",
@@ -13,16 +19,14 @@ AppliedDestructured(
     }),
   ),
   merge,
-).pipe(MongoTransport(process.env.MONGODB_URI ?? ""));
+).then(MongoTransport(process.env.MONGODB_URI ?? ""));
 
-RPCOf("cache").pipe(CacheTransport());
+ContextOf("cache").then(CacheTransport());
 
-RPCOf("config").pipe(
-  RPCChain(
-    Of({
-      rpName: "TestApp",
-      rpID: "localhost",
-      origin: "http://localhost:1234",
-    }),
-  ),
+ContextOf("config").then(
+  ContextChain({
+    rpName: "TestApp",
+    rpID: "localhost",
+    origin: "http://localhost:1234",
+  }),
 );

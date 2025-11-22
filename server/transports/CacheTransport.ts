@@ -1,4 +1,4 @@
-import { isFilled, RPCType, Tap } from "silentium";
+import { ContextType, isFilled } from "silentium";
 
 /**
  * Simple memory cache
@@ -9,31 +9,31 @@ import { isFilled, RPCType, Tap } from "silentium";
 export function CacheTransport() {
   const cache: Record<string, unknown> = {};
 
-  return Tap<RPCType>((rpc) => {
-    const key = rpc.params?.key ?? "none";
+  return (context: ContextType) => {
+    const key = context.params?.key ?? "none";
 
     // TODO ttl consider
-    if (rpc.method === "get") {
+    if (context.method === "get") {
       const value = cache[key];
       if (isFilled(value)) {
-        rpc.result?.use(value);
+        context.result?.(value);
       } else {
-        rpc.error?.use(`not found ${key}`);
+        context.error?.(`not found ${key}`);
       }
     }
 
-    if (rpc.method === "post") {
+    if (context.method === "post") {
       if (!isFilled(cache[key])) {
-        const value = rpc.params?.value ?? "none";
+        const value = context.params?.value ?? "none";
         cache[key] = value;
       } else {
-        rpc.error?.use(`already filled ${key}`);
+        context.error?.(`already filled ${key}`);
       }
     }
 
-    if (rpc.method === "put") {
-      const value = rpc.params?.value ?? "none";
+    if (context.method === "put") {
+      const value = context.params?.value ?? "none";
       cache[key] = value;
     }
-  });
+  };
 }

@@ -1,21 +1,18 @@
 import { ContextTransport } from "@/transports/ContextTransport";
 import { FetchAPITransport } from "@/transports/FetchAPITransport";
 import { merge } from "lodash-es";
-import { All, AppliedDestructured, LateShared, Of, RPCOf } from "silentium";
+import { All, AppliedDestructured, ContextOf, LateShared } from "silentium";
 
 AppliedDestructured(
-  All(
-    RPCOf("request"),
-    Of({
-      params: {
-        baseUrl: "http://localhost:4000",
-      },
-    }),
-  ),
+  All(ContextOf("request"), {
+    params: {
+      baseUrl: "http://localhost:4000",
+    },
+  }),
   merge,
-).pipe(FetchAPITransport());
+).then(FetchAPITransport());
 
-RPCOf("context").pipe(ContextTransport());
+ContextOf("context").then(ContextTransport());
 
 export const $notification = LateShared<{
   type: "error" | "success" | "info";

@@ -1,21 +1,20 @@
-import { LateShared, type SourceType } from "silentium";
+import { LateShared, MessageSource } from "silentium";
 
 /**
  * URL representation associated with the History API
  */
-export function HistoryUrl(): SourceType<string> {
+export function HistoryUrl() {
   const $url = LateShared(location.pathname);
-  return {
-    use: (value) => {
+  return MessageSource<string>(
+    (resolve) => {
+      $url.then(resolve);
+    },
+    (value) => {
       const state = { page: value, timestamp: Date.now() };
       const title = `Page ${value}`;
       const url = `${value}`;
       history.pushState(state, title, url);
       $url.use(value);
     },
-    pipe(u) {
-      $url.pipe(u);
-      return this;
-    },
-  };
+  );
 }

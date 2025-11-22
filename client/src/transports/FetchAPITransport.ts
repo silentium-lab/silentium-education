@@ -1,31 +1,29 @@
-import { RPCType, Tap } from "silentium";
+import { ContextType } from "silentium";
 
 export function FetchAPITransport() {
-  return Tap<RPCType>((r) => {
+  return (context: ContextType) => {
     const abortController = new AbortController();
-    if (r.params?.abort) {
-      r.params.abort.pipe(
-        Tap((abort) => {
-          if (abort) {
-            abortController.abort();
-          }
-        }),
-      );
+    if (context.params?.abort) {
+      context.params.abort.then((abort: boolean) => {
+        if (abort) {
+          abortController.abort();
+        }
+      });
     }
-    const { baseUrl, credentials, headers, body, query } = r.params ?? {};
-    const url = "/" + (r.params?.model ?? "unknown");
+    const { baseUrl, credentials, headers, body, query } = context.params ?? {};
+    const url = "/" + (context.params?.model ?? "unknown");
     let urlWithQuery: URL;
     try {
       urlWithQuery = new URL(String(url ?? "/"), baseUrl);
     } catch {
-      r.error?.use(new Error("Invalid URL"));
+      context.error?.(new Error("Invalid URL"));
       return;
     }
     Object.entries(query ?? {}).forEach(([key, value]) =>
       urlWithQuery.searchParams.append(key, String(value)),
     );
     const options: RequestInit = {
-      method: r.method ?? "get",
+      method: context.params?.method ?? "get",
       credentials,
       headers,
       body: (body ? JSON.stringify(body) : undefined) as BodyInit,
@@ -41,9 +39,9 @@ export function FetchAPITransport() {
         }
         return response.text();
       })
-      .then((data) => r.result?.use(data))
+      .then((data) => context.result?.(data))
       .catch((error) => {
-        r.error?.use(error);
+        context.error?.(error);
       });
-  });
+  };
 }
