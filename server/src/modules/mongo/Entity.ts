@@ -1,25 +1,13 @@
 import { ObjectId } from "mongodb";
-import {
-  All,
-  Applied,
-  Message,
-  MessageType,
-  RPC,
-  TapOptional,
-  TapType,
-} from "silentium";
+import { All, Applied, Context, Message, MessageType } from "silentium";
 import { Record } from "silentium-components";
 import { UrlId } from "../string/UrlId";
 
 // TODO move $url outside
-export function Entity<T>(
-  $url: MessageType<string>,
-  collection: string,
-  error?: TapType,
-) {
-  return Message<T>((transport) => {
+export function Entity<T>($url: MessageType<string>, collection: string) {
+  return Message<T>((res, rej) => {
     const $id = UrlId($url);
-    const rpc = RPC(
+    const rpc = Context<T>(
       Record({
         transport: "db",
         method: "findOne",
@@ -33,7 +21,7 @@ export function Entity<T>(
         }),
       }),
     );
-    TapOptional(error).wait(rpc.error());
-    rpc.result().pipe(transport);
+    rpc.then(res);
+    rpc.catch(rej);
   });
 }

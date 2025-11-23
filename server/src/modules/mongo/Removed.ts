@@ -1,30 +1,17 @@
 import { ObjectId } from "mongodb";
-import {
-  All,
-  Applied,
-  Message,
-  MessageType,
-  Of,
-  RPC,
-  TapOptional,
-  TapType,
-} from "silentium";
+import { All, Applied, Context, Message, MessageType, Of } from "silentium";
 import { Record } from "silentium-components";
 import { UrlParam } from "../string/UrlParam";
 
-export function Removed<T>(
-  $url: MessageType<string>,
-  collection: string,
-  error?: TapType,
-) {
-  return Message<T>((transport) => {
+export function Removed<T>($url: MessageType<string>, collection: string) {
+  return Message<T>((res, rej) => {
     const $id = UrlParam($url, Of("id"));
-    const rpc = RPC(
+    const context = Context<T>(
       Record({
-        transport: Of("db"),
-        method: Of("deleteOne"),
+        transport: "db",
+        method: "deleteOne",
         params: Record({
-          collection: Of(collection),
+          collection,
           args: All(
             Record({
               _id: Applied($id, (id) => new ObjectId(id)),
@@ -33,7 +20,7 @@ export function Removed<T>(
         }),
       }),
     );
-    TapOptional(error).wait(rpc.error());
-    rpc.result().pipe(transport);
+    context.then(res);
+    context.catch(rej);
   });
 }

@@ -1,17 +1,7 @@
 import { IncomingMessage } from "http";
 import { ObjectId } from "mongodb";
 import getRawBody from "raw-body";
-import {
-  All,
-  Applied,
-  Message,
-  MessageType,
-  Of,
-  RPC,
-  Tap,
-  TapOptional,
-  TapType,
-} from "silentium";
+import { All, Applied, Context, Message, MessageType, Of } from "silentium";
 import { Record } from "silentium-components";
 import { UrlFromMessage } from "../string/UrlFromMessage";
 import { UrlId } from "../string/UrlId";
@@ -19,38 +9,34 @@ import { UrlId } from "../string/UrlId";
 export function Updated<T>(
   $req: MessageType<IncomingMessage>,
   collection: string,
-  error?: TapType,
 ) {
-  return Message<T>((transport) => {
+  return Message<T>((res, rej) => {
     const $id = UrlId(UrlFromMessage($req));
 
-    $req.pipe(
-      Tap(async (req) => {
-        try {
-          const body = await getRawBody(req);
-          const bodyText = body.toString("utf8");
-          const rpc = RPC(
-            Record({
-              transport: Of("db"),
-              method: Of("findOneAndUpdate"),
-              params: Record({
-                collection: Of(collection),
-                args: All(
-                  Record({
-                    _id: Applied($id, (id) => new ObjectId(id)),
-                  }),
-                  Of({ $set: JSON.parse(bodyText) }),
-                  Of({ returnDocument: "after" }),
-                ),
-              }),
+    $req.then(async (req) => {
+      try {
+        const body = await getRawBody(req);
+        const bodyText = body.toString("utf8");
+        const context = Context<T>(
+          Record({
+            transport: Of("db"),
+            method: Of("findOneAndUpdate"),
+            params: Record({
+              collection: Of(collection),
+              args: All(
+                Record({
+                  _id: Applied($id, (id) => new ObjectId(id)),
+                }),
+                Of({ $set: JSON.parse(bodyText) }),
+                Of({ returnDocument: "after" }),
+              ),
             }),
-          );
-          TapOptional(error).wait(rpc.error());
-          rpc.result().pipe(transport);
-        } catch (e) {
-          error?.use(e);
-        }
-      }),
-    );
+          }),
+        );
+        context.then(res);
+      } catch (e) {
+        rej(e);
+      }
+    });
   });
 }

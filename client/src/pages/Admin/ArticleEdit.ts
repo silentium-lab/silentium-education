@@ -8,7 +8,16 @@ import { ArticleForm } from "@/pages/Admin/ArticleForm";
 import { $title, $url, i18n } from "@/store";
 import type { ArticleType } from "@/types/ArticleType";
 import { omit, partialRight } from "lodash-es";
-import { Any, Applied, LateShared, Message, Of, Shared } from "silentium";
+import {
+  Any,
+  Applied,
+  LateShared,
+  Local,
+  Message,
+  MessageType,
+  Of,
+  Shared,
+} from "silentium";
 import {
   Branch,
   Constant,
@@ -21,43 +30,43 @@ import {
 
 export function ArticleEdit() {
   return Message<string>((transport) => {
-    const title = i18n.tr("Article");
-    title.pipe($title);
+    $title.chain(i18n.tr("Article"));
 
     const $localUrl = Detached($url);
     const $id = Shared(SplitPart($localUrl, Of("/"), Of(3)));
     const $article = Shared(
-      ServerResponse(CRUD(Of("private/articles")).entity($id).result()),
+      ServerResponse(CRUD(Of("private/articles")).entity($id)),
     );
     const $clicked = LateShared();
     const $form = LateShared<ArticleType>();
 
     const $formUpdated = Shared(
       ServerResponse(
-        CRUD(Of("private/articles"))
-          .updated($id, Shot($form, $clicked))
-          .result(),
+        CRUD(Of("private/articles")).updated($id, Shot($form, $clicked)),
       ),
     );
-    const $formUpdateLoading = Any(Loading($clicked, $formUpdated), Of(false));
+    const $formUpdateLoading = Any(Loading($clicked, $formUpdated), false);
 
-    Constant(
-      {
-        type: "success",
-        content: "Успешно изменено",
-      } as const,
-      $formUpdated,
-    ).pipe($notification);
+    $notification.chain(
+      Constant(
+        {
+          type: "success",
+          content: "Успешно изменено",
+        } as const,
+        $formUpdated,
+      ),
+    );
 
-    Applied(
-      Any($article, Task($formUpdated)),
-      partialRight(omit, ["_id"]),
-    ).pipe($form);
+    $form.chain(
+      <MessageType<ArticleType>>(
+        Applied(Any($article, Task($formUpdated)), partialRight(omit, ["_id"]))
+      ),
+    );
 
     const t = Template();
     t.template(`<div class="article">
 			${t.var(Link(Of("/admin/articles"), i18n.tr("Articles"), Of("underline")))}
-        <h1 class="title-1">${t.var(title)}</h1>
+        <h1 class="title-1">${t.var(Local($title))}</h1>
         <div class="mb-2">
           <div>
             <b>id: </b>
@@ -73,7 +82,7 @@ export function ArticleEdit() {
           ),
         )}
       </div>`);
-    t.pipe(transport);
+    t.then(transport);
 
     return () => {
       t.destroy();

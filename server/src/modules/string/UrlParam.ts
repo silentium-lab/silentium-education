@@ -8,9 +8,9 @@ export function UrlParam(
   $url: MessageType<string>,
   $param: MessageType<string>,
 ): MessageType<string> {
-  return Filtered(
+  return Filtered<string>(
     Applied(All($url, $param), ([url, param]) => {
-      return new URL(url).searchParams.get(param);
+      return new URL(url).searchParams.get(param) ?? "";
     }),
     Boolean,
   );

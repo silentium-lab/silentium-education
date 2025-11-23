@@ -1,6 +1,6 @@
 import { IncomingMessage } from "http";
 import getRawBody from "raw-body";
-import { Message, MessageType, TapParent } from "silentium";
+import { Message, MessageType } from "silentium";
 
 /**
  * Convert incoming message body to json object
@@ -8,12 +8,11 @@ import { Message, MessageType, TapParent } from "silentium";
 export function RequestBody<T = any>(
   $req: MessageType<IncomingMessage>,
 ): MessageType<T> {
-  const parent = TapParent(async function (req: IncomingMessage) {
-    const body = await getRawBody(req);
-    const bodyText = body.toString("utf8");
-    this.use(JSON.parse(bodyText));
-  });
-  return Message((transport) => {
-    $req.pipe(parent.child(transport));
+  return Message((res) => {
+    $req.then(async function (req: IncomingMessage) {
+      const body = await getRawBody(req);
+      const bodyText = body.toString("utf8");
+      res(JSON.parse(bodyText));
+    });
   });
 }

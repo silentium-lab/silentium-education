@@ -1,15 +1,16 @@
 import {
   All,
   Applied,
+  ConstructorType,
   DestroyableType,
   DestroyContainer,
   isDestroyable,
   Local,
   MessageType,
   Of,
-  TapType,
+  Rejections,
 } from "silentium";
-import { Record, Task, Transaction } from "silentium-components";
+import { Record, Task } from "silentium-components";
 
 /**
  * A template that, when changed, will re-query all its variables
@@ -25,14 +26,15 @@ class StencilImpl implements MessageType<string>, DestroyableType {
   private vars: Record<string, MessageType> = {
     $TPL: Of("$TPL"),
   };
+  private rejections = new Rejections();
 
   public constructor(private $src: MessageType<string> = Of("")) {}
 
-  public pipe(transport: TapType<string, null>): this {
+  public then(resolve: ConstructorType<[string]>): this {
     const $vars = Record(this.vars);
     const localsDC = DestroyContainer();
     this.dc.add(localsDC);
-    const $actualVars = Transaction(Task($vars, 1), () => {
+    const $actualVars = Task($vars, 1).then(() => {
       localsDC.destroy();
       const vars = Object.fromEntries(
         Object.entries(this.vars).map((entry) => {
@@ -41,12 +43,16 @@ class StencilImpl implements MessageType<string>, DestroyableType {
       );
       return Local(Record(vars));
     });
-    Applied(All(this.$src, $actualVars), ([base, vars]) => {
-      Object.entries(vars).forEach(([ph, val]) => {
-        base = base.replaceAll(ph, String(val));
-      });
-      return base;
-    }).pipe(transport);
+    try {
+      Applied(All(this.$src, $actualVars), ([base, vars]) => {
+        Object.entries(vars).forEach(([ph, val]) => {
+          base = base.replaceAll(ph, String(val));
+        });
+        return base;
+      }).then(resolve);
+    } catch (e) {
+      this.rejections.reject(e);
+    }
     return this;
   }
 
@@ -68,8 +74,14 @@ class StencilImpl implements MessageType<string>, DestroyableType {
     return varName;
   }
 
+  public catch(rejected: ConstructorType<[unknown]>) {
+    this.rejections.catch(rejected);
+    return this;
+  }
+
   public destroy(): this {
     this.dc.destroy();
+    this.rejections.destroy();
     return this;
   }
 }

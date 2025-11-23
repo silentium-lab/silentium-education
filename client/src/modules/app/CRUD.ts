@@ -1,5 +1,5 @@
 import { NewContext } from "@/modules/context/Context";
-import { MessageType, Of, RPC } from "silentium";
+import { Context, MessageType, Of } from "silentium";
 import { Concatenated, Record } from "silentium-components";
 
 /**
@@ -24,11 +24,11 @@ class CRUDImpl {
    * List of entities from external system
    */
   public list<R = unknown>($search?: MessageType<Record<string, unknown>>) {
-    const $r = RPC<R>(
+    const $r = Context<R>(
       Record({
         transport: this.$transport,
-        method: "get",
         params: Record({
+          method: "get",
           model: this.$model,
           query: $search ?? {},
           credentials: "include",
@@ -36,7 +36,7 @@ class CRUDImpl {
       }),
     );
 
-    $r.error().pipe(NewContext("error"));
+    $r.catch(NewContext("error"));
 
     return $r;
   }
@@ -45,18 +45,18 @@ class CRUDImpl {
    * One entity from external system
    */
   public entity<R = unknown>($id: MessageType<string>) {
-    const $r = RPC<R>(
+    const $r = Context<R>(
       Record({
         transport: this.$transport,
-        method: "get",
         params: Record({
+          method: "get",
           model: Concatenated([this.$model, Of("/"), $id, Of("/")]),
           credentials: "include",
         }),
       }),
     );
 
-    $r.error().pipe(NewContext("error"));
+    $r.catch(NewContext("error"));
 
     return $r;
   }
@@ -65,7 +65,7 @@ class CRUDImpl {
    * Custom query
    */
   public custom<R = unknown>($search?: MessageType<Record<string, unknown>>) {
-    const $r = RPC<R>(
+    const $r = Context<R>(
       Record({
         transport: this.$transport,
         method: "get",
@@ -77,7 +77,7 @@ class CRUDImpl {
       }),
     );
 
-    $r.error().pipe(NewContext("error"));
+    $r.catch(NewContext("error"));
 
     return $r;
   }
@@ -86,7 +86,7 @@ class CRUDImpl {
    * Creating a new entity
    */
   public created<R = unknown>($form: MessageType) {
-    const $r = RPC<R>(
+    const $r = Context<R>(
       Record({
         transport: this.$transport,
         method: "post",
@@ -98,7 +98,7 @@ class CRUDImpl {
       }),
     );
 
-    $r.error().pipe(NewContext("error"));
+    $r.catch(NewContext("error"));
 
     return $r;
   }
@@ -107,7 +107,7 @@ class CRUDImpl {
    * Updating an entity
    */
   public updated<R = unknown>($id: MessageType<string>, $form: MessageType) {
-    const $r = RPC<R>(
+    const $r = Context<R>(
       Record({
         transport: this.$transport,
         method: "put",
@@ -119,7 +119,7 @@ class CRUDImpl {
       }),
     );
 
-    $r.error().pipe(NewContext("error"));
+    $r.catch(NewContext("error"));
 
     return $r;
   }
@@ -128,7 +128,7 @@ class CRUDImpl {
    * Deleting an entity
    */
   public deleted<R = unknown>($id: MessageType<string>) {
-    const $r = RPC<R>(
+    const $r = Context<R>(
       Record({
         transport: this.$transport,
         method: "delete",
@@ -142,7 +142,7 @@ class CRUDImpl {
       }),
     );
 
-    $r.error().pipe(NewContext("error"));
+    $r.catch(NewContext("error"));
 
     return $r;
   }

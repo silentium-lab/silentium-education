@@ -8,7 +8,7 @@ import { Render } from "silentium-morphdom";
 import { Elements } from "silentium-web-api";
 
 export function App($route: MessageType<string>) {
-  return Message<HTMLElement>((transport) => {
+  return Message<HTMLElement>((resolve) => {
     const t = Template();
     t.template(
       `<div class="container mx-auto px-3 h-full flex flex-col">
@@ -19,7 +19,7 @@ export function App($route: MessageType<string>) {
 			</div>`,
     );
     const $el = First(Elements(Of("body .app")));
-    Render($el, t).pipe(transport);
+    Render($el, t).then(resolve);
   });
 }
 

@@ -11,12 +11,13 @@ import {
   Chain,
   DestroyContainer,
   LateShared,
+  Local,
   Map,
   Message,
+  MessageType,
   Of,
   Once,
   Shared,
-  TapMessage,
 } from "silentium";
 import {
   Constant,
@@ -29,77 +30,73 @@ import {
 
 export function Articles() {
   return Message<string>((transport) => {
-    const title = i18n.tr("Articles");
-    title.pipe($title);
+    $title.chain(i18n.tr("Articles"));
 
     const $articlesSearch = LateShared({});
     const $articles = Shared(
       ServerResponse(
-        CRUD(Of("private/articles")).list($articlesSearch).result(),
-      ),
+        CRUD(Of("private/articles")).list($articlesSearch),
+      ) as MessageType<any[]>,
     );
 
     const dc = DestroyContainer();
 
     const t = Template();
     t.template(`<div class="article">
-        <h1 class="title-1">${t.var(title)}</h1>
+        <h1 class="title-1">${t.var(Local($title))}</h1>
         ${t.var(Link(Of("/admin/articles/create"), Of("Создать статью"), Of("block mb-3 underline")))}
         ${t.var(
           Applied(
             Any<any>(
               Chain($articlesSearch, Of([])),
-              Map(
-                $articles,
-                TapMessage((article) => {
-                  const removeTrigger = LateShared();
+              Map($articles, (article) => {
+                const removeTrigger = LateShared();
 
-                  const localArticle = Detached<ArticleType>(article);
-                  const removedSrc = Shared(
-                    CRUD(Of("private/articles"))
-                      .deleted(
-                        Shot(
-                          Once(Path(localArticle, Of("_id"))),
-                          Once(removeTrigger),
-                        ),
-                      )
-                      .result(),
-                  );
-                  Constant({}, Once(removedSrc)).pipe($articlesSearch);
+                const localArticle = Detached<ArticleType>(article);
+                const removedSrc = Shared(
+                  CRUD(Of("private/articles")).deleted(
+                    Shot(
+                      Once(Path(localArticle, Of("_id"))),
+                      Once(removeTrigger),
+                    ),
+                  ),
+                );
+                $articlesSearch.chain(Constant({}, Once(removedSrc)));
 
+                $notification.chain(
                   Constant(
                     {
                       type: "success",
                       content: "Успешно удалено",
                     } as const,
                     removedSrc,
-                  ).pipe($notification);
+                  ),
+                );
 
-                  return Template(
-                    Of(`<div class="flex gap-2">
+                return Template(
+                  Of(`<div class="flex gap-2">
                       $link
                       <div class="cursor-pointer $removeId">&times;</div>
                     </div>`),
-                    Record({
-                      $link: Link(
-                        Template(
-                          Of("/admin/articles/$id/"),
-                          Record({ $id: Path(article, Of("_id")) }),
-                        ),
-                        Path(article, Of("title")),
-                        Of("underline"),
+                  Record({
+                    $link: Link(
+                      Template(
+                        Of("/admin/articles/$id/"),
+                        Record({ $id: Path(article, Of("_id")) }),
                       ),
-                      $removeId: dc.add(ClickedId(removeTrigger)),
-                    }),
-                  );
-                }),
-              ),
+                      Path(article, Of("title")),
+                      Of("underline"),
+                    ),
+                    $removeId: dc.add(ClickedId(removeTrigger)),
+                  }),
+                );
+              }),
             ),
             (a) => a.join(""),
           ),
         )}
       </div>`);
-    t.pipe(transport);
+    t.then(transport);
 
     return () => {
       dc.destroy();

@@ -9,7 +9,7 @@ import {
 import cookie from "cookie";
 import { IncomingMessage } from "http";
 import { ObjectId } from "mongodb";
-import { All, Message, MessageType, Of, RPC, Tap, TapMessage } from "silentium";
+import { All, Context, Message, MessageType, Of, Void } from "silentium";
 import {
   Concatenated,
   First,
@@ -59,22 +59,22 @@ function ConcretePassKey($username: MessageType): MessageType<Passkey> {
         "user.username": $username,
       }),
     ),
-  );
+  ) as MessageType<Passkey>;
 }
 
 function UpdateCounter(
   $passkey: MessageType<Passkey>,
   $counter: MessageType<number>,
 ) {
-  return RPC(
+  return Context(
     Record({
-      transport: Of("db"),
-      method: Of("updateOne"),
+      transport: "db",
       params: Record({
-        collection: Of("user-passkeys"),
+        method: "updateOne",
+        collection: "user-passkeys",
         args: All(
           Record({
-            _id: Path($passkey, Of("_id")),
+            _id: Path($passkey, "_id"),
           }),
           Record({
             $set: Record({
@@ -88,12 +88,12 @@ function UpdateCounter(
 }
 
 function NewPassKey($form: MessageType) {
-  return RPC(
+  return Context(
     Record({
-      transport: Of("db"),
-      method: Of("insertOne"),
+      transport: "db",
       params: Record({
-        collection: Of("user-passkeys"),
+        method: "insertOne",
+        collection: "user-passkeys",
         args: All($form),
       }),
     }),
@@ -101,28 +101,32 @@ function NewPassKey($form: MessageType) {
 }
 
 function PassKeyConfig() {
-  return RPC<PassKeyConfigType>(
-    Of({ transport: "config", method: "get" }),
-  ).result();
+  return Context<PassKeyConfigType>({
+    transport: "config",
+    params: { method: "get" },
+  });
 }
 
 export function Auth($req: MessageType<IncomingMessage>) {
   return Message((transport) => {
-    const $config = RPC<PassKeyConfigType>(
-      Of({ transport: "config", method: "get" }),
-    ).result();
+    const $config = Context<PassKeyConfigType>({
+      transport: "config",
+      params: {
+        method: "get",
+      },
+    });
 
-    const rd = Router(
+    const rd = Router<any>(
       Query($req),
       Of([
         {
           pattern: "^POST:/auth/registration/start$",
-          message: TapMessage(() =>
+          message: () =>
             Message<unknown>((transport) => {
               const $body = RequestBody($req);
               const $passkeys = UserPasskeys(Path($body, Of("username")));
-              All($config, $body, $passkeys).pipe(
-                Tap(async ([config, body, passkeys]) => {
+              All($config, $body, $passkeys).then(
+                async ([config, body, passkeys]) => {
                   const { username } = body;
                   const options: PublicKeyCredentialCreationOptionsJSON =
                     await generateRegistrationOptions({
@@ -140,43 +144,41 @@ export function Auth($req: MessageType<IncomingMessage>) {
                         authenticatorAttachment: "platform",
                       },
                     });
-                  RPC(
-                    Of({
-                      transport: "cache",
-                      method: "put",
-                      params: {
-                        key: username,
-                        value: options,
-                      },
-                    }),
-                  ).result();
-                  transport.use({
+                  Context({
+                    transport: "cache",
+                    method: "put",
+                    params: {
+                      key: username,
+                      value: options,
+                    },
+                  }).then(Void());
+                  transport({
                     data: options,
                   });
-                }),
+                },
               );
             }),
-          ),
         },
         {
           pattern: "^POST:/auth/registration/finish$",
-          message: TapMessage(() =>
-            Message<unknown>((transport) => {
-              const $config = RPC<PassKeyConfigType>(
-                Of({ transport: "config", method: "get" }),
-              ).result();
+          message: () =>
+            Message<unknown>((resolve) => {
+              const $config = Context<PassKeyConfigType>({
+                transport: "config",
+                method: "get",
+              });
               const $body = RequestBody<Record<string, any>>($req);
-              const $options = RPC<PassKeyChallenge>(
+              const $options = Context<PassKeyChallenge>(
                 Record({
-                  transport: Of("cache"),
-                  method: Of("get"),
+                  transport: "cache",
+                  method: "get",
                   params: Record({
-                    key: Path($body, Of("username")),
+                    key: Path($body, "username"),
                   }),
                 }),
-              ).result();
-              All($body, $options, $config).pipe(
-                Tap(async ([data, options, config]) => {
+              );
+              All($body, $options, $config).then(
+                async ([data, options, config]) => {
                   let verification;
                   try {
                     verification = await verifyRegistrationResponse({
@@ -207,37 +209,36 @@ export function Auth($req: MessageType<IncomingMessage>) {
                           deviceType: credentialDeviceType,
                           backedUp: credentialBackedUp,
                         }),
-                      ).result();
-                      transport.use({
+                      ).then(Void());
+                      resolve({
                         result: true,
                       });
                       return;
                     }
                   } catch (error) {
-                    transport.use({
+                    resolve({
                       status: 400,
                       error: error.message,
                     });
                     return;
                   }
-                  transport.use({
+                  resolve({
                     status: 500,
                     error: "Unable to register",
                   });
-                }),
+                },
               );
             }),
-          ),
         },
         {
           pattern: "^POST:/auth/login/start$",
-          message: TapMessage(() =>
-            Message<unknown>((transport) => {
+          message: () =>
+            Message<unknown>((resolve) => {
               const $body = RequestBody<Record<string, any>>($req);
               const $passkeys = UserPasskeys(Path($body, Of("username")));
               const $config = PassKeyConfig();
-              All($body, $passkeys, $config).pipe(
-                Tap(async ([body, passkeys, config]) => {
+              All($body, $passkeys, $config).then(
+                async ([body, passkeys, config]) => {
                   const options: PublicKeyCredentialRequestOptionsJSON =
                     await generateAuthenticationOptions({
                       rpID: config.rpID,
@@ -246,7 +247,7 @@ export function Auth($req: MessageType<IncomingMessage>) {
                         transports: passkey.transports,
                       })),
                     });
-                  RPC(
+                  Context(
                     Of({
                       transport: "cache",
                       method: "put",
@@ -255,23 +256,22 @@ export function Auth($req: MessageType<IncomingMessage>) {
                         value: options,
                       },
                     }),
-                  ).result();
-                  transport.use({
+                  ).then(Void());
+                  resolve({
                     data: options,
                   });
-                }),
+                },
               );
             }),
-          ),
         },
         {
           pattern: "^POST:/auth/login/finish$",
-          message: TapMessage(() =>
+          message: () =>
             Message<unknown>((transport) => {
               const $body = RequestBody<Record<string, any>>($req);
-              const $username = Path($body, Of("username"));
+              const $username = Path<string>($body, "username");
               const $passkey = ConcretePassKey($username);
-              const $options = RPC<PassKeyChallenge>(
+              const $options = Context<PassKeyChallenge>(
                 Record({
                   transport: Of("cache"),
                   method: Of("get"),
@@ -279,10 +279,10 @@ export function Auth($req: MessageType<IncomingMessage>) {
                     key: Concatenated([$username, Of("-login")]),
                   }),
                 }),
-              ).result();
+              );
               const $config = PassKeyConfig();
-              All($body, $passkey, $options, $config).pipe(
-                Tap(async ([body, passkey, options, config]) => {
+              All($body, $passkey, $options, $config).then(
+                async ([body, passkey, options, config]) => {
                   try {
                     const verification = await verifyAuthenticationResponse({
                       response: body.data as any,
@@ -305,12 +305,12 @@ export function Auth($req: MessageType<IncomingMessage>) {
                     if (verified) {
                       const { authenticationInfo } = verification;
                       const { newCounter } = authenticationInfo;
-                      UpdateCounter(Of(passkey), Of(newCounter)).result();
+                      UpdateCounter(Of(passkey), Of(newCounter)).then(Void());
                       authId = uuidv4();
-                      NewSid(Of(authId)).result();
+                      NewSid(Of(authId)).then(Void());
                     }
 
-                    transport.use({
+                    transport({
                       verified,
                       ...(authId
                         ? {
@@ -331,25 +331,24 @@ export function Auth($req: MessageType<IncomingMessage>) {
                     });
                     return;
                   } catch (error) {
-                    transport.use({
+                    transport({
                       status: 400,
                       error: error.message,
                     });
                     return;
                   }
-                }),
+                },
               );
             }),
-          ),
         },
       ]),
-      TapMessage(() =>
+      () =>
         Of({
           error: "Auth route not found",
           status: 404,
         }),
-      ),
-    ).pipe(transport);
+    );
+    rd.then(transport);
 
     return () => {
       rd.destroy();

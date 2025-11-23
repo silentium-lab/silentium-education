@@ -1,32 +1,23 @@
 import { ClassName } from "@/modules/ClassName";
 import { Clicked } from "@/modules/Clicked";
 import { Id } from "@/modules/Id";
-import {
-  Message,
-  MessageType,
-  Of,
-  Shared,
-  Tap,
-  TapType,
-  Void,
-} from "silentium";
+import { Message, MessageType, Shared, SourceType } from "silentium";
 import { First, Template } from "silentium-components";
 import { Elements } from "silentium-web-api";
 
 export function Button(
   $label: MessageType<string>,
-  $class: MessageType<string> = Of(""),
-  clickTap: TapType = Void(),
+  $class: MessageType<string>,
+  click: SourceType,
 ) {
-  return Message<string>((transport) => {
+  return Message<string>((resolve) => {
     const $id = Shared(Id());
 
-    const clicked = Clicked(First(Elements(ClassName($id)))).pipe(
-      Tap((e) => {
-        e.preventDefault();
-        clickTap.use(e);
-      }),
-    );
+    const clicked = Clicked(First(Elements(ClassName($id))));
+    clicked.then((e) => {
+      e.preventDefault();
+      click.use(e);
+    });
 
     const t = Template();
     t.template(
@@ -34,7 +25,7 @@ export function Button(
         ${t.var($label)}
       </button>`,
     );
-    t.pipe(transport);
+    t.then(resolve);
 
     return () => {
       clicked.destroy();

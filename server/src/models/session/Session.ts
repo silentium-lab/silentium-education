@@ -1,8 +1,8 @@
-import { MessageType, RPC } from "silentium";
+import { Context, MessageType } from "silentium";
 import { Record } from "silentium-components";
 
 export function Session($key: MessageType<string>) {
-  return RPC(
+  return Context(
     Record({
       transport: "cache",
       method: "get",

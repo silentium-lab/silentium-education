@@ -7,20 +7,20 @@ const Active = (lang: string) =>
   Applied($lang, (l) => (l === lang ? "font-bold" : ""));
 
 export function Lang($class: MessageType<string>): MessageType<string> {
-  return Message((transport) => {
+  return Message((resolve) => {
     const $ru = LateShared();
     const $en = LateShared();
 
-    Constant("ru", $ru).pipe($lang);
-    Constant("en", $en).pipe($lang);
+    $lang.chain(Constant("ru", $ru));
+    $lang.chain(Constant("en", $en));
 
     const t = Template();
     t.template(
       `<nav class="px-2 ${t.var($class)}">
-			${t.var(Button(Of("ru"), Active("ru"), $ru))}
-			${t.var(Button(Of("en"), Active("en"), $en))}
-		</nav>`,
+        ${t.var(Button(Of("ru"), Active("ru"), $ru))}
+        ${t.var(Button(Of("en"), Active("en"), $en))}
+      </nav>`,
     );
-    t.pipe(transport);
+    t.then(resolve);
   });
 }

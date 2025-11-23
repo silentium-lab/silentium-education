@@ -4,15 +4,8 @@ import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { i18n } from "@/store";
 import { startRegistration } from "@simplewebauthn/browser";
-import {
-  FromPromise,
-  LateShared,
-  Message,
-  Of,
-  Primitive,
-  Shared,
-} from "silentium";
-import { Record, Shot, Template, Transaction } from "silentium-components";
+import { LateShared, Message, Of, Primitive, Shared } from "silentium";
+import { Record, Shot, Template } from "silentium-components";
 import { Log } from "silentium-web-api";
 
 /**
@@ -24,39 +17,34 @@ export function Configuration() {
 
     const $register = LateShared();
 
-    const $username = LateShared();
+    const $username = LateShared<string>();
     const $regStart = Shared(
       ServerResponse(
-        CRUD(Of("auth/registration/start"))
-          .created(Shot(Record({ username: $username }), $register))
-          .result(),
+        CRUD(Of("auth/registration/start")).created(
+          Shot(Record({ username: $username }), $register),
+        ),
       ),
     );
 
-    const $fidoData = Transaction($regStart, (data) => {
-      return FromPromise(
-        startRegistration({
-          optionsJSON: Primitive(data).primitiveWithException() as any,
-        }),
-        Log("fido error"),
-      );
+    const $fidoData = $regStart.then((data: any) => {
+      return startRegistration({
+        optionsJSON: Primitive(data).primitiveWithException() as any,
+      });
     });
 
     const $regFinish = Shared(
       ServerResponse(
-        CRUD(Of("auth/registration/finish"))
-          .created(
-            Record({
-              data: $fidoData,
-              username: $username,
-            }),
-          )
-          .result(),
+        CRUD(Of("auth/registration/finish")).created(
+          Record({
+            data: $fidoData,
+            username: $username,
+          }),
+        ),
       ),
     );
 
-    $regStart.pipe(Log("formUpdated"));
-    $regFinish.pipe(Log("regFinish"));
+    $regStart.then(Log("formUpdated"));
+    $regFinish.then(Log("regFinish"));
 
     const t = Template();
     t.template(`<div class="article">
@@ -73,7 +61,7 @@ export function Configuration() {
         ${t.var(Button(Of("Регистрация"), Of("btn"), $register))}
       </div>
 		</div>`);
-    t.pipe(transport);
+    t.then(transport);
 
     return () => {
       t.destroy();

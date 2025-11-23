@@ -7,9 +7,6 @@ export const settingsModels = {
    * Application is configured
    */
   hasSettings(): MessageType<boolean> {
-    return Path(
-      FromJson(CRUD(Of("configured")).custom().result()),
-      Of("data.configured"),
-    );
+    return Path(FromJson(CRUD(Of("configured")).custom()), "data.configured");
   },
 };

@@ -6,7 +6,7 @@ export function LinkExternal(
   $text: MessageType<string>,
   $class: MessageType<string> = Of(""),
 ) {
-  return Message<string>((transport) => {
+  return Message<string>((resolve) => {
     const t = Template();
     t.template(
       `<a
@@ -17,6 +17,6 @@ export function LinkExternal(
 			${t.var($text)}
 		</a>`,
     );
-    t.pipe(transport);
+    t.then(resolve);
   });
 }

@@ -1,24 +1,20 @@
 import { Button } from "@/components/Button";
-import { Applied, LateShared, Message, Of, Tap } from "silentium";
+import { Applied, LateShared, Message, Of } from "silentium";
 import { Concatenated, Template } from "silentium-components";
 
 export function Counter() {
-  return Message<string>((transport) => {
+  return Message<string>((resolve) => {
     const $count = LateShared(1);
     const $clicked = LateShared();
     const $reset = LateShared();
 
-    $clicked.pipe(
-      Tap(() => {
-        $count.use($count.value().primitiveWithException() + 1);
-      }),
-    );
+    $clicked.then(() => {
+      $count.use($count.value().primitiveWithException() + 1);
+    });
 
-    $reset.pipe(
-      Tap(() => {
-        $count.use(1);
-      }),
-    );
+    $reset.then(() => {
+      $count.use(1);
+    });
 
     const t = Template();
     t.template(
@@ -33,7 +29,7 @@ export function Counter() {
         ${t.var(Button(Of("reset"), Of("btn"), $reset))}
       </div>`,
     );
-    t.pipe(transport);
+    t.then(resolve);
 
     return () => {
       t.destroy();

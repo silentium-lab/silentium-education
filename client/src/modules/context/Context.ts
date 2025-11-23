@@ -1,29 +1,25 @@
-import { Of, RPC, Tap } from "silentium";
+import { Context } from "silentium";
 
-export function Context(key: string, def?: any) {
-  return RPC(
-    Of({
-      transport: "context",
-      method: "get",
-      params: {
-        key,
-        default: def,
-      },
-    }),
-  ).result();
+export function FromContext(key: string, def?: any) {
+  return Context({
+    transport: "context",
+    method: "get",
+    params: {
+      key,
+      default: def,
+    },
+  });
 }
 
 export function NewContext(key: string) {
-  return Tap((v) => {
-    RPC(
-      Of({
-        transport: "context",
-        method: "set",
-        params: {
-          value: v,
-          key,
-        },
-      }),
-    ).result();
-  });
+  return (v: any) => {
+    Context({
+      transport: "context",
+      method: "set",
+      params: {
+        value: v,
+        key,
+      },
+    });
+  };
 }

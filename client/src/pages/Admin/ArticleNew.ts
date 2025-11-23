@@ -5,7 +5,7 @@ import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { ArticleForm } from "@/pages/Admin/ArticleForm";
 import { $title, $url, i18n } from "@/store";
-import { Any, LateShared, Message, Of, Shared } from "silentium";
+import { Any, LateShared, Local, Message, Of, Shared } from "silentium";
 import {
   Branch,
   Constant,
@@ -18,9 +18,8 @@ import {
 } from "silentium-components";
 
 export function ArticleNew() {
-  return Message<string>((transport) => {
-    const title = i18n.tr("Create Article");
-    title.pipe($title);
+  return Message<string>((resolve) => {
+    $title.chain(i18n.tr("Create Article"));
 
     const clickedSrc = LateShared();
     const formSrc = LateShared({
@@ -28,11 +27,9 @@ export function ArticleNew() {
       content: "",
     });
 
-    const $formUpdated = Shared(
+    const $formUpdated = Shared<any>(
       ServerResponse(
-        CRUD(Of("private/articles"))
-          .created(Shot(formSrc, clickedSrc))
-          .result(),
+        CRUD(Of("private/articles")).created(Shot(formSrc, clickedSrc)),
       ),
     );
     const formUpdateLoadingSrc = Any(
@@ -41,28 +38,32 @@ export function ArticleNew() {
     );
 
     const insertedIdSrc = Path($formUpdated, Of("insertedId"));
-    Task(
-      Template(
-        Of("/admin/articles/$id/"),
-        Record({
-          $id: insertedIdSrc,
-        }),
+    $url.chain(
+      Task(
+        Template(
+          Of("/admin/articles/$id/"),
+          Record({
+            $id: insertedIdSrc,
+          }),
+        ),
+        900,
       ),
-      900,
-    ).pipe($url);
+    );
 
-    Constant(
-      {
-        type: "success",
-        content: "Успешно создано",
-      } as const,
-      $formUpdated,
-    ).pipe($notification);
+    $notification.chain(
+      Constant(
+        {
+          type: "success",
+          content: "Успешно создано",
+        } as const,
+        $formUpdated,
+      ),
+    );
 
     const t = Template();
     t.template(`<div class="article">
 			${t.var(Link(Of("/admin/articles"), i18n.tr("Articles"), Of("underline")))}
-        <h1 class="title-1">${t.var(title)}</h1>
+        <h1 class="title-1">${t.var(Local($title))}</h1>
 		${t.var(ArticleForm(formSrc))}
 		${t.var(
       Button(
@@ -72,7 +73,7 @@ export function ArticleNew() {
       ),
     )}
       </div>`);
-    t.pipe(transport);
+    t.then(resolve);
 
     return () => {
       t.destroy();

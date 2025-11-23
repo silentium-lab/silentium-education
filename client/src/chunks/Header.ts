@@ -19,6 +19,6 @@ export function Header() {
           </nav>
         </header>`,
     );
-    t.pipe(transport);
+    t.then(transport);
   });
 }

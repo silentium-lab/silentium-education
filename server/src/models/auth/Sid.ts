@@ -1,37 +1,37 @@
-import { All, Applied, MessageType, Of, RPC } from "silentium";
+import { All, Applied, Context, MessageType } from "silentium";
 import { Record } from "silentium-components";
 
 export function Sid(): MessageType<string[]> {
   return Applied(
-    RPC(
+    Context(
       Record({
         transport: "db",
-        method: "find",
         params: Record({
+          method: "find",
           collection: "sessions",
-          postProcessArgs: Of([]),
-          postProcess: Of("toArray"),
+          postProcessArgs: [],
+          postProcess: "toArray",
         }),
       }),
-    ).result(),
+    ),
     (r: any) => r.map((i: any) => i.sid),
   );
 }
 
 export function NewSid($sid: MessageType) {
-  return RPC(
+  return Context(
     Record({
       transport: "db",
-      method: "insertOne",
       params: Record({
+        method: "insertOne",
         collection: "sessions",
         args: All(
           Record({
             sid: $sid,
           }),
-          Record({
+          {
             expireAfterSeconds: 3600,
-          }),
+          },
         ),
       }),
     }),

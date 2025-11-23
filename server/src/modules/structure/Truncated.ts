@@ -1,4 +1,4 @@
-import { Applied, Message, MessageType } from "silentium";
+import { Applied, MessageType } from "silentium";
 
 /**
  * Allows forming an object where
@@ -8,11 +8,9 @@ export function Truncated(
   $record: MessageType<Record<string, unknown>>,
   excludeValues: unknown[],
 ) {
-  return Message((transport) => {
-    Applied($record, (r) => {
-      return Object.fromEntries(
-        Object.entries(r).filter((e) => !excludeValues.includes(e[1])),
-      );
-    }).pipe(transport);
+  return Applied($record, (r) => {
+    return Object.fromEntries(
+      Object.entries(r).filter((e) => !excludeValues.includes(e[1])),
+    );
   });
 }

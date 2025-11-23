@@ -14,8 +14,8 @@ import { Element } from "silentium-web-api";
 export function MountPoint($base: MessageType<string>) {
   return Message<string>((transport) => {
     const $id = Shared(Id(Of("mount-point")));
-    $id.pipe(transport);
+    $id.then(transport);
     const $el = Element(ClassName($id));
-    Render($el, $base).pipe(Void());
+    Render($el, $base).then(Void());
   });
 }

@@ -6,12 +6,14 @@ import { Timer } from "silentium-web-api";
 export function Notifications() {
   return Message<string>((transport) => {
     const $notified = LateShared(false);
-    Constant(true, Tick($notification)).pipe($notified);
-    Constant(false, Polling<unknown>(Timer(5000), $notification)).pipe($notified);
+    $notified.chain(Constant(true, Tick($notification)));
+    $notified.chain(
+      Constant(false, Polling<unknown>(Timer(5000), $notification)),
+    );
     const t = Template();
     t.template(`<div class="fixed top-2 right-2 p-2 rounded-md bg-${t.var(Of(Primitive(Path($notification, Of("type"))) as unknown as string))} ${t.var(Applied($notified, (show) => (show ? "visible" : "hidden")))}">
       ${t.var(Of(Primitive(Path($notification, Of("content"))) as unknown as string))}
     </div>`);
-    t.pipe(transport);
+    t.then(transport);
   });
 }

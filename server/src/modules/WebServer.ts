@@ -1,12 +1,5 @@
 import http, { IncomingMessage } from "node:http";
-import {
-  ConstructorType,
-  Message,
-  MessageType,
-  Of,
-  Shared,
-  Tap,
-} from "silentium";
+import { ConstructorType, Message, MessageType, Of, Shared } from "silentium";
 
 export function WebServer(
   processSrc: ConstructorType<
@@ -16,7 +9,7 @@ export function WebServer(
   hostname: string = "0.0.0.0",
   port: number = 4000,
 ) {
-  return Message<string>((transport) => {
+  return Message<string>((resolve) => {
     const config = {
       port,
       hostname,
@@ -39,34 +32,30 @@ export function WebServer(
         res.end("");
       } else {
         const process = Shared(processSrc(Of(req)));
-        process.pipe(
-          Tap((v) => {
-            headers();
-            if (v.headers) {
-              Object.entries(v.headers).forEach(([name, value]) => {
-                res.setHeader(name, value);
-              });
-              delete v.headers;
-            }
-            if (v.status) {
-              res.statusCode = v.status as number;
-              delete v.status;
-            }
-            res.end(JSON.stringify(v));
-            process?.destroy();
-          }),
-        );
+        process.then((v) => {
+          headers();
+          if (v.headers) {
+            Object.entries(v.headers).forEach(([name, value]) => {
+              res.setHeader(name, value);
+            });
+            delete v.headers;
+          }
+          if (v.status) {
+            res.statusCode = v.status as number;
+            delete v.status;
+          }
+          res.end(JSON.stringify(v));
+          process?.destroy();
+        });
       }
     });
 
     server.listen(config.port, config.hostname, () => {
-      transport.use(
-        `Server running at http://${config.hostname}:${config.port}/`,
-      );
+      resolve(`Server running at http://${config.hostname}:${config.port}/`);
     });
 
     server.on("error", (error) => {
-      transport.use(["Server error:", error].join());
+      resolve(["Server error:", error].join());
     });
   });
 }

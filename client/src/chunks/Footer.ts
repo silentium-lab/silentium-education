@@ -5,7 +5,7 @@ import { Message, Of } from "silentium";
 import { Template } from "silentium-components";
 
 export function Footer() {
-  return Message<string>((transport) => {
+  return Message<string>((resolve) => {
     const t = Template();
     t.template(
       `<footer class="py-2 flex justify-between items-center gap-2 flex-wrap">
@@ -19,6 +19,6 @@ export function Footer() {
           ${t.var(logoSrc)}
         </footer>`,
     );
-    t.pipe(transport);
+    t.then(resolve);
   });
 }
