@@ -20,8 +20,8 @@ export function Updated<T>(
         const context = Context<T>(
           Record({
             transport: Of("db"),
-            method: Of("findOneAndUpdate"),
             params: Record({
+              method: Of("findOneAndUpdate"),
               collection: Of(collection),
               args: All(
                 Record({

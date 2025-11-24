@@ -4,7 +4,14 @@ import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { i18n } from "@/store";
 import { startRegistration } from "@simplewebauthn/browser";
-import { LateShared, Message, Of, Primitive, Shared } from "silentium";
+import {
+  LateShared,
+  Message,
+  MessageType,
+  Of,
+  Process,
+  Shared,
+} from "silentium";
 import { Record, Shot, Template } from "silentium-components";
 import { Log } from "silentium-web-api";
 
@@ -20,16 +27,16 @@ export function Configuration() {
     const $username = LateShared<string>();
     const $regStart = Shared(
       ServerResponse(
-        CRUD(Of("auth/registration/start")).created(
+        CRUD("auth/registration/start").created(
           Shot(Record({ username: $username }), $register),
         ),
       ),
     );
 
-    const $fidoData = $regStart.then((data: any) => {
+    const $fidoData = Process($regStart, (data: any) => {
       return startRegistration({
-        optionsJSON: Primitive(data).primitiveWithException() as any,
-      });
+        optionsJSON: data,
+      }) as MessageType;
     });
 
     const $regFinish = Shared(
@@ -43,6 +50,7 @@ export function Configuration() {
       ),
     );
 
+    $fidoData.then(Log("$fidoData"));
     $regStart.then(Log("formUpdated"));
     $regFinish.then(Log("regFinish"));
 

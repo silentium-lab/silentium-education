@@ -1,5 +1,11 @@
 import { NewContext } from "@/modules/context/Context";
-import { Context, MessageType, Of } from "silentium";
+import {
+  ActualMessage,
+  Context,
+  MaybeMessage,
+  MessageType,
+  Of,
+} from "silentium";
 import { Concatenated, Record } from "silentium-components";
 
 /**
@@ -8,10 +14,10 @@ import { Concatenated, Record } from "silentium-components";
  * named $transport
  */
 export function CRUD(
-  $model: MessageType<string>,
+  $model: MaybeMessage<string>,
   $transport: MessageType<string> = Of("request"),
 ) {
-  return new CRUDImpl($model, $transport);
+  return new CRUDImpl(ActualMessage($model), $transport);
 }
 
 class CRUDImpl {
@@ -68,8 +74,8 @@ class CRUDImpl {
     const $r = Context<R>(
       Record({
         transport: this.$transport,
-        method: "get",
         params: Record({
+          method: "get",
           model: this.$model,
           query: $search ?? {},
           credentials: "include",
@@ -89,8 +95,8 @@ class CRUDImpl {
     const $r = Context<R>(
       Record({
         transport: this.$transport,
-        method: "post",
         params: Record({
+          method: "post",
           model: this.$model,
           body: $form,
           credentials: "include",
@@ -110,8 +116,8 @@ class CRUDImpl {
     const $r = Context<R>(
       Record({
         transport: this.$transport,
-        method: "put",
         params: Record({
+          method: "put",
           model: Concatenated([this.$model, Of("/"), $id, Of("/")]),
           body: $form,
           credentials: "include",
@@ -131,8 +137,8 @@ class CRUDImpl {
     const $r = Context<R>(
       Record({
         transport: this.$transport,
-        method: "delete",
         params: Record({
+          method: "delete",
           model: this.$model,
           query: Record({
             id: $id,

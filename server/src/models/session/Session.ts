@@ -5,8 +5,8 @@ export function Session($key: MessageType<string>) {
   return Context(
     Record({
       transport: "cache",
-      method: "get",
       params: Record({
+        method: "get",
         key: $key,
       }),
     }),

@@ -9,8 +9,8 @@ export function Removed<T>($url: MessageType<string>, collection: string) {
     const context = Context<T>(
       Record({
         transport: "db",
-        method: "deleteOne",
         params: Record({
+          method: "deleteOne",
           collection,
           args: All(
             Record({

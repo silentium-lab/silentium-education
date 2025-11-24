@@ -10,8 +10,8 @@ export function Entity<T>($url: MessageType<string>, collection: string) {
     const rpc = Context<T>(
       Record({
         transport: "db",
-        method: "findOne",
         params: Record({
+          method: "findOne",
           collection,
           args: All(
             Record({

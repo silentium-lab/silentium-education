@@ -146,8 +146,8 @@ export function Auth($req: MessageType<IncomingMessage>) {
                     });
                   Context({
                     transport: "cache",
-                    method: "put",
                     params: {
+                      method: "put",
                       key: username,
                       value: options,
                     },
@@ -171,8 +171,8 @@ export function Auth($req: MessageType<IncomingMessage>) {
               const $options = Context<PassKeyChallenge>(
                 Record({
                   transport: "cache",
-                  method: "get",
                   params: Record({
+                    method: "get",
                     key: Path($body, "username"),
                   }),
                 }),
@@ -250,8 +250,8 @@ export function Auth($req: MessageType<IncomingMessage>) {
                   Context(
                     Of({
                       transport: "cache",
-                      method: "put",
                       params: {
+                        method: "put",
                         key: `${body.username}-login`,
                         value: options,
                       },
@@ -274,8 +274,8 @@ export function Auth($req: MessageType<IncomingMessage>) {
               const $options = Context<PassKeyChallenge>(
                 Record({
                   transport: Of("cache"),
-                  method: Of("get"),
                   params: Record({
+                    method: Of("get"),
                     key: Concatenated([$username, Of("-login")]),
                   }),
                 }),
