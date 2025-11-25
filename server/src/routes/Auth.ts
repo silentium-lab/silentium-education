@@ -211,7 +211,9 @@ export function Auth($req: MessageType<IncomingMessage>) {
                         }),
                       ).then(Void());
                       resolve({
-                        result: true,
+                        data: {
+                          result: true,
+                        },
                       });
                       return;
                     }
@@ -273,9 +275,9 @@ export function Auth($req: MessageType<IncomingMessage>) {
               const $passkey = ConcretePassKey($username);
               const $options = Context<PassKeyChallenge>(
                 Record({
-                  transport: Of("cache"),
+                  transport: "cache",
                   params: Record({
-                    method: Of("get"),
+                    method: "get",
                     key: Concatenated([$username, Of("-login")]),
                   }),
                 }),
@@ -311,7 +313,7 @@ export function Auth($req: MessageType<IncomingMessage>) {
                     }
 
                     transport({
-                      verified,
+                      data: { verified },
                       ...(authId
                         ? {
                             headers: {
