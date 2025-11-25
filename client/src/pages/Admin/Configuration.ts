@@ -22,37 +22,7 @@ export function Configuration() {
   return Message<string>((transport) => {
     i18n.tr("Configuration");
 
-    const $register = LateShared();
-
-    const $username = LateShared<string>();
-    const $regStart = Shared(
-      ServerResponse(
-        CRUD("auth/registration/start").created(
-          Shot(Record({ username: $username }), $register),
-        ),
-      ),
-    );
-
-    const $fidoData = Process($regStart, (data: any) => {
-      return startRegistration({
-        optionsJSON: data,
-      }) as MessageType;
-    });
-
-    const $regFinish = Shared(
-      ServerResponse(
-        CRUD(Of("auth/registration/finish")).created(
-          Record({
-            data: $fidoData,
-            username: $username,
-          }),
-        ),
-      ),
-    );
-
-    $fidoData.then(Log("$fidoData"));
-    $regStart.then(Log("formUpdated"));
-    $regFinish.then(Log("regFinish"));
+    const behavior = ConfigurationBehavior();
 
     const t = Template();
     t.template(`<div class="article">
@@ -63,10 +33,10 @@ export function Configuration() {
           Укажите обязательные параметры
       </p>
       <div class="mb-2">
-        <input class="${t.var(Input($username))} border-1 p-2 rounded-sm w-full" name="username" />
+        <input class="${t.var(Input(behavior.$username))} border-1 p-2 rounded-sm w-full" name="username" />
       </div>
       <div>
-        ${t.var(Button(Of("Регистрация"), Of("btn"), $register))}
+        ${t.var(Button(Of("Регистрация"), Of("btn"), behavior.$register))}
       </div>
 		</div>`);
     t.then(transport);
@@ -75,4 +45,44 @@ export function Configuration() {
       t.destroy();
     };
   });
+}
+
+export function ConfigurationBehavior() {
+  const $register = LateShared();
+
+  const $username = LateShared<string>();
+  const $regStart = Shared(
+    ServerResponse(
+      CRUD("auth/registration/start").created(
+        Shot(Record({ username: $username }), $register),
+      ),
+    ),
+  );
+
+  const $authData = Process($regStart, (data: any) => {
+    return startRegistration({
+      optionsJSON: data,
+    }) as MessageType;
+  });
+
+  const $regFinish = Shared(
+    ServerResponse(
+      CRUD(Of("auth/registration/finish")).created(
+        Record({
+          data: $authData,
+          username: $username,
+        }),
+      ),
+    ),
+  );
+
+  $regFinish.then(Log("regFinish"));
+
+  return {
+    $register,
+    $username,
+    $regStart,
+    $authData,
+    $regFinish,
+  };
 }
