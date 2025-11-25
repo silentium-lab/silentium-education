@@ -1,4 +1,4 @@
-import { Context } from "silentium";
+import { Context, Void } from "silentium";
 
 export function FromContext(key: string, def?: any) {
   return Context({
@@ -20,6 +20,6 @@ export function NewContext(key: string) {
         value: v,
         key,
       },
-    });
+    }).then(Void());
   };
 }

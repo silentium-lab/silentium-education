@@ -13,7 +13,6 @@ import {
   Shared,
 } from "silentium";
 import { Record, Shot, Template } from "silentium-components";
-import { Log } from "silentium-web-api";
 
 /**
  * Configuration page
@@ -59,11 +58,13 @@ export function ConfigurationBehavior() {
     ),
   );
 
-  const $authData = Process($regStart, (data: any) => {
-    return startRegistration({
-      optionsJSON: data,
-    }) as MessageType;
-  });
+  const $authData = Shared(
+    Process($regStart, (data: any) => {
+      return startRegistration({
+        optionsJSON: data,
+      }) as MessageType;
+    }),
+  );
 
   const $regFinish = Shared(
     ServerResponse(
@@ -76,7 +77,9 @@ export function ConfigurationBehavior() {
     ),
   );
 
-  $regFinish.then(Log("regFinish"));
+  $regFinish.then(() => {
+    location.reload();
+  });
 
   return {
     $register,

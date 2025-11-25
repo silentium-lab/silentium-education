@@ -4,9 +4,16 @@ import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { $title, i18n } from "@/store";
 import { startAuthentication } from "@simplewebauthn/browser";
-import { LateShared, Local, Message, Of, Primitive, Shared } from "silentium";
+import {
+  LateShared,
+  Local,
+  Message,
+  MessageType,
+  Of,
+  Process,
+  Shared,
+} from "silentium";
 import { Record, Shot, Template } from "silentium-components";
-import { Log } from "silentium-web-api";
 
 export function Auth() {
   const $username = LateShared<string>();
@@ -19,25 +26,24 @@ export function Auth() {
       ),
     ),
   );
-  const $fidoAuthData = $loginStart.then((data: any) => {
-    return startAuthentication({
-      optionsJSON: Primitive(data).primitiveWithException() as any,
-    });
-  });
+  const $authData = Shared(
+    Process($loginStart, (data: any) => {
+      return startAuthentication({
+        optionsJSON: data,
+      }) as MessageType;
+    }),
+  );
 
   const $loginFinish = Shared(
     ServerResponse(
       CRUD(Of("auth/login/finish")).created(
         Record({
-          data: $fidoAuthData,
+          data: $authData,
           username: $username,
         }),
       ),
     ),
   );
-
-  $authenticated.then(Log("authenticated"));
-  $loginFinish.then(Log("loginFinish"));
 
   $loginFinish.then(() => {
     location.reload();

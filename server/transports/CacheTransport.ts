@@ -11,9 +11,10 @@ export function CacheTransport() {
 
   return (context: ContextType) => {
     const key = context.params?.key ?? "none";
+    const method = context.params?.method ?? "none";
 
     // TODO ttl consider
-    if (context.method === "get") {
+    if (method === "get") {
       const value = cache[key];
       if (isFilled(value)) {
         context.result?.(value);
@@ -22,7 +23,7 @@ export function CacheTransport() {
       }
     }
 
-    if (context.method === "post") {
+    if (method === "post") {
       if (!isFilled(cache[key])) {
         const value = context.params?.value ?? "none";
         cache[key] = value;
@@ -31,7 +32,7 @@ export function CacheTransport() {
       }
     }
 
-    if (context.method === "put") {
+    if (method === "put") {
       const value = context.params?.value ?? "none";
       cache[key] = value;
     }
