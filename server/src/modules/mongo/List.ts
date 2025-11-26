@@ -12,7 +12,7 @@ export function List<T>(
         params: Record({
           method: "find",
           collection,
-          postProcessArgs: conditions ? All(conditions) : [],
+          args: conditions ? All(conditions) : [],
           postProcess: "toArray",
         }),
       }),

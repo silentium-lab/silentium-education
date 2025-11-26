@@ -285,6 +285,13 @@ export function Auth($req: MessageType<IncomingMessage>) {
               const $config = PassKeyConfig();
               All($body, $passkey, $options, $config).then(
                 async ([body, passkey, options, config]) => {
+                  if (!passkey) {
+                    transport({
+                      status: 400,
+                      error: "Auth not found",
+                    });
+                    return;
+                  }
                   try {
                     const verification = await verifyAuthenticationResponse({
                       response: body.data as any,

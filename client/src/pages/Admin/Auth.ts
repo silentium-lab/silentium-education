@@ -53,9 +53,12 @@ export function Auth() {
     $title.chain(i18n.tr("Auth"));
     const t = Template();
     t.template(`<div class="article">
-			<h1 class="title-1">${t.var(Local($title))}</h1>
+			<h1 class="title-1">Войти</h1>
       <div class="mb-2">
-        <input class="${t.var(Input($username))} border-1 p-2 rounded-sm w-full" name="username" />
+        <label for="login">
+          Логин
+        </login>
+        <input id="login" class="${t.var(Input($username))} border-1 p-2 rounded-sm w-full" name="username" />
       </div>
       <div class="mb-2">
         ${t.var(Button(Of("Войти"), Of("btn"), $authenticated))}
