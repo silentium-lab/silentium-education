@@ -20,5 +20,9 @@ export function Header() {
         </header>`,
     );
     t.then(transport);
+
+    return () => {
+      t.destroy();
+    }
   });
 }

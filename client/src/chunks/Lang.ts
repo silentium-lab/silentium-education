@@ -22,5 +22,9 @@ export function Lang($class: MessageType<string>): MessageType<string> {
       </nav>`,
     );
     t.then(resolve);
+
+    return () => {
+      t.destroy();
+    }
   });
 }

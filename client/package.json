@@ -41,7 +41,7 @@
     "@simplewebauthn/browser": "^13.2.2",
     "lodash-es": "^4.17.21",
     "mustache": "^4.2.0",
-    "silentium": "^0.0.156",
+    "silentium": "^0.0.162",
     "silentium-components": "^0.0.86",
     "silentium-morphdom": "^0.0.17",
     "silentium-web-api": "^0.0.33",

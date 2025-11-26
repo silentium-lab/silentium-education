@@ -15,7 +15,7 @@ export function Link(
     const $id = Shared(Id());
     const url = Primitive($linkUrl);
 
-    const clicked = Clicked(First(Elements(ClassName($id))));
+    const clicked = Clicked(ClassName($id));
     clicked.then((e: Event) => {
       e.preventDefault();
       $url.use(url.primitive() as string);
