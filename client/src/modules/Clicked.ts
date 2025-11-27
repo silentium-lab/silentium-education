@@ -11,7 +11,6 @@ export function Clicked($class: MessageType<string>) {
       if (!target) {
         return;
       }
-      console.log("clicked", target, className);
       if (target.classList.contains(className)) {
         resolve(event);
       }

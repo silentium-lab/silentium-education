@@ -35,7 +35,7 @@ class StencilImpl implements MessageType<string>, DestroyableType {
     const localsDC = DestroyContainer();
     this.dc.add(localsDC);
     const $actualVars = Task($vars, 1).then(() => {
-      localsDC.destroy();
+      // localsDC.destroy();
       const vars = Object.fromEntries(
         Object.entries(this.vars).map((entry) => {
           return [entry[0], localsDC.add(entry[1])];

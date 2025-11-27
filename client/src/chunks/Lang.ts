@@ -1,10 +1,17 @@
 import { Button } from "@/components/Button";
 import { $lang } from "@/store";
-import { Applied, LateShared, Message, MessageType, Of } from "silentium";
+import {
+  Applied,
+  LateShared,
+  Local,
+  Message,
+  MessageType,
+  Of,
+} from "silentium";
 import { Constant, Template } from "silentium-components";
 
 const Active = (lang: string) =>
-  Applied($lang, (l) => (l === lang ? "font-bold" : ""));
+  Applied(Local($lang), (l) => (l === lang ? "font-bold" : ""));
 
 export function Lang($class: MessageType<string>): MessageType<string> {
   return Message((resolve) => {
@@ -25,6 +32,6 @@ export function Lang($class: MessageType<string>): MessageType<string> {
 
     return () => {
       t.destroy();
-    }
+    };
   });
 }
