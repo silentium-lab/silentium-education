@@ -11,6 +11,10 @@
     "about": "О проекте",
     "documentation": "Документация",
     "blog": "Блог",
+    "Articles": "Статьи",
+    "Sections": "Разделы",
+    "Categories": "Категории",
+    "Logout": "Выход",
     "tg_group": "Телеграм группа"
   }
 }

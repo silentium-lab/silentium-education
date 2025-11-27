@@ -3,12 +3,17 @@ import { Message, MessageType, Of } from "silentium";
 import { Router } from "silentium-components";
 import { CRUDRouter } from "../app/CRUDRouter";
 import { Query } from "../modules/string/Query";
+import { Logout } from "./Logout";
 
 export function Private(req: MessageType<IncomingMessage>) {
   return Message((transport) => {
     const rd = Router(
       Query(req),
       Of([
+        {
+          pattern: "^.+:/private/logout.*$",
+          message: Logout,
+        },
         {
           pattern: "^.+:/private/articles.*$",
           message: () => CRUDRouter(req, "/private/articles", "documents"),

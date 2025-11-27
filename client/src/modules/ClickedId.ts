@@ -1,13 +1,16 @@
 import { ClassName } from "@/modules/ClassName";
 import { Clicked } from "@/modules/Clicked";
 import { Id } from "@/modules/Id";
-import { Chainable, Message, Shared, SourceType } from "silentium";
+import { Message, Shared, SourceType } from "silentium";
 
 export function ClickedId(click: SourceType) {
-  return Message((transport) => {
+  return Message<string>((transport) => {
     const $id = Shared(Id());
     const $clicked = Clicked(ClassName($id));
-    Chainable(click).chain($clicked);
+    $clicked.then((e) => {
+      e.preventDefault();
+      click.use(e);
+    });
 
     $id.then(transport);
 
