@@ -1,4 +1,3 @@
-import { $notification } from "@/bootstrap";
 import { Logout } from "@/modules/app/common/Logout";
 import { ClickedId } from "@/modules/ClickedId";
 import { FromContext } from "@/modules/context/Context";
@@ -7,9 +6,8 @@ import { ArticleNew } from "@/pages/Admin/ArticleNew";
 import { Articles } from "@/pages/Admin/Articles";
 import { Auth } from "@/pages/Admin/Auth";
 import { $title, $url, i18n } from "@/store";
-import { Filtered, LateShared, Message, Of, Void } from "silentium";
+import { Filtered, LateShared, Message, Of } from "silentium";
 import {
-  Constant,
   Detached,
   Polling,
   Router,
@@ -49,13 +47,15 @@ export function Admin() {
           message: ArticleEdit,
         },
       ]),
-      () => Of("Admin not found"),
+      () => Of("Admin page not found"),
     );
 
     const $logout = LateShared();
     $logout.then(console.log);
     const $loggedOut = Polling(Logout(), $logout);
-    $loggedOut.then(() => location.reload());
+    $loggedOut.then(() => {
+      location.href = "/";
+    });
 
     const t = Template();
     t.template(`<div class="flex min-h-screen bg-gray-100">

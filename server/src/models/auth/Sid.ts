@@ -28,6 +28,7 @@ export function NewSid($sid: MessageType) {
         args: All(
           Record({
             sid: $sid,
+            createdAt: Date.now(),
           }),
           {
             expireAfterSeconds: 3600,
