@@ -3,7 +3,7 @@ import { Button } from "@/components/Button";
 import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
-import { ArticleForm } from "@/pages/Admin/ArticleForm";
+import { ArticleForm } from "@/pages/Admin/Article/ArticleForm";
 import { $title, $url, i18n } from "@/store";
 import { Any, LateShared, Local, Message, Of, Shared } from "silentium";
 import {

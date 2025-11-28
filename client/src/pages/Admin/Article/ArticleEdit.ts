@@ -4,7 +4,7 @@ import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { SplitPart } from "@/modules/string/SplitPart";
-import { ArticleForm } from "@/pages/Admin/ArticleForm";
+import { ArticleForm } from "@/pages/Admin/Article/ArticleForm";
 import { $title, $url, i18n } from "@/store";
 import type { ArticleType } from "@/types/ArticleType";
 import { omit, partialRight } from "lodash-es";

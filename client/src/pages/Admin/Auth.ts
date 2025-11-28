@@ -6,7 +6,6 @@ import { $title, i18n } from "@/store";
 import { startAuthentication } from "@simplewebauthn/browser";
 import {
   LateShared,
-  Local,
   Message,
   MessageType,
   Of,

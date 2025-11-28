@@ -1,9 +1,7 @@
 import { Logout } from "@/modules/app/common/Logout";
 import { ClickedId } from "@/modules/ClickedId";
 import { FromContext } from "@/modules/context/Context";
-import { ArticleEdit } from "@/pages/Admin/ArticleEdit";
-import { ArticleNew } from "@/pages/Admin/ArticleNew";
-import { Articles } from "@/pages/Admin/Articles";
+import { ArticleRouter } from "@/pages/Admin/Article/ArticleRouter";
 import { Auth } from "@/pages/Admin/Auth";
 import { $title, $url, i18n } from "@/store";
 import { Filtered, LateShared, Message, Of } from "silentium";
@@ -32,19 +30,8 @@ export function Admin() {
           message: Auth,
         },
         {
-          pattern: "^/admin/articles$",
-          name: "list",
-          message: Articles,
-        },
-        {
-          pattern: "^/admin/articles/create$",
-          name: "create",
-          message: ArticleNew,
-        },
-        {
-          pattern: String.raw`^/admin/articles/.+/$`,
-          name: "edit",
-          message: ArticleEdit,
+          pattern: "^/admin/articles.*$",
+          message: ArticleRouter,
         },
       ]),
       () => Of("Admin page not found"),
