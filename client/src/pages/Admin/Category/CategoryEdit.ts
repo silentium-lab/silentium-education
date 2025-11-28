@@ -4,8 +4,8 @@ import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { SplitPart } from "@/modules/string/SplitPart";
-import { ArticleConfig } from "@/pages/Admin/Article/ArticleConfig";
 import { ArticleForm } from "@/pages/Admin/Article/ArticleForm";
+import { CategoryConfig } from "@/pages/Admin/Category/CategoryConfig";
 import { $title, $url, i18n } from "@/store";
 import type { ArticleType } from "@/types/ArticleType";
 import { omit, partialRight } from "lodash-es";
@@ -17,7 +17,6 @@ import {
   Message,
   MessageType,
   Of,
-  Primitive,
   Shared,
 } from "silentium";
 import {
@@ -30,10 +29,10 @@ import {
   Template,
 } from "silentium-components";
 
-export function ArticleEdit() {
+export function CategoryEdit() {
   return Message<string>((transport) => {
-    $title.chain(i18n.tr("Article"));
-    const config = ArticleConfig();
+    $title.chain(i18n.tr("Category"));
+    const config = CategoryConfig();
 
     const $localUrl = Detached($url);
     const $id = Shared(SplitPart($localUrl, Of("/"), Of(3)));
@@ -50,8 +49,8 @@ export function ArticleEdit() {
       Constant(
         {
           type: "success",
-          content: Primitive(i18n.tr("Saved successfully")),
-        },
+          content: "Успешно изменено",
+        } as const,
         $formUpdated,
       ),
     );

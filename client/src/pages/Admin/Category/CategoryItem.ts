@@ -2,7 +2,7 @@ import { $notification } from "@/bootstrap";
 import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
 import { ClickedId } from "@/modules/ClickedId";
-import { ArticleConfig } from "@/pages/Admin/Article/ArticleConfig";
+import { CategoryConfig } from "@/pages/Admin/Category/CategoryConfig";
 import { ArticleType } from "@/types/ArticleType";
 import {
   Chainable,
@@ -23,18 +23,18 @@ import {
   Template,
 } from "silentium-components";
 
-export function ArticleItem(
+export function CategoryItem(
   $article: MessageType<ArticleType>,
   reload: SourceType,
 ) {
   return Message((resolve) => {
     const removeTrigger = LateShared();
-    const config = ArticleConfig();
+    const config = CategoryConfig();
 
     const localArticle = Detached<ArticleType>($article);
     const $removed = Shared(
       CRUD(config.model).deleted(
-        Shot(Once(Path(localArticle, "_id")), Once(removeTrigger)),
+        Shot(Once(Path(localArticle, Of("_id"))), Once(removeTrigger)),
       ),
     );
 

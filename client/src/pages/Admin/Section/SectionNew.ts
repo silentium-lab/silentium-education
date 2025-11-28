@@ -3,8 +3,8 @@ import { Button } from "@/components/Button";
 import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
-import { ArticleConfig } from "@/pages/Admin/Article/ArticleConfig";
 import { ArticleForm } from "@/pages/Admin/Article/ArticleForm";
+import { SectionConfig } from "@/pages/Admin/Section/SectionConfig";
 import { $title, $url, i18n } from "@/store";
 import { Any, LateShared, Local, Message, Of, Shared } from "silentium";
 import {
@@ -18,10 +18,10 @@ import {
   Template,
 } from "silentium-components";
 
-export function ArticleNew() {
+export function SectionNew() {
   return Message<string>((resolve) => {
     $title.chain(i18n.tr("Create Article"));
-    const config = ArticleConfig();
+    const config = SectionConfig();
 
     const clickedSrc = LateShared();
     const formSrc = LateShared({

@@ -3,6 +3,8 @@ import { ClickedId } from "@/modules/ClickedId";
 import { FromContext } from "@/modules/context/Context";
 import { ArticleRouter } from "@/pages/Admin/Article/ArticleRouter";
 import { Auth } from "@/pages/Admin/Auth";
+import { CategoryRouter } from "@/pages/Admin/Category/CategoryRouter";
+import { SectionRouter } from "@/pages/Admin/Section/SectionRouter";
 import { $title, $url, i18n } from "@/store";
 import { Filtered, LateShared, Message, Of } from "silentium";
 import {
@@ -32,6 +34,14 @@ export function Admin() {
         {
           pattern: "^/admin/articles.*$",
           message: ArticleRouter,
+        },
+        {
+          pattern: "^/admin/sections.*$",
+          message: SectionRouter,
+        },
+        {
+          pattern: "^/admin/categories.*$",
+          message: CategoryRouter,
         },
       ]),
       () => Of("Admin page not found"),

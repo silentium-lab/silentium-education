@@ -16,5 +16,5 @@ ContextOf("context").then(ContextTransport());
 
 export const $notification = LateShared<{
   type: "error" | "success" | "info";
-  content: string;
+  content: string | object;
 }>();

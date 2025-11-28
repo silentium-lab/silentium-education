@@ -1,8 +1,8 @@
 import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
-import { ArticleConfig } from "@/pages/Admin/Article/ArticleConfig";
-import { ArticleItem } from "@/pages/Admin/Article/ArticleItem";
+import { SectionConfig } from "@/pages/Admin/Section/SectionConfig";
+import { SectionItem } from "@/pages/Admin/Section/SectionItem";
 import { $title, i18n } from "@/store";
 import {
   Any,
@@ -18,10 +18,10 @@ import {
 } from "silentium";
 import { Template } from "silentium-components";
 
-export function ArticleList() {
+export function SectionList() {
   return Message<string>((transport) => {
-    $title.chain(i18n.tr("Articles"));
-    const config = ArticleConfig();
+    $title.chain(i18n.tr("Sections"));
+    const config = SectionConfig();
 
     const $reload = LateShared(1);
     const $articlesSearch = LateShared({});
@@ -40,7 +40,7 @@ export function ArticleList() {
             Any<any>(
               Chain($articlesSearch, Of([])),
               Map($articles, (article) => {
-                return ArticleItem(article, $reload);
+                return SectionItem(article, $reload);
               }),
             ),
             (a) => a.join(""),

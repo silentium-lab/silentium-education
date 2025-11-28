@@ -23,6 +23,10 @@ export function Private(req: MessageType<IncomingMessage>) {
           message: () => CRUDRouter(req, "/private/categories", "categories"),
         },
         {
+          pattern: "^.+:/private/sections.*$",
+          message: () => CRUDRouter(req, "/private/sections", "sections"),
+        },
+        {
           pattern: "^.+:/private/settings.*$",
           message: () => CRUDRouter(req, "/private/settings", "settings"),
         },
