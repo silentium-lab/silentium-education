@@ -8,7 +8,6 @@ import { ArticleType } from "@/types/ArticleType";
 import {
   Chainable,
   LateShared,
-  Message,
   MessageType,
   Of,
   Once,
@@ -29,33 +28,30 @@ export function ArticleItem(
   $article: MessageType<ArticleType>,
   reload: SourceType,
 ) {
-  return Message((resolve) => {
-    const removeTrigger = LateShared();
-    const config = ArticleConfig();
+  const removeTrigger = LateShared();
+  const config = ArticleConfig();
 
-    const localArticle = Detached<ArticleType>($article);
-    const $removed = Shared(
-      CRUD(config.model).deleted(
-        Shot(Once(Path(localArticle, "_id")), Once(removeTrigger)),
-      ),
-    );
+  const localArticle = Detached<ArticleType>($article);
+  const $removed = Shared(
+    CRUD(config.model).deleted(
+      Shot(Once(Path(localArticle, "_id")), Once(removeTrigger)),
+    ),
+  );
 
-    Chainable(reload).chain(Constant(1, $removed));
+  Chainable(reload).chain(Constant(1, $removed));
 
-    $notification.chain(
-      Constant(
-        {
-          type: "success",
-          content: Primitive(
-            i18n.tr("Delete success"),
-          ).primitiveWithException(),
-        } as const,
-        $removed,
-      ),
-    );
+  $notification.chain(
+    Constant(
+      {
+        type: "success",
+        content: Primitive(i18n.tr("Delete success")).primitiveWithException(),
+      } as const,
+      $removed,
+    ),
+  );
 
-    const t = Template();
-    t.template(`<div class="flex gap-2">
+  const t = Template();
+  t.template(`<div class="flex gap-2">
         ${t.var(
           Link(
             Template(
@@ -69,6 +65,5 @@ export function ArticleItem(
         <div class="cursor-pointer ${t.var(ClickedId(removeTrigger))}">&times;</div>
     </div>`);
 
-    t.then(resolve);
-  });
+  return t;
 }

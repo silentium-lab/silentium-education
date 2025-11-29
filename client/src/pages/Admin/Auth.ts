@@ -4,17 +4,11 @@ import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { $title, i18n } from "@/store";
 import { startAuthentication } from "@simplewebauthn/browser";
-import {
-  LateShared,
-  Message,
-  MessageType,
-  Of,
-  Process,
-  Shared,
-} from "silentium";
+import { LateShared, MessageType, Of, Process, Shared } from "silentium";
 import { Record, Shot, Template } from "silentium-components";
 
 export function Auth() {
+  $title.chain(i18n.tr("Auth"));
   const $username = LateShared<string>();
   const $authenticated = LateShared();
 
@@ -48,21 +42,18 @@ export function Auth() {
     location.reload();
   });
 
-  return Message<string>((transport) => {
-    $title.chain(i18n.tr("Auth"));
-    const t = Template();
-    t.template(`<div class="article">
-			<h1 class="title-1">Войти</h1>
+  return Template(
+    (t) => `<div class="article">
+      <h1 class="title-1">${t.var(i18n.tr("Sign in"))}</h1>
       <div class="mb-2">
         <label for="login">
-          Логин
+          ${t.var(i18n.tr("Login"))}
         </login>
         <input id="login" class="${t.var(Input($username))} border-1 p-2 rounded-sm w-full" name="username" />
       </div>
       <div class="mb-2">
-        ${t.var(Button(Of("Войти"), Of("btn"), $authenticated))}
+        ${t.var(Button(i18n.tr("Sign in"), Of("btn"), $authenticated))}
       </div>
-		</div>`);
-    t.then(transport);
-  });
+    </div>`,
+  );
 }

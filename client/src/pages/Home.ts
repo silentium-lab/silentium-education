@@ -2,15 +2,13 @@ import { Counter } from "@/chunks/Counter";
 import { Link } from "@/components/Link";
 import { Stencil } from "@/modules/render/Stencil";
 import { $lang, $title, i18n } from "@/store";
-import { Local, Message, Of } from "silentium";
+import { Local, Of } from "silentium";
 
 export function Home() {
-  return Message<string>((transport) => {
-    $title.chain(i18n.tr("home"));
+  $title.chain(i18n.tr("home"));
 
-    const t = Stencil();
-    t.template(
-      `<section class="article">
+  return Stencil(
+    (t) => `<section class="article">
 			<h1 class="title-1">
 			Silentium
 			</h1>
@@ -22,11 +20,5 @@ export function Home() {
 				${t.var(Link(Of("/admin/articles"), Of("Статьи"), Of("underline")))}
 			</div>
 		</section>`,
-    );
-    t.then(transport);
-
-    return function homeDestroy() {
-      t.destroy();
-    };
-  });
+  );
 }

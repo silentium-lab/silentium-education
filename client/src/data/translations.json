@@ -17,9 +17,13 @@
     "Save": "Сохранить",
     "Section": "Раздел",
     "Sections": "Разделы",
+    "Sign in": "Войти",
     "about": "О проекте",
+    "Login": "Логин",
     "blog": "Блог",
     "documentation": "Документация",
+    "System configuration": "Конфигурирование системы",
+    "Before using the admin panel, you need to configure the server. Specify the required parameters.": "Перед использованием панели администратора необходимо провести конфигурацию сервера, Укажите обязательные параметры",
     "home": "Главная",
     "tg_group": "Телеграм группа"
   }

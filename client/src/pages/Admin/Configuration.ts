@@ -4,32 +4,22 @@ import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { i18n } from "@/store";
 import { startRegistration } from "@simplewebauthn/browser";
-import {
-  LateShared,
-  Message,
-  MessageType,
-  Of,
-  Process,
-  Shared,
-} from "silentium";
+import { LateShared, MessageType, Of, Process, Shared } from "silentium";
 import { Record, Shot, Template } from "silentium-components";
 
 /**
  * Configuration page
  */
 export function Configuration() {
-  return Message<string>((transport) => {
-    i18n.tr("Configuration");
+  i18n.tr("Configuration");
 
-    const behavior = ConfigurationBehavior();
+  const behavior = ConfigurationBehavior();
 
-    const t = Template();
-    t.template(`<div class="article">
-			<h1 class="title-1">Конфигурирование системы</h1>
+  return Template(
+    (t) => `<div class="article">
+      <h1 class="title-1">${t.var(i18n.tr("System configuration"))}</h1>
       <p class="mb-2">
-          Перед использованием панели администратора
-          необходимо провести конфигурацию сервера,
-          Укажите обязательные параметры
+          ${t.var(i18n.tr("Before using the admin panel, you need to configure the server. Specify the required parameters."))}
       </p>
       <div class="mb-2">
         <input class="${t.var(Input(behavior.$username))} border-1 p-2 rounded-sm w-full" name="username" />
@@ -37,13 +27,8 @@ export function Configuration() {
       <div>
         ${t.var(Button(Of("Регистрация"), Of("btn"), behavior.$register))}
       </div>
-		</div>`);
-    t.then(transport);
-
-    return () => {
-      t.destroy();
-    };
-  });
+    </div>`,
+  );
 }
 
 export function ConfigurationBehavior() {

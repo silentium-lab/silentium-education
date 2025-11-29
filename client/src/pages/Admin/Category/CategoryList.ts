@@ -11,7 +11,6 @@ import {
   LateShared,
   Local,
   Map,
-  Message,
   MessageType,
   Of,
   Shared,
@@ -19,39 +18,33 @@ import {
 import { Template } from "silentium-components";
 
 export function CategoryList() {
-  return Message<string>((transport) => {
-    $title.chain(i18n.tr("Categories"));
-    const config = CategoryConfig();
+  $title.chain(i18n.tr("Categories"));
+  const config = CategoryConfig();
 
-    const $reload = LateShared(1);
-    const $articlesSearch = LateShared({});
-    const $articles = Shared(
-      ServerResponse(
-        CRUD(config.model).list(Chain($reload, $articlesSearch)),
-      ) as MessageType<any[]>,
-    );
+  const $reload = LateShared(1);
+  const $articlesSearch = LateShared({});
+  const $articles = Shared(
+    ServerResponse(
+      CRUD(config.model).list(Chain($reload, $articlesSearch)),
+    ) as MessageType<any[]>,
+  );
 
-    const t = Template();
-    t.template(`<div class="article">
-        <h1 class="title-1">${t.var(Local($title))}</h1>
-        ${t.var(Link(Of(`${config.path}/create`), i18n.tr("Create category"), Of("block mb-3 underline")))}
-        ${t.var(
-          Applied(
-            Any<any>(
-              Chain($articlesSearch, Of([])),
-              Map($articles, (article) => {
-                return CategoryItem(article, $reload);
-              }),
-            ),
-            (a) => a.join(""),
-          ),
-        )}
-      </div>`);
-    t.then(transport);
+  const t = Template();
+  t.template(`<div class="article">
+    <h1 class="title-1">${t.var(Local($title))}</h1>
+    ${t.var(Link(Of(`${config.path}/create`), i18n.tr("Create category"), Of("block mb-3 underline")))}
+    ${t.var(
+      Applied(
+        Any<any>(
+          Chain($articlesSearch, Of([])),
+          Map($articles, (article) => {
+            return CategoryItem(article, $reload);
+          }),
+        ),
+        (a) => a.join(""),
+      ),
+    )}
+  </div>`);
 
-    return () => {
-      $articles.destroy();
-      t.destroy();
-    };
-  });
+  return t;
 }

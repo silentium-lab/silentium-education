@@ -1,12 +1,7 @@
 import { $title } from "@/store";
-import { Message } from "silentium";
-import { Template } from "silentium-components";
+import { Of } from "silentium";
 
 export function NotFound() {
-  return Message<string>((transport) => {
-    $title.use("Не найдено");
-    const t = Template();
-    t.template("<div>Not found</div>");
-    t.then(transport);
-  });
+  $title.use("Не найдено");
+  return Of("<div>Not found</div>");
 }

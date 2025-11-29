@@ -14,7 +14,6 @@ import {
   Applied,
   LateShared,
   Local,
-  Message,
   MessageType,
   Of,
   Primitive,
@@ -31,41 +30,40 @@ import {
 } from "silentium-components";
 
 export function ArticleEdit() {
-  return Message<string>((transport) => {
-    $title.chain(i18n.tr("Article"));
-    const config = ArticleConfig();
+  $title.chain(i18n.tr("Article"));
+  const config = ArticleConfig();
 
-    const $localUrl = Detached($url);
-    const $id = Shared(SplitPart($localUrl, Of("/"), Of(3)));
-    const $article = Shared(ServerResponse(CRUD(config.model).entity($id)));
-    const $clicked = LateShared();
-    const $form = LateShared<ArticleType>();
+  const $localUrl = Detached($url);
+  const $id = Shared(SplitPart($localUrl, Of("/"), Of(3)));
+  const $article = Shared(ServerResponse(CRUD(config.model).entity($id)));
+  const $clicked = LateShared();
+  const $form = LateShared<ArticleType>();
 
-    const $formUpdated = Shared(
-      ServerResponse(CRUD(config.model).updated($id, Shot($form, $clicked))),
-    );
-    const $formUpdateLoading = Any(Loading($clicked, $formUpdated), false);
+  const $formUpdated = Shared(
+    ServerResponse(CRUD(config.model).updated($id, Shot($form, $clicked))),
+  );
+  const $formUpdateLoading = Any(Loading($clicked, $formUpdated), false);
 
-    $notification.chain(
-      Constant(
-        {
-          type: "success",
-          content: Primitive(
-            i18n.tr("Saved successfully"),
-          ).primitiveWithException(),
-        },
-        $formUpdated,
-      ),
-    );
+  $notification.chain(
+    Constant(
+      {
+        type: "success",
+        content: Primitive(
+          i18n.tr("Saved successfully"),
+        ).primitiveWithException(),
+      },
+      $formUpdated,
+    ),
+  );
 
-    $form.chain(
-      <MessageType<ArticleType>>(
-        Applied(Any($article, Task($formUpdated)), partialRight(omit, ["_id"]))
-      ),
-    );
+  $form.chain(
+    <MessageType<ArticleType>>(
+      Applied(Any($article, Task($formUpdated)), partialRight(omit, ["_id"]))
+    ),
+  );
 
-    const t = Template();
-    t.template(`<div class="article">
+  const t = Template();
+  t.template(`<div class="article">
 			${t.var(Link(Of(config.path), i18n.tr("Articles"), Of("underline")))}
         <h1 class="title-1">${t.var(Local($title))}</h1>
         <div class="mb-2">
@@ -83,10 +81,6 @@ export function ArticleEdit() {
           ),
         )}
       </div>`);
-    t.then(transport);
 
-    return () => {
-      t.destroy();
-    };
-  });
+  return t;
 }

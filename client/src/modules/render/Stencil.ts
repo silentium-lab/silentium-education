@@ -1,11 +1,16 @@
 import {
+  ActualMessage,
   All,
   Applied,
   ConstructorType,
   DestroyableType,
   DestroyContainer,
   isDestroyable,
+  isMessage,
+  LateShared,
   Local,
+  MaybeMessage,
+  Message,
   MessageType,
   Of,
   Rejections,
@@ -17,8 +22,24 @@ import { Record, Task } from "silentium-components";
  * to obtain new values. This is important when building an application,
  * as any template change requires recomputing the components from scratch.
  */
-export function Stencil($src: MessageType<string> = Of("")) {
-  return new StencilImpl($src);
+export function Stencil(
+  src: MaybeMessage<string> | ((t: StencilImpl) => string) = "",
+) {
+  const $src = LateShared<string>();
+  if (typeof src === "string" || isMessage(src)) {
+    $src.chain(ActualMessage(src));
+  }
+  const t = new StencilImpl($src);
+
+  if (typeof src === "function") {
+    $src.chain(
+      Message((r) => {
+        r(src(t));
+      }),
+    );
+  }
+
+  return t;
 }
 
 class StencilImpl implements MessageType<string>, DestroyableType {

@@ -1,10 +1,9 @@
 import { ClassName } from "@/modules/ClassName";
 import { Id } from "@/modules/Id";
-import { KeyPressed } from "@/modules/KeyPressed";
-import { All, Message, MessageSourceType, Shared } from "silentium";
+import { All, FromEvent, Message, MessageSourceType, Shared } from "silentium";
 import { Element } from "silentium-web-api";
 
-export function Input($value: MessageSourceType<string>) {
+export function Select($value: MessageSourceType<string>) {
   return Message<string>((transport) => {
     const $id = Shared(Id());
     $id.then(transport);
@@ -17,8 +16,17 @@ export function Input($value: MessageSourceType<string>) {
       }
     });
 
-    KeyPressed<InputEvent>($el).then((e: InputEvent) => {
+    const event = FromEvent<Event>(
+      $el,
+      "change",
+      "addEventListener",
+      "removeEventListener",
+    ).then((e) => {
       $value.use((e.target as HTMLInputElement).value);
     });
+
+    return () => {
+      event.destroy();
+    };
   });
 }

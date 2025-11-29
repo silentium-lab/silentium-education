@@ -6,7 +6,7 @@ import { Auth } from "@/pages/Admin/Auth";
 import { CategoryRouter } from "@/pages/Admin/Category/CategoryRouter";
 import { SectionRouter } from "@/pages/Admin/Section/SectionRouter";
 import { $title, $url, i18n } from "@/store";
-import { Filtered, LateShared, Message, Of } from "silentium";
+import { Filtered, LateShared, Of } from "silentium";
 import {
   Detached,
   Polling,
@@ -16,46 +16,46 @@ import {
 } from "silentium-components";
 
 export function Admin() {
-  return Message<string>((transport) => {
-    $title.use("Админ панель");
+  $title.use("Админ панель");
 
-    const $localUrl = Detached($url);
-    const $error = Filtered(FromContext("error"), (e: any) => e.status === 401);
+  const $localUrl = Detached($url);
+  const $error = Filtered(FromContext("error"), (e: any) => e.status === 401);
+  const result = LateShared<string>();
 
-    Shot<string>(Auth(), $error).then(transport);
+  result.chain(Shot<string>(Auth(), $error));
 
-    const rd = Router(
-      $localUrl,
-      Of([
-        {
-          pattern: "^/admin$",
-          message: Auth,
-        },
-        {
-          pattern: "^/admin/articles.*$",
-          message: ArticleRouter,
-        },
-        {
-          pattern: "^/admin/sections.*$",
-          message: SectionRouter,
-        },
-        {
-          pattern: "^/admin/categories.*$",
-          message: CategoryRouter,
-        },
-      ]),
-      () => Of("Admin page not found"),
-    );
+  const rd = Router(
+    $localUrl,
+    Of([
+      {
+        pattern: "^/admin$",
+        message: Auth,
+      },
+      {
+        pattern: "^/admin/articles.*$",
+        message: ArticleRouter,
+      },
+      {
+        pattern: "^/admin/sections.*$",
+        message: SectionRouter,
+      },
+      {
+        pattern: "^/admin/categories.*$",
+        message: CategoryRouter,
+      },
+    ]),
+    () => Of("Admin page not found"),
+  );
 
-    const $logout = LateShared();
-    $logout.then(console.log);
-    const $loggedOut = Polling(Logout(), $logout);
-    $loggedOut.then(() => {
-      location.href = "/";
-    });
+  const $logout = LateShared();
+  $logout.then(console.log);
+  const $loggedOut = Polling(Logout(), $logout);
+  $loggedOut.then(() => {
+    location.href = "/";
+  });
 
-    const t = Template();
-    t.template(`<div class="flex min-h-screen bg-gray-100">
+  const t = Template(
+    (t) => `<div class="flex min-h-screen bg-gray-100">
       <!-- Sidebar Menu -->
       <div class="max-w-34 bg-white shadow-lg flex-1">
         <nav class="mt-4  h-full flex flex-col">
@@ -70,11 +70,9 @@ export function Admin() {
           ${t.var(rd)}
         </div>
       </div>
-    </div>`);
-    t.then(transport);
+    </div>`,
+  );
+  result.chain(t);
 
-    return function AdminDestroy() {
-      rd.destroy();
-    };
-  });
+  return result;
 }
