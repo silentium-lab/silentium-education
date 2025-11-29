@@ -54,7 +54,6 @@ export function ArticleForm($form: MessageSourceType<ArticleType>) {
 			</div>
 			<div class="mb-2">
 				<div class="font-bold">${t.var(i18n.tr("Content"))}: </div>
-        ${t.var(Input($content))}
 				<textarea rows="20" class="${t.var(Input($content))} border-1 p-2 rounded-sm w-full"></textarea>
 			</div>
       <hr>
