@@ -29,15 +29,13 @@ export function ArticleForm($form: MessageSourceType<ArticleType>) {
 				<input class="${t.var(Input($title))} border-1 p-2 rounded-sm w-full" />
 			</div>
 			<div class="mb-2">
-				<div class="font-bold">${t.var(i18n.tr("Content"))}: </div>
-				<textarea rows="20" class="${t.var(Input($content))} border-1 p-2 rounded-sm w-full"></textarea>
-			</div>
-			<div class="mb-2">
 				<div class="font-bold">${t.var(i18n.tr("Category"))}: </div>
 				<select name="category" class="${t.var(Select($category))} border-1 p-2 rounded-sm w-full">
           ${t.var(
             Applied($categories, (s) =>
-              s.map((i: any) => `<option value="${i._id}">${i.title}</option>`),
+              s
+                .map((i: any) => `<option value="${i._id}">${i.title}</option>`)
+                .join(""),
             ),
           )}
         </select>
@@ -47,10 +45,17 @@ export function ArticleForm($form: MessageSourceType<ArticleType>) {
 				<select class="${t.var(Select($section))} border-1 p-2 rounded-sm w-full">
           ${t.var(
             Applied($sections, (s) =>
-              s.map((i: any) => `<option value="${i._id}">${i.title}</option>`),
+              s
+                .map((i: any) => `<option value="${i._id}">${i.title}</option>`)
+                .join(""),
             ),
           )}
         </select>
+			</div>
+			<div class="mb-2">
+				<div class="font-bold">${t.var(i18n.tr("Content"))}: </div>
+        ${t.var(Input($content))}
+				<textarea rows="20" class="${t.var(Input($content))} border-1 p-2 rounded-sm w-full"></textarea>
 			</div>
       <hr>
 		</div>`,

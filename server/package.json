@@ -34,7 +34,7 @@
     "mongodb": "^6.19.0",
     "raw-body": "^3.0.1",
     "silentium": "^0.0.163",
-    "silentium-components": "^0.0.89",
+    "silentium-components": "^0.0.91",
     "uuid": "^13.0.0"
   }
 }
