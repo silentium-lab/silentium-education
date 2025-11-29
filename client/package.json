@@ -44,7 +44,7 @@
     "silentium": "^0.0.163",
     "silentium-components": "^0.0.89",
     "silentium-morphdom": "^0.0.17",
-    "silentium-web-api": "^0.0.33",
+    "silentium-web-api": "^0.0.34",
     "uuid": "^11.1.0"
   },
   "@parcel/transformer-js": {

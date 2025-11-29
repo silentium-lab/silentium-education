@@ -3,6 +3,7 @@ import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
 import { ClickedId } from "@/modules/ClickedId";
 import { ArticleConfig } from "@/pages/Admin/Article/ArticleConfig";
+import { i18n } from "@/store";
 import { ArticleType } from "@/types/ArticleType";
 import {
   Chainable,
@@ -11,6 +12,7 @@ import {
   MessageType,
   Of,
   Once,
+  Primitive,
   Shared,
   SourceType,
 } from "silentium";
@@ -44,7 +46,9 @@ export function ArticleItem(
       Constant(
         {
           type: "success",
-          content: "Успешно удалено",
+          content: Primitive(
+            i18n.tr("Delete success"),
+          ).primitiveWithException(),
         } as const,
         $removed,
       ),

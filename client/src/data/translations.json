@@ -1,20 +1,26 @@
 {
-  "en": {
-    "home": "Main",
-    "about": "About",
-    "documentation": "Documentation",
-    "blog": "Blog",
-    "tg_group": "Telegram group"
-  },
+  "en": {},
   "ru": {
-    "home": "Главная",
-    "about": "О проекте",
-    "documentation": "Документация",
-    "blog": "Блог",
+    "Article": "Статья",
     "Articles": "Статьи",
-    "Sections": "Разделы",
     "Categories": "Категории",
+    "Category": "Категория",
+    "Content": "Содержимое",
+    "Create article": "Создать статью",
+    "Create category": "Создать категорию",
+    "Create section": "Создать раздел",
+    "Change success": "Успешно изменено",
+    "Created success": "Успешно создано",
+    "Delete success": "Успешно удалено",
     "Logout": "Выход",
+    "Name": "Название",
+    "Save": "Сохранить",
+    "Section": "Раздел",
+    "Sections": "Разделы",
+    "about": "О проекте",
+    "blog": "Блог",
+    "documentation": "Документация",
+    "home": "Главная",
     "tg_group": "Телеграм группа"
   }
 }

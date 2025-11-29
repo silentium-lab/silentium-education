@@ -4,8 +4,8 @@ import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { SplitPart } from "@/modules/string/SplitPart";
-import { ArticleForm } from "@/pages/Admin/Article/ArticleForm";
 import { CategoryConfig } from "@/pages/Admin/Category/CategoryConfig";
+import { CategoryForm } from "@/pages/Admin/Category/CategoryForm";
 import { $title, $url, i18n } from "@/store";
 import type { ArticleType } from "@/types/ArticleType";
 import { omit, partialRight } from "lodash-es";
@@ -17,6 +17,7 @@ import {
   Message,
   MessageType,
   Of,
+  Primitive,
   Shared,
 } from "silentium";
 import {
@@ -49,7 +50,9 @@ export function CategoryEdit() {
       Constant(
         {
           type: "success",
-          content: "Успешно изменено",
+          content: Primitive(
+            i18n.tr("Change success"),
+          ).primitiveWithException(),
         } as const,
         $formUpdated,
       ),
@@ -63,18 +66,18 @@ export function CategoryEdit() {
 
     const t = Template();
     t.template(`<div class="article">
-			${t.var(Link(Of(config.path), i18n.tr("Articles"), Of("underline")))}
+			${t.var(Link(Of(config.path), i18n.tr("Categories"), Of("underline")))}
         <h1 class="title-1">${t.var(Local($title))}</h1>
         <div class="mb-2">
           <div>
             <b>id: </b>
             ${t.var($id)}
           </div>
-          ${t.var(ArticleForm($form))}
+          ${t.var(CategoryForm($form))}
         </div>
         ${t.var(
           Button(
-            Branch($formUpdateLoading, Of("Сохраняем..."), Of("Сохранить")),
+            Branch($formUpdateLoading, i18n.tr("Saving..."), i18n.tr("Save")),
             Of("btn"),
             $clicked,
           ),

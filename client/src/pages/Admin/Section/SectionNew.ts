@@ -3,10 +3,18 @@ import { Button } from "@/components/Button";
 import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
-import { ArticleForm } from "@/pages/Admin/Article/ArticleForm";
 import { SectionConfig } from "@/pages/Admin/Section/SectionConfig";
+import { SectionForm } from "@/pages/Admin/Section/SectionForm";
 import { $title, $url, i18n } from "@/store";
-import { Any, LateShared, Local, Message, Of, Shared } from "silentium";
+import {
+  Any,
+  LateShared,
+  Local,
+  Message,
+  Of,
+  Primitive,
+  Shared,
+} from "silentium";
 import {
   Branch,
   Constant,
@@ -20,7 +28,7 @@ import {
 
 export function SectionNew() {
   return Message<string>((resolve) => {
-    $title.chain(i18n.tr("Create Article"));
+    $title.chain(i18n.tr("Create section"));
     const config = SectionConfig();
 
     const clickedSrc = LateShared();
@@ -54,7 +62,9 @@ export function SectionNew() {
       Constant(
         {
           type: "success",
-          content: "Успешно создано",
+          content: Primitive(
+            i18n.tr("Created success"),
+          ).primitiveWithException(),
         } as const,
         $formUpdated,
       ),
@@ -62,16 +72,16 @@ export function SectionNew() {
 
     const t = Template();
     t.template(`<div class="article">
-			${t.var(Link(Of(config.path), i18n.tr("Articles"), Of("underline")))}
+			${t.var(Link(Of(config.path), i18n.tr("Sections"), Of("underline")))}
         <h1 class="title-1">${t.var(Local($title))}</h1>
-		${t.var(ArticleForm(formSrc))}
-		${t.var(
-      Button(
-        Branch(formUpdateLoadingSrc, Of("Сохраняем..."), Of("Сохранить")),
-        Of("btn"),
-        clickedSrc,
-      ),
-    )}
+        ${t.var(SectionForm(formSrc))}
+        ${t.var(
+          Button(
+            Branch(formUpdateLoadingSrc, i18n.tr("Saving..."), i18n.tr("Save")),
+            Of("btn"),
+            clickedSrc,
+          ),
+        )}
       </div>`);
     t.then(resolve);
 

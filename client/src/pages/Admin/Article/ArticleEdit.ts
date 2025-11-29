@@ -50,7 +50,9 @@ export function ArticleEdit() {
       Constant(
         {
           type: "success",
-          content: Primitive(i18n.tr("Saved successfully")),
+          content: Primitive(
+            i18n.tr("Saved successfully"),
+          ).primitiveWithException(),
         },
         $formUpdated,
       ),
@@ -75,7 +77,7 @@ export function ArticleEdit() {
         </div>
         ${t.var(
           Button(
-            Branch($formUpdateLoading, Of("Сохраняем..."), Of("Сохранить")),
+            Branch($formUpdateLoading, i18n.tr("Saving..."), i18n.tr("Save")),
             Of("btn"),
             $clicked,
           ),

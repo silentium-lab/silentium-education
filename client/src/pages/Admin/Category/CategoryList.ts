@@ -34,7 +34,7 @@ export function CategoryList() {
     const t = Template();
     t.template(`<div class="article">
         <h1 class="title-1">${t.var(Local($title))}</h1>
-        ${t.var(Link(Of(`${config.path}/create`), Of("Создать статью"), Of("block mb-3 underline")))}
+        ${t.var(Link(Of(`${config.path}/create`), i18n.tr("Create category"), Of("block mb-3 underline")))}
         ${t.var(
           Applied(
             Any<any>(

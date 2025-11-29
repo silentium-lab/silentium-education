@@ -3,6 +3,7 @@ import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
 import { ClickedId } from "@/modules/ClickedId";
 import { CategoryConfig } from "@/pages/Admin/Category/CategoryConfig";
+import { i18n } from "@/store";
 import { ArticleType } from "@/types/ArticleType";
 import {
   Chainable,
@@ -11,6 +12,7 @@ import {
   MessageType,
   Of,
   Once,
+  Primitive,
   Shared,
   SourceType,
 } from "silentium";
@@ -34,7 +36,7 @@ export function CategoryItem(
     const localArticle = Detached<ArticleType>($article);
     const $removed = Shared(
       CRUD(config.model).deleted(
-        Shot(Once(Path(localArticle, Of("_id"))), Once(removeTrigger)),
+        Shot(Once(Path(localArticle, "_id")), Once(removeTrigger)),
       ),
     );
 
@@ -44,7 +46,9 @@ export function CategoryItem(
       Constant(
         {
           type: "success",
-          content: "Успешно удалено",
+          content: Primitive(
+            i18n.tr("Delete success"),
+          ).primitiveWithException(),
         } as const,
         $removed,
       ),
