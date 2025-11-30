@@ -1,9 +1,37 @@
 import { ClassName } from "@/modules/ClassName";
 import { Id } from "@/modules/Id";
-import { All, FromEvent, Message, MessageSourceType, Shared } from "silentium";
+import {
+  All,
+  Applied,
+  FromEvent,
+  Message,
+  MessageSourceType,
+  MessageType,
+  Shared,
+} from "silentium";
+import { Template } from "silentium-components";
 import { Element } from "silentium-web-api";
 
-export function Select($value: MessageSourceType<string>) {
+export function Select(
+  $value: MessageSourceType<string>,
+  $items: MessageType<unknown[]>,
+) {
+  return Template(
+    (t) => `
+      <select class="${t.var(SelectId($value))} border-1 p-2 rounded-sm w-full">
+        ${t.var(
+          Applied($items, (s) =>
+            s
+              .map((i: any) => `<option value="${i._id}">${i.title}</option>`)
+              .join(""),
+          ),
+        )}
+      </select>
+  `,
+  );
+}
+
+export function SelectId($value: MessageSourceType<string>) {
   return Message<string>((transport) => {
     const $id = Shared(Id());
     $id.then(transport);

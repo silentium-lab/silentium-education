@@ -5,5 +5,5 @@ import { FromJson, Path } from "silentium-components";
  * Base backend format
  */
 export function ServerResponse($base: MessageType<string>) {
-  return Path(FromJson($base), Of("data"));
+  return Path<any>(FromJson($base), Of("data"));
 }
