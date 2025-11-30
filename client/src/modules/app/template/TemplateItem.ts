@@ -1,10 +1,9 @@
 import { $notification } from "@/bootstrap";
 import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
+import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
 import { ClickedId } from "@/modules/ClickedId";
-import { SectionConfig } from "@/pages/Admin/Section/SectionConfig";
 import { i18n } from "@/store";
-import { ArticleType } from "@/types/ArticleType";
 import {
   Chainable,
   LateShared,
@@ -24,17 +23,18 @@ import {
   Template,
 } from "silentium-components";
 
-export function SectionItem(
-  $article: MessageType<ArticleType>,
+export function TemplateItem(
+  $config: MessageType<TemplateConfig>,
+  $item: MessageType<any>,
   reload: SourceType,
+  $titleField = Of("title"),
 ) {
   const removeTrigger = LateShared();
-  const config = SectionConfig();
 
-  const localArticle = Detached<ArticleType>($article);
+  const localItem = Detached<any>($item);
   const $removed = Shared(
-    CRUD(config.model).deleted(
-      Shot(Once(Path(localArticle, Of("_id"))), Once(removeTrigger)),
+    CRUD(Path($config, "model")).deleted(
+      Shot(Once(Path(localItem, "_id")), Once(removeTrigger)),
     ),
   );
 
@@ -55,10 +55,13 @@ export function SectionItem(
       ${t.var(
         Link(
           Template(
-            Of(`${config.path}/$id/`),
-            Record({ $id: Path($article, Of("_id")) }),
+            "$config/$id/",
+            Record({
+              $id: Path($item, Of("_id")),
+              $config: Path($config, "path"),
+            }),
           ),
-          Path($article, Of("title")),
+          Path($item, $titleField),
           Of("underline"),
         ),
       )}

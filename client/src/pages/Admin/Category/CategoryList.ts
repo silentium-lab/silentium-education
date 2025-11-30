@@ -1,50 +1,16 @@
-import { Link } from "@/components/Link";
-import { CRUD } from "@/modules/app/CRUD";
-import { ServerResponse } from "@/modules/app/ServerResponse";
+import { TemplateItem } from "@/modules/app/template/TemplateItem";
+import { TemplateList } from "@/modules/app/template/TemplateList";
 import { CategoryConfig } from "@/pages/Admin/Category/CategoryConfig";
-import { CategoryItem } from "@/pages/Admin/Category/CategoryItem";
 import { $title, i18n } from "@/store";
-import {
-  Any,
-  Applied,
-  Chain,
-  LateShared,
-  Local,
-  Map,
-  MessageType,
-  Of,
-  Shared,
-} from "silentium";
-import { Template } from "silentium-components";
+import { partial } from "lodash-es";
 
 export function CategoryList() {
-  $title.chain(i18n.tr("Categories"));
-  const config = CategoryConfig();
-
-  const $reload = LateShared(1);
-  const $articlesSearch = LateShared({});
-  const $articles = Shared(
-    ServerResponse(
-      CRUD(config.model).list(Chain($reload, $articlesSearch)),
-    ) as MessageType<any[]>,
+  const $t = i18n.tr("Categories");
+  $title.chain($t);
+  const $config = CategoryConfig();
+  return TemplateList(
+    $config,
+    i18n.tr("Create category"),
+    partial(TemplateItem, $config),
   );
-
-  const t = Template();
-  t.template(`<div class="article">
-    <h1 class="title-1">${t.var(Local($title))}</h1>
-    ${t.var(Link(Of(`${config.path}/create`), i18n.tr("Create category"), Of("block mb-3 underline")))}
-    ${t.var(
-      Applied(
-        Any<any>(
-          Chain($articlesSearch, Of([])),
-          Map($articles, (article) => {
-            return CategoryItem(article, $reload);
-          }),
-        ),
-        (a) => a.join(""),
-      ),
-    )}
-  </div>`);
-
-  return t;
 }
