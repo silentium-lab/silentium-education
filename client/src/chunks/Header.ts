@@ -23,6 +23,6 @@ export function Header() {
 
     return () => {
       t.destroy();
-    }
+    };
   });
 }

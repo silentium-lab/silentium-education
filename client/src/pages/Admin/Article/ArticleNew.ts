@@ -31,7 +31,9 @@ export function ArticleNew() {
   });
 
   const $formUpdated = Shared<any>(
-    ServerResponse(CRUD(config.model).created(Shot(formSrc, clickedSrc))),
+    ServerResponse(
+      CRUD(Path(config, "model")).created(Shot(formSrc, clickedSrc)),
+    ),
   );
   const formUpdateLoadingSrc = Any(
     Loading(clickedSrc, $formUpdated),
@@ -42,9 +44,10 @@ export function ArticleNew() {
   $url.chain(
     Task(
       Template(
-        Of(`${config.path}/$id/`),
+        "$config/$id/",
         Record({
           $id: insertedIdSrc,
+          $config: Path(config, "path"),
         }),
       ),
       900,
@@ -63,7 +66,7 @@ export function ArticleNew() {
 
   const t = Template();
   t.template(`<div class="article">
-    ${t.var(Link(Of(config.path), i18n.tr("Articles"), Of("underline")))}
+    ${t.var(Link(Path(config, "path"), i18n.tr("Articles"), Of("underline")))}
     <h1 class="title-1">${t.var(Local($title))}</h1>
     ${t.var(ArticleForm(formSrc))}
     ${t.var(

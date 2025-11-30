@@ -34,6 +34,7 @@ export default [
           accessibility: "explicit",
         },
       ],
+      indent: ["error", 2],
     },
   },
   {

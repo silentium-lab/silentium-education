@@ -33,7 +33,7 @@ export function ArticleItem(
 
   const localArticle = Detached<ArticleType>($article);
   const $removed = Shared(
-    CRUD(config.model).deleted(
+    CRUD(Path(config, "model")).deleted(
       Shot(Once(Path(localArticle, "_id")), Once(removeTrigger)),
     ),
   );
@@ -55,8 +55,11 @@ export function ArticleItem(
         ${t.var(
           Link(
             Template(
-              Of(`${config.path}/$id/`),
-              Record({ $id: Path($article, Of("_id")) }),
+              "$config/$id/",
+              Record({
+                $id: Path($article, Of("_id")),
+                $config: Path(config, "path"),
+              }),
             ),
             Path($article, Of("title")),
             Of("underline"),

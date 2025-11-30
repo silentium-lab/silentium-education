@@ -18,23 +18,23 @@ export function ArticleForm($form: MessageSourceType<ArticleType>) {
 
   return Template(
     (t) => `<div class="mb-2">
-			<div class="mb-2">
-				<div class="font-bold">${t.var(i18n.tr("Name"))}: </div>
-				<input class="${t.var(Input($title))} border-1 p-2 rounded-sm w-full" />
-			</div>
-			<div class="mb-2">
-				<div class="font-bold">${t.var(i18n.tr("Category"))}: </div>
+      <div class="mb-2">
+        <div class="font-bold">${t.var(i18n.tr("Name"))}: </div>
+        <input class="${t.var(Input($title))} border-1 p-2 rounded-sm w-full" />
+      </div>
+      <div class="mb-2">
+        <div class="font-bold">${t.var(i18n.tr("Category"))}: </div>
         ${t.var(Select($category, $categories))}
-			</div>
-			<div class="mb-2">
-				<div class="font-bold">${t.var(i18n.tr("Section"))}: </div>
+      </div>
+      <div class="mb-2">
+        <div class="font-bold">${t.var(i18n.tr("Section"))}: </div>
         ${t.var(Select($section, $sections))}
-			</div>
-			<div class="mb-2">
-				<div class="font-bold">${t.var(i18n.tr("Content"))}: </div>
-				<textarea rows="20" class="${t.var(Input($content))} border-1 p-2 rounded-sm w-full"></textarea>
-			</div>
+      </div>
+      <div class="mb-2">
+        <div class="font-bold">${t.var(i18n.tr("Content"))}: </div>
+        <textarea rows="20" class="${t.var(Input($content))} border-1 p-2 rounded-sm w-full"></textarea>
+      </div>
       <hr>
-		</div>`,
+    </div>`,
   );
 }

@@ -11,11 +11,10 @@ import {
   LateShared,
   Local,
   Map,
-  MessageType,
   Of,
   Shared,
 } from "silentium";
-import { Template } from "silentium-components";
+import { Path, Template } from "silentium-components";
 
 export function ArticleList() {
   $title.chain(i18n.tr("Articles"));
@@ -25,24 +24,29 @@ export function ArticleList() {
   const $articlesSearch = LateShared({});
   const $articles = Shared(
     ServerResponse(
-      CRUD(config.model).list(Chain($reload, $articlesSearch)),
-    ) as MessageType<any[]>,
+      CRUD(Path(config, "model")).list(Chain($reload, $articlesSearch)),
+    ),
   );
 
-  const t = Template();
-  t.template(`<div class="article">
-        <h1 class="title-1">${t.var(Local($title))}</h1>
-        ${t.var(Link(Of(`${config.path}/create`), i18n.tr("Create article"), Of("block mb-3 underline")))}
-        ${t.var(
-          Applied(
-            Any<any>(
-              Chain($articlesSearch, Of([])),
-              Map($articles, (article) => ArticleItem(article, $reload)),
-            ),
-            (a) => a.join(""),
+  return Template(
+    (t) => `<div class="article">
+      <h1 class="title-1">${t.var(Local($title))}</h1>
+      ${t.var(
+        Link(
+          Applied(config, (c) => `${c.path}/create`),
+          i18n.tr("Create article"),
+          Of("block mb-3 underline"),
+        ),
+      )}
+      ${t.var(
+        Applied(
+          Any<any>(
+            Chain($articlesSearch, Of([])),
+            Map($articles, (article) => ArticleItem(article, $reload)),
           ),
-        )}
-      </div>`);
-
-  return t;
+          (a) => a.join(""),
+        ),
+      )}
+    </div>`,
+  );
 }

@@ -24,6 +24,7 @@ import {
   Constant,
   Detached,
   Loading,
+  Path,
   Shot,
   Task,
   Template,
@@ -35,12 +36,16 @@ export function ArticleEdit() {
 
   const $localUrl = Detached($url);
   const $id = Shared(SplitPart($localUrl, Of("/"), Of(3)));
-  const $article = Shared(ServerResponse(CRUD(config.model).entity($id)));
+  const $article = Shared(
+    ServerResponse(CRUD(Path(config, "model")).entity($id)),
+  );
   const $clicked = LateShared();
   const $form = LateShared<ArticleType>();
 
   const $formUpdated = Shared(
-    ServerResponse(CRUD(config.model).updated($id, Shot($form, $clicked))),
+    ServerResponse(
+      CRUD(Path(config, "model")).updated($id, Shot($form, $clicked)),
+    ),
   );
   const $formUpdateLoading = Any(Loading($clicked, $formUpdated), false);
 
@@ -62,9 +67,9 @@ export function ArticleEdit() {
     ),
   );
 
-  const t = Template();
-  t.template(`<div class="article">
-			${t.var(Link(Of(config.path), i18n.tr("Articles"), Of("underline")))}
+  return Template(
+    (t) => `<div class="article">
+			${t.var(Link(Path(config, "path"), i18n.tr("Articles"), Of("underline")))}
         <h1 class="title-1">${t.var(Local($title))}</h1>
         <div class="mb-2">
           <div>
@@ -80,7 +85,6 @@ export function ArticleEdit() {
             $clicked,
           ),
         )}
-      </div>`);
-
-  return t;
+      </div>`,
+  );
 }

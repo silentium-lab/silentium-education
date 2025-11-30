@@ -4,7 +4,8 @@ import { ArticleList } from "@/pages/Admin/Article/ArticleList";
 import { ArticleNew } from "@/pages/Admin/Article/ArticleNew";
 import { NotFound } from "@/pages/NotFound";
 import { $url } from "@/store";
-import { Detached, Router } from "silentium-components";
+import { All, Applied } from "silentium";
+import { Detached, Record, Router } from "silentium-components";
 
 export function ArticleRouter() {
   const $localUrl = Detached($url);
@@ -12,20 +13,20 @@ export function ArticleRouter() {
 
   return Router(
     $localUrl,
-    [
-      {
-        pattern: `^${config.path}$`,
+    All(
+      Record({
+        pattern: Applied(config, (c) => `^${c.path}$`),
         message: ArticleList,
-      },
-      {
-        pattern: `^${config.path}/create$`,
+      }),
+      Record({
+        pattern: Applied(config, (c) => `^${c.path}/create$`),
         message: ArticleNew,
-      },
-      {
-        pattern: String.raw`^${config.path}/.+/$`,
+      }),
+      Record({
+        pattern: Applied(config, (c) => String.raw`^${c.path}/.+/$`),
         message: ArticleEdit,
-      },
-    ],
+      }),
+    ),
     NotFound,
   );
 }

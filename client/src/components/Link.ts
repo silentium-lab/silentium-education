@@ -3,8 +3,7 @@ import { Clicked } from "@/modules/Clicked";
 import { Id } from "@/modules/Id";
 import { $url } from "@/store";
 import { Message, MessageType, Of, Primitive, Shared } from "silentium";
-import { First, Template } from "silentium-components";
-import { Elements } from "silentium-web-api";
+import { Template } from "silentium-components";
 
 export function Link(
   $linkUrl: MessageType<string>,
