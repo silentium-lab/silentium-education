@@ -18,6 +18,7 @@ import {
   Of,
   Primitive,
   Shared,
+  SourceType,
 } from "silentium";
 import {
   Branch,
@@ -33,7 +34,10 @@ import {
 export function TemplateEdit(
   $config: MessageType<TemplateConfig>,
   $listLabel: MessageType<string>,
-  form: ConstructorType<[MessageSourceType<any>], MessageType<string>>,
+  form: ConstructorType<
+    [MessageSourceType<any>, SourceType<boolean>],
+    MessageType<string>
+  >,
 ) {
   const $localUrl = Detached($url);
   const $id = Shared(SplitPart($localUrl, Of("/"), Of(3)));
@@ -65,6 +69,7 @@ export function TemplateEdit(
   $form.chain(
     Applied(Any($article, Task($formUpdated)), partialRight(omit, ["_id"])),
   );
+  const $validated = LateShared(false);
 
   return Template(
     (t) => `<div class="article">
@@ -75,13 +80,14 @@ export function TemplateEdit(
           <b>id: </b>
           ${t.var($id)}
         </div>
-        ${t.var(form($form))}
+        ${t.var(form($form, $validated))}
       </div>
       ${t.var(
         Button(
           Branch($formUpdateLoading, i18n.tr("Saving..."), i18n.tr("Save")),
-          Of("btn"),
+          Applied($validated, (v) => `btn ${v ? "" : "disabled opacity-25"}`),
           $clicked,
+          Applied($validated, (v) => `${v ? "" : "disabled"}`),
         ),
       )}
     </div>`,

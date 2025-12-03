@@ -7,6 +7,7 @@ import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
 import { $title, $url, i18n } from "@/store";
 import {
   Any,
+  Applied,
   ConstructorType,
   LateShared,
   Local,
@@ -15,6 +16,7 @@ import {
   Of,
   Primitive,
   Shared,
+  SourceType,
 } from "silentium";
 import {
   Branch,
@@ -30,10 +32,14 @@ import {
 export function TemplateNew(
   $config: MessageType<TemplateConfig>,
   $listLabel: MessageType<string>,
-  form: ConstructorType<[MessageSourceType<any>], MessageType<string>>,
+  form: ConstructorType<
+    [MessageSourceType<any>, SourceType<boolean>],
+    MessageType<string>
+  >,
+  defaultForm: unknown = {},
 ) {
   const $clicked = LateShared();
-  const $form = LateShared<any>({});
+  const $form = LateShared<any>(defaultForm);
 
   const $formUpdated = Shared<any>(
     ServerResponse(CRUD(Path($config, "model")).created(Shot($form, $clicked))),
@@ -64,16 +70,19 @@ export function TemplateNew(
     ),
   );
 
+  const $validated = LateShared(false);
+
   return Template(
     (t) => `<div class="article">
       ${t.var(Link(Path($config, "path"), $listLabel, Of("underline")))}
       <h1 class="title-1">${t.var(Local($title))}</h1>
-      ${t.var(form($form))}
+      ${t.var(form($form, $validated))}
       ${t.var(
         Button(
           Branch(formUpdateLoadingSrc, i18n.tr("Saving..."), i18n.tr("Save")),
-          Of("btn"),
+          Applied($validated, (v) => `btn ${v ? "" : "disabled opacity-25"}`),
           $clicked,
+          Applied($validated, (v) => `${v ? "" : "disabled"}`),
         ),
       )}
     </div>`,

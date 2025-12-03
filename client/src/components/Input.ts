@@ -2,6 +2,7 @@ import { ClassName } from "@/modules/ClassName";
 import { Id } from "@/modules/Id";
 import { KeyPressed } from "@/modules/KeyPressed";
 import { All, Message, MessageSourceType, Shared } from "silentium";
+import { Task } from "silentium-components";
 import { Element } from "silentium-web-api";
 
 export function Input($value: MessageSourceType<string>) {
@@ -17,7 +18,8 @@ export function Input($value: MessageSourceType<string>) {
       }
     });
 
-    KeyPressed<InputEvent>($el).then((e: InputEvent) => {
+    const pressed = KeyPressed<InputEvent>($el);
+    Task(pressed, 150).then((e: InputEvent) => {
       $value.use((e.target as HTMLInputElement).value);
     });
   });

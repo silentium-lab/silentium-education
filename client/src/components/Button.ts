@@ -1,13 +1,14 @@
 import { ClassName } from "@/modules/ClassName";
 import { Clicked } from "@/modules/Clicked";
 import { Id } from "@/modules/Id";
-import { Message, MessageType, Shared, SourceType } from "silentium";
+import { Message, MessageType, Of, Shared, SourceType } from "silentium";
 import { Template } from "silentium-components";
 
 export function Button(
   $label: MessageType<string>,
   $class: MessageType<string>,
   click: SourceType,
+  $attributes = Of(""),
 ) {
   const $id = Shared(Id());
 
@@ -20,7 +21,7 @@ export function Button(
 
     const t = Template();
     t.template(
-      `<button class="${t.var($id)} ${t.var($class)} cursor-pointer">
+      `<button ${t.var($attributes)} class="${t.var($id)} ${t.var($class)} cursor-pointer">
         ${t.var($label)}
       </button>`,
     );
