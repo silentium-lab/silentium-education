@@ -2,7 +2,7 @@ import { ClassName } from "@/modules/ClassName";
 import { Clicked } from "@/modules/Clicked";
 import { Id } from "@/modules/Id";
 import { $url } from "@/store";
-import { Message, MessageType, Of, Primitive, Shared } from "silentium";
+import { MessageType, Of, Primitive, Shared } from "silentium";
 import { Template } from "silentium-components";
 
 export function Link(
@@ -10,29 +10,21 @@ export function Link(
   $text: MessageType<string>,
   $class: MessageType<string> = Of(""),
 ) {
-  return Message<string>((transport) => {
-    const $id = Shared(Id());
-    const url = Primitive($linkUrl);
+  const $id = Shared(Id());
+  const url = Primitive($linkUrl);
 
-    const clicked = Clicked(ClassName($id));
-    clicked.then((e: Event) => {
-      e.preventDefault();
-      $url.use(url.primitive() as string);
-    });
-
-    const t = Template();
-    t.template(
-      `<a
-        href="${t.var($linkUrl)}"
-        class="${t.var($id)} ${t.var($class)}"
-      >
-        ${t.var($text)}
-      </a>`,
-    );
-    t.then(transport);
-
-    return () => {
-      clicked.destroy();
-    };
+  const clicked = Clicked(ClassName($id));
+  clicked.then((e: Event) => {
+    e.preventDefault();
+    $url.use(url.primitive() as string);
   });
+
+  return Template(
+    (t) => `<a
+      href="${t.var($linkUrl)}"
+      class="${t.var($id)} ${t.var($class)}"
+    >
+      ${t.var($text)}
+    </a>`,
+  );
 }

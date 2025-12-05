@@ -26,6 +26,7 @@
     "Saved successfully": "Успешно сохранено",
     "Before using the admin panel, you need to configure the server. Specify the required parameters.": "Перед использованием панели администратора необходимо провести конфигурацию сервера, Укажите обязательные параметры",
     "home": "Главная",
+    "title": "Название",
     "tg_group": "Телеграм группа"
   }
 }

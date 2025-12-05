@@ -1,10 +1,10 @@
-import { LateShared, MessageSource } from "silentium";
+import { Late, MessageSource } from "silentium";
 
 /**
  * URL representation associated with the History API
  */
 export function HistoryUrl() {
-  const $url = LateShared(location.pathname);
+  const $url = Late(location.pathname);
   return MessageSource<string>(
     (resolve) => {
       $url.then(resolve);

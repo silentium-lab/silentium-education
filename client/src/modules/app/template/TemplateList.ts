@@ -8,7 +8,7 @@ import {
   Applied,
   Chain,
   ConstructorType,
-  LateShared,
+  Late,
   Local,
   Map,
   MessageType,
@@ -23,11 +23,13 @@ export function TemplateList(
   $creationLabel: MessageType<string>,
   itemTemplate: ConstructorType<[MessageType, SourceType], MessageType<string>>,
 ) {
-  const $reload = LateShared(1);
-  const $search = LateShared({});
+  const $reload = Late<any>();
+  const $search = Late({});
   const $articles = Shared(
-    ServerResponse(CRUD(Path($config, "model")).list(Chain($reload, $search))),
+    ServerResponse(CRUD(Path($config, "model")).list(Any($reload, $search))),
   );
+
+  $reload.then(console.log);
 
   return Template(
     (t) => `<div class="article">

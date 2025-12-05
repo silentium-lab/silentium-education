@@ -4,13 +4,13 @@ import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { $title, i18n } from "@/store";
 import { startAuthentication } from "@simplewebauthn/browser";
-import { LateShared, MessageType, Of, Process, Shared } from "silentium";
+import { Late, MessageType, Of, Process, Shared } from "silentium";
 import { Record, Shot, Template } from "silentium-components";
 
 export function Auth() {
   $title.chain(i18n.tr("Auth"));
-  const $username = LateShared<string>();
-  const $authenticated = LateShared();
+  const $username = Late<string>();
+  const $authenticated = Late();
 
   const $loginStart = Shared(
     ServerResponse(

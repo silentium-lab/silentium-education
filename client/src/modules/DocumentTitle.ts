@@ -1,10 +1,10 @@
-import { LateShared } from "silentium";
+import { Late } from "silentium";
 
 /**
  * Document header representation
  */
 export function DocumentTitle() {
-  const $src = LateShared(document.title);
+  const $src = Late(document.title);
   $src.then((v) => {
     document.title = v;
   });

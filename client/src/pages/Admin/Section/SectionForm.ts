@@ -1,11 +1,35 @@
+import { ErrorList } from "@/components/ErrorList";
 import { Input } from "@/components/Input";
 import { i18n } from "@/store";
 import type { ArticleType } from "@/types/ArticleType";
-import { MessageSourceType, Of } from "silentium";
-import { Part, Template } from "silentium-components";
+import {
+  Chainable,
+  Computed,
+  MessageSourceType,
+  Of,
+  SourceType,
+} from "silentium";
+import { Memo, Part, Template } from "silentium-components";
+import {
+  Required,
+  Validated,
+  ValidationErrors,
+  ValidationItems,
+} from "silentium-validation";
 
-export function SectionForm($form: MessageSourceType<ArticleType>) {
+export function SectionForm(
+  $form: MessageSourceType<ArticleType>,
+  validated: SourceType<boolean>,
+) {
   const $title = Part<string>($form, Of("title"));
+
+  const $errors = ValidationErrors(
+    Computed(ValidationItems, $form, {
+      title: [Required],
+    }),
+  );
+  const $validated = Computed(Validated, $errors);
+  Chainable(validated).chain(Memo($validated));
 
   return Template(
     (t) => `<div class="mb-2">
@@ -13,6 +37,7 @@ export function SectionForm($form: MessageSourceType<ArticleType>) {
         <div class="font-bold">${t.var(i18n.tr("Name"))}: </div>
         <input class="${t.var(Input($title))} border-1 p-2 rounded-sm w-full" />
       </div>
+      ${t.var(ErrorList($errors))}
       <hr>
     </div>`,
   );

@@ -41,11 +41,11 @@
     "@simplewebauthn/browser": "^13.2.2",
     "lodash-es": "^4.17.21",
     "mustache": "^4.2.0",
-    "silentium": "^0.0.165",
-    "silentium-components": "^0.0.93",
-    "silentium-morphdom": "^0.0.17",
-    "silentium-validation": "^0.0.3",
-    "silentium-web-api": "^0.0.34",
+    "silentium": "^0.0.169",
+    "silentium-components": "^0.0.94",
+    "silentium-morphdom": "^0.0.18",
+    "silentium-validation": "^0.0.4",
+    "silentium-web-api": "^0.0.35",
     "uuid": "^11.1.0"
   },
   "@parcel/transformer-js": {

@@ -6,5 +6,8 @@ import { $title, i18n } from "@/store";
 export function CategoryNew() {
   const $label = i18n.tr("Create category");
   $title.chain($label);
-  return TemplateNew(CategoryConfig(), $label, CategoryForm);
+  return TemplateNew(CategoryConfig(), $label, CategoryForm, {
+    title: undefined,
+    parent_id: undefined,
+  });
 }

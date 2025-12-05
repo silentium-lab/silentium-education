@@ -1,4 +1,4 @@
-import { Message, MessageType, Of } from "silentium";
+import { MessageType, Of } from "silentium";
 import { Template } from "silentium-components";
 
 export function LinkExternal(
@@ -6,17 +6,13 @@ export function LinkExternal(
   $text: MessageType<string>,
   $class: MessageType<string> = Of(""),
 ) {
-  return Message<string>((resolve) => {
-    const t = Template();
-    t.template(
-      `<a
+  return Template(
+    (t) => `<a
 			href="${t.var($url)}"
 			target="_blank"
 			class="${t.var($class)}"
 		>
 			${t.var($text)}
 		</a>`,
-    );
-    t.then(resolve);
-  });
+  );
 }

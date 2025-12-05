@@ -6,7 +6,7 @@ import { Auth } from "@/pages/Admin/Auth";
 import { CategoryRouter } from "@/pages/Admin/Category/CategoryRouter";
 import { SectionRouter } from "@/pages/Admin/Section/SectionRouter";
 import { $title, $url, i18n } from "@/store";
-import { Filtered, LateShared, Of } from "silentium";
+import { Filtered, Late, Of } from "silentium";
 import {
   Detached,
   Polling,
@@ -20,7 +20,7 @@ export function Admin() {
 
   const $localUrl = Detached($url);
   const $error = Filtered(FromContext("error"), (e: any) => e.status === 401);
-  const result = LateShared<string>();
+  const result = Late<string>();
 
   result.chain(Shot<string>(Auth(), $error));
 
@@ -47,7 +47,7 @@ export function Admin() {
     () => Of("Admin page not found"),
   );
 
-  const $logout = LateShared();
+  const $logout = Late();
   $logout.then(console.log);
   const $loggedOut = Polling(Logout(), $logout);
   $loggedOut.then(() => {

@@ -4,7 +4,7 @@ import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { i18n } from "@/store";
 import { startRegistration } from "@simplewebauthn/browser";
-import { LateShared, MessageType, Of, Process, Shared } from "silentium";
+import { Late, MessageType, Of, Process, Shared } from "silentium";
 import { Record, Shot, Template } from "silentium-components";
 
 /**
@@ -32,9 +32,9 @@ export function Configuration() {
 }
 
 export function ConfigurationBehavior() {
-  const $register = LateShared();
+  const $register = Late();
 
-  const $username = LateShared<string>();
+  const $username = Late<string>();
   const $regStart = Shared(
     ServerResponse(
       CRUD("auth/registration/start").created(

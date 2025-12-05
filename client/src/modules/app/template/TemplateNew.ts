@@ -4,12 +4,13 @@ import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
+import { Mount } from "@/modules/render/Mount";
 import { $title, $url, i18n } from "@/store";
 import {
   Any,
   Applied,
   ConstructorType,
-  LateShared,
+  Late,
   Local,
   MessageSourceType,
   MessageType,
@@ -38,8 +39,8 @@ export function TemplateNew(
   >,
   defaultForm: unknown = {},
 ) {
-  const $clicked = LateShared();
-  const $form = LateShared<any>(defaultForm);
+  const $clicked = Late();
+  const $form = Late<any>(defaultForm);
 
   const $formUpdated = Shared<any>(
     ServerResponse(CRUD(Path($config, "model")).created(Shot($form, $clicked))),
@@ -70,7 +71,7 @@ export function TemplateNew(
     ),
   );
 
-  const $validated = LateShared(false);
+  const $validated = Late(false);
 
   return Template(
     (t) => `<div class="article">
@@ -78,11 +79,13 @@ export function TemplateNew(
       <h1 class="title-1">${t.var(Local($title))}</h1>
       ${t.var(form($form, $validated))}
       ${t.var(
-        Button(
-          Branch(formUpdateLoadingSrc, i18n.tr("Saving..."), i18n.tr("Save")),
-          Applied($validated, (v) => `btn ${v ? "" : "disabled opacity-25"}`),
-          $clicked,
-          Applied($validated, (v) => `${v ? "" : "disabled"}`),
+        Mount(
+          Button(
+            Branch(formUpdateLoadingSrc, i18n.tr("Saving..."), i18n.tr("Save")),
+            Applied($validated, (v) => `btn ${v ? "" : "disabled opacity-25"}`),
+            $clicked,
+            Applied($validated, (v) => `${v ? "" : "disabled"}`),
+          ),
         ),
       )}
     </div>`,

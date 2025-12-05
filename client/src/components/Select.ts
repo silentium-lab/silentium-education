@@ -33,9 +33,9 @@ export function Select(
 }
 
 export function SelectId($value: MessageSourceType<string>) {
-  return Message<string>((transport) => {
+  return Message<string>((resolve, reject) => {
     const $id = Shared(Id());
-    $id.then(transport);
+    $id.then(resolve);
 
     const $el = Shared(Element<HTMLInputElement>(ClassName($id)));
 
@@ -50,9 +50,11 @@ export function SelectId($value: MessageSourceType<string>) {
       "change",
       "addEventListener",
       "removeEventListener",
-    ).then((e) => {
-      $value.use((e.target as HTMLInputElement).value);
-    });
+    )
+      .catch(reject)
+      .then((e) => {
+        $value.use((e.target as HTMLInputElement).value);
+      });
 
     return () => {
       event.destroy();

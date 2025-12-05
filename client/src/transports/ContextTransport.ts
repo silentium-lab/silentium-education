@@ -1,4 +1,4 @@
-import { ContextType, LateShared, MessageSourceType } from "silentium";
+import { ContextType, Late, MessageSourceType } from "silentium";
 
 /**
  * Lazy contexts
@@ -10,7 +10,7 @@ export function ContextTransport() {
     const key = context.params?.key ?? "none";
 
     if (!cache[key]) {
-      cache[key] = LateShared();
+      cache[key] = Late();
     }
 
     if (context.params?.method === "get" && context.result) {

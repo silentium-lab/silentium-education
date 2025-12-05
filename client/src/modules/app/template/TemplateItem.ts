@@ -6,8 +6,9 @@ import { ClickedId } from "@/modules/ClickedId";
 import { i18n } from "@/store";
 import {
   Chainable,
-  LateShared,
+  Late,
   MessageType,
+  New,
   Of,
   Once,
   Primitive,
@@ -18,6 +19,7 @@ import {
   Constant,
   Detached,
   Path,
+  Polling,
   Record,
   Shot,
   Template,
@@ -29,7 +31,7 @@ export function TemplateItem(
   reload: SourceType,
   $titleField = Of("title"),
 ) {
-  const removeTrigger = LateShared();
+  const removeTrigger = Late();
 
   const localItem = Detached<any>($item);
   const $removed = Shared(
@@ -38,7 +40,12 @@ export function TemplateItem(
     ),
   );
 
-  Chainable(reload).chain(Constant(1, $removed));
+  Chainable(reload).chain(
+    Polling(
+      New(() => ({})),
+      $removed,
+    ),
+  );
 
   $notification.chain(
     Constant(

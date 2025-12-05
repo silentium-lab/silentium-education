@@ -1,5 +1,5 @@
 import { IncomingMessage } from "http";
-import { Any, LateShared, MessageType, Of, Shared } from "silentium";
+import { Any, Late, MessageType, Of, Shared } from "silentium";
 import { Detached, Record, Router, Shot } from "silentium-components";
 import { NotFoundSrc } from "../../store";
 import { Created } from "../modules/mongo/Created";
@@ -23,7 +23,7 @@ export const CRUDRouter = (
       {
         pattern: `^GET:${baseUrl}$`,
         message: () => {
-          const $error = LateShared();
+          const $error = Late();
           const $data = Shared(List(collectionName));
           return Truncated(
             Record({
@@ -38,7 +38,7 @@ export const CRUDRouter = (
         pattern: `^GET:${baseUrl}/.+/$`,
         message: () => {
           const $url = UrlFromMessage(detachedReq);
-          const $error = LateShared();
+          const $error = Late();
           const $data = Shared(Entity($url, collectionName));
           return Truncated(
             Record({
@@ -52,7 +52,7 @@ export const CRUDRouter = (
       {
         pattern: `^POST:${baseUrl}$`,
         message: () => {
-          const $error = LateShared();
+          const $error = Late();
           const $data = Shared(Created(detachedReq, collectionName));
           return Truncated(
             Record({
@@ -66,7 +66,7 @@ export const CRUDRouter = (
       {
         pattern: `^PUT:${baseUrl}/.+/$`,
         message: () => {
-          const $error = LateShared();
+          const $error = Late();
           const $data = Shared(Updated(detachedReq, collectionName));
           return Truncated(
             Record({
@@ -80,7 +80,7 @@ export const CRUDRouter = (
       {
         pattern: `^DELETE:${baseUrl}.*$`,
         message: () => {
-          const $error = LateShared();
+          const $error = Late();
           const $url = UrlFromMessage(detachedReq);
           const $data = Shared(Removed($url, collectionName));
           return Truncated(

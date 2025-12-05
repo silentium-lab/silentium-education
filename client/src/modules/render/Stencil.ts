@@ -7,7 +7,7 @@ import {
   DestroyContainer,
   isDestroyable,
   isMessage,
-  LateShared,
+  Late,
   Local,
   MaybeMessage,
   Message,
@@ -25,7 +25,7 @@ import { Record, Task } from "silentium-components";
 export function Stencil(
   src: MaybeMessage<string> | ((t: StencilImpl) => string) = "",
 ) {
-  const $src = LateShared<string>();
+  const $src = Late<string>();
   if (typeof src === "string" || isMessage(src)) {
     $src.chain(ActualMessage(src));
   }

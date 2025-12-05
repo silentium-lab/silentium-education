@@ -1,4 +1,4 @@
-import { LateShared, MessageSource, MessageType, Primitive } from "silentium";
+import { Late, MessageSource, MessageType, Primitive } from "silentium";
 
 /**
  * Data representation from Storage API
@@ -9,7 +9,7 @@ export function StorageRecord<T = string>(
   storageType: "localStorage" | "sessionStorage" = "localStorage",
 ) {
   const nameSync = Primitive($name);
-  const resultSrc = LateShared<T>();
+  const resultSrc = Late<T>();
   return MessageSource<T>(
     (resolve) => {
       resultSrc.then(resolve);

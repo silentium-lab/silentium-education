@@ -4,6 +4,7 @@ import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
+import { Mount } from "@/modules/render/Mount";
 import { SplitPart } from "@/modules/string/SplitPart";
 import { $title, $url, i18n } from "@/store";
 import { omit, partialRight } from "lodash-es";
@@ -11,10 +12,11 @@ import {
   Any,
   Applied,
   ConstructorType,
-  LateShared,
+  Late,
   Local,
   MessageSourceType,
   MessageType,
+  New,
   Of,
   Primitive,
   Shared,
@@ -22,10 +24,10 @@ import {
 } from "silentium";
 import {
   Branch,
-  Constant,
   Detached,
   Loading,
   Path,
+  Polling,
   Shot,
   Task,
   Template,
@@ -44,8 +46,8 @@ export function TemplateEdit(
   const $article = Shared(
     ServerResponse(CRUD(Path($config, "model")).entity($id)),
   );
-  const $clicked = LateShared();
-  const $form = LateShared<any>();
+  const $clicked = Late();
+  const $form = Late<any>();
 
   const $formUpdated = Shared(
     ServerResponse(
@@ -55,21 +57,23 @@ export function TemplateEdit(
   const $formUpdateLoading = Any(Loading($clicked, $formUpdated), false);
 
   $notification.chain(
-    Constant(
-      {
+    Polling(
+      New(() => ({
         type: "success",
         content: Primitive(
           i18n.tr("Saved successfully"),
         ).primitiveWithException(),
-      },
+      })),
       $formUpdated,
     ),
   );
 
+  $formUpdated.then(console.log);
+
   $form.chain(
     Applied(Any($article, Task($formUpdated)), partialRight(omit, ["_id"])),
   );
-  const $validated = LateShared(false);
+  const $validated = Late(false);
 
   return Template(
     (t) => `<div class="article">
@@ -83,11 +87,13 @@ export function TemplateEdit(
         ${t.var(form($form, $validated))}
       </div>
       ${t.var(
-        Button(
-          Branch($formUpdateLoading, i18n.tr("Saving..."), i18n.tr("Save")),
-          Applied($validated, (v) => `btn ${v ? "" : "disabled opacity-25"}`),
-          $clicked,
-          Applied($validated, (v) => `${v ? "" : "disabled"}`),
+        Mount(
+          Button(
+            Branch($formUpdateLoading, i18n.tr("Saving..."), i18n.tr("Save")),
+            Applied($validated, (v) => `btn ${v ? "" : "disabled opacity-25"}`),
+            $clicked,
+            Applied($validated, (v) => `${v ? "" : "disabled"}`),
+          ),
         ),
       )}
     </div>`,
