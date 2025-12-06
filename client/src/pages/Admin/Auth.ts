@@ -1,15 +1,23 @@
 import { Button } from "@/components/Button";
+import { Error } from "@/components/Error";
 import { Input } from "@/components/Input";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
+import { Mount } from "@/modules/render/Mount";
 import { $title, Tr } from "@/store";
+import { MinLength, RequiredTr } from "@/validations";
 import { startAuthentication } from "@simplewebauthn/browser";
-import { Late, MessageType, Of, Process, Shared } from "silentium";
-import { Record, Shot, Template } from "silentium-components";
+import { Computed, Late, MessageType, Of, Process, Shared } from "silentium";
+import { Branch, Record, Shot, Template } from "silentium-components";
+import {
+  Validated,
+  ValidationErrors,
+  ValidationItems,
+} from "silentium-validation";
 
 export function Auth() {
   $title.chain(Tr("Auth"));
-  const $username = Late<string>();
+  const $username = Late<string>("");
   const $authenticated = Late();
 
   const $loginStart = Shared(
@@ -42,6 +50,19 @@ export function Auth() {
     location.reload();
   });
 
+  const $errors = ValidationErrors(
+    Computed(
+      ValidationItems,
+      Record({
+        name: $username,
+      }),
+      {
+        name: [RequiredTr, MinLength(3)],
+      },
+    ),
+  );
+  const $validated = Computed(Validated, $errors);
+
   return Template(
     (t) => `<div class="article">
       <h1 class="title-1">${t.var(Tr("Sign in"))}</h1>
@@ -50,9 +71,19 @@ export function Auth() {
           ${t.var(Tr("Login"))}
         </login>
         <input id="login" class="${t.var(Input($username))} border-1 p-2 rounded-sm w-full" name="username" />
+        ${t.var(Mount(Error("name", $errors)))}
       </div>
       <div class="mb-2">
-        ${t.var(Button(Tr("Sign in"), Of("btn"), $authenticated))}
+        ${t.var(
+          Mount(
+            Button(
+              Tr("Sign in"),
+              Of("btn"),
+              $authenticated,
+              Branch($validated, "", "disabled"),
+            ),
+          ),
+        )}
       </div>
     </div>`,
   );

@@ -2,6 +2,7 @@ import { ErrorList } from "@/components/ErrorList";
 import { Input } from "@/components/Input";
 import { Tr } from "@/store";
 import type { ArticleType } from "@/types/ArticleType";
+import { RequiredTr } from "@/validations";
 import {
   Chainable,
   Computed,
@@ -11,7 +12,6 @@ import {
 } from "silentium";
 import { Memo, Part, Template } from "silentium-components";
 import {
-  Required,
   Validated,
   ValidationErrors,
   ValidationItems,
@@ -25,7 +25,7 @@ export function SectionForm(
 
   const $errors = ValidationErrors(
     Computed(ValidationItems, $form, {
-      title: [Required],
+      title: [RequiredTr],
     }),
   );
   const $validated = Computed(Validated, $errors);

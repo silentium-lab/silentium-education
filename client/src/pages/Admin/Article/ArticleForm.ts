@@ -3,8 +3,9 @@ import { Input } from "@/components/Input";
 import { Select } from "@/components/Select";
 import { Categories } from "@/models/categories/Categries";
 import { Sections } from "@/models/sections/Sections";
-import { i18n, Tr } from "@/store";
+import { Tr } from "@/store";
 import type { ArticleType } from "@/types/ArticleType";
+import { RequiredTr } from "@/validations";
 import {
   Chainable,
   Computed,
@@ -14,7 +15,6 @@ import {
 } from "silentium";
 import { Memo, Part, Template } from "silentium-components";
 import {
-  Required,
   Validated,
   ValidationErrors,
   ValidationItems,
@@ -34,10 +34,10 @@ export function ArticleForm(
 
   const $errors = ValidationErrors(
     Computed(ValidationItems, $form, {
-      title: [Required],
-      content: [Required],
-      category_id: [Required],
-      section_id: [Required],
+      title: [RequiredTr],
+      content: [RequiredTr],
+      category_id: [RequiredTr],
+      section_id: [RequiredTr],
     }),
   );
   const $validated = Computed(Validated, $errors);

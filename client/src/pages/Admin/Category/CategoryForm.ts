@@ -4,6 +4,7 @@ import { Select } from "@/components/Select";
 import { Categories } from "@/models/categories/Categries";
 import { Tr } from "@/store";
 import type { ArticleType } from "@/types/ArticleType";
+import { RequiredTr } from "@/validations";
 import {
   Chainable,
   Computed,
@@ -13,7 +14,6 @@ import {
 } from "silentium";
 import { Memo, Part, Template } from "silentium-components";
 import {
-  Required,
   Validated,
   ValidationErrors,
   ValidationItems,
@@ -30,8 +30,8 @@ export function CategoryForm(
 
   const $errors = ValidationErrors(
     Computed(ValidationItems, $form, {
-      title: [Required],
-      parent_id: [Required],
+      title: [RequiredTr],
+      parent_id: [RequiredTr],
     }),
   );
   const $validated = Computed(Validated, $errors);

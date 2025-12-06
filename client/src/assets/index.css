@@ -36,4 +36,8 @@ body {
   .btn {
     @apply py-1 px-2 bg-primary rounded-sm text-fg-inverse hover:bg-primary-active transition-colors;
   }
+
+  button:disabled {
+    @apply opacity-45;
+  }
 }

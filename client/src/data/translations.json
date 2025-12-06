@@ -27,6 +27,8 @@
     "Before using the admin panel, you need to configure the server. Specify the required parameters.": "Перед использованием панели администратора необходимо провести конфигурацию сервера, Укажите обязательные параметры",
     "home": "Главная",
     "title": "Название",
+    "Must be greater than": "Должно быть длиннее чем ",
+    "Field required": "Обязательное поле",
     "tg_group": "Телеграм группа"
   }
 }
