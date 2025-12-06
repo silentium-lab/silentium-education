@@ -69,7 +69,7 @@ export function Auth() {
       <div class="mb-2">
         <label for="login">
           ${t.var(Tr("Login"))}
-        </login>
+        </label>
         <input id="login" class="${t.var(Input($username))} border-1 p-2 rounded-sm w-full" name="username" />
         ${t.var(Mount(Error("name", $errors)))}
       </div>

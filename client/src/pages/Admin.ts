@@ -7,13 +7,7 @@ import { CategoryRouter } from "@/pages/Admin/Category/CategoryRouter";
 import { SectionRouter } from "@/pages/Admin/Section/SectionRouter";
 import { $title, $url, Tr } from "@/store";
 import { Filtered, Late, Of } from "silentium";
-import {
-  Detached,
-  Polling,
-  Router,
-  Shot,
-  Template,
-} from "silentium-components";
+import { Detached, Polling, Router, Template } from "silentium-components";
 
 export function Admin() {
   $title.use("Админ панель");
@@ -22,7 +16,7 @@ export function Admin() {
   const $error = Filtered(FromContext("error"), (e: any) => e.status === 401);
   const result = Late<string>();
 
-  result.chain(Shot<string>(Auth(), $error));
+  result.chain(Polling<string>(Auth(), $error));
 
   const rd = Router(
     $localUrl,
