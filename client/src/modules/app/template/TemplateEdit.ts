@@ -6,7 +6,7 @@ import { ServerResponse } from "@/modules/app/ServerResponse";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
 import { Mount } from "@/modules/render/Mount";
 import { SplitPart } from "@/modules/string/SplitPart";
-import { $title, $url, i18n } from "@/store";
+import { $title, $url, Tr } from "@/store";
 import { omit, partialRight } from "lodash-es";
 import {
   Any,
@@ -60,9 +60,7 @@ export function TemplateEdit(
     Polling(
       New(() => ({
         type: "success",
-        content: Primitive(
-          i18n.tr("Saved successfully"),
-        ).primitiveWithException(),
+        content: Primitive(Tr("Saved successfully")).primitiveWithException(),
       })),
       $formUpdated,
     ),
@@ -89,7 +87,7 @@ export function TemplateEdit(
       ${t.var(
         Mount(
           Button(
-            Branch($formUpdateLoading, i18n.tr("Saving..."), i18n.tr("Save")),
+            Branch($formUpdateLoading, Tr("Saving..."), Tr("Save")),
             Applied($validated, (v) => `btn ${v ? "" : "disabled opacity-25"}`),
             $clicked,
             Applied($validated, (v) => `${v ? "" : "disabled"}`),

@@ -21,7 +21,8 @@ export const $url = Shared(HistoryUrl());
 
 export const $title = DocumentTitle();
 
-export const i18n = I18N(Memo($lang), Of(translations));
+const i18n = I18N(Memo($lang), Of(translations));
+export const Tr = i18n.tr.bind(i18n);
 
 export const $authenticated = Late(true);
 

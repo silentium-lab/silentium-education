@@ -1,11 +1,10 @@
 import { Counter } from "@/chunks/Counter";
-import { $title, i18n } from "@/store";
+import { $title, Tr } from "@/store";
 import { Local } from "silentium";
 import { Template } from "silentium-components";
 
 export function About() {
-  $title.chain(i18n.tr("about"));
-
+  $title.chain(Tr("about"));
   return Template(
     (t) => `<section class="article">
       <h1 class="title-1">${t.var(Local($title))}</h1>

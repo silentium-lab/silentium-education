@@ -1,12 +1,12 @@
 import { TemplateNew } from "@/modules/app/template/TemplateNew";
 import { SectionConfig } from "@/pages/Admin/Section/SectionConfig";
 import { SectionForm } from "@/pages/Admin/Section/SectionForm";
-import { $title, i18n } from "@/store";
+import { $title, Tr } from "@/store";
 
 export function SectionNew() {
-  const $label = i18n.tr("Create section");
+  const $label = Tr("Create section");
   $title.chain($label);
-  return TemplateNew(SectionConfig(), $label, SectionForm, {
+  return TemplateNew(SectionConfig(), Tr("Sections"), SectionForm, {
     title: undefined,
   });
 }

@@ -3,7 +3,7 @@ import { Input } from "@/components/Input";
 import { Select } from "@/components/Select";
 import { Categories } from "@/models/categories/Categries";
 import { Sections } from "@/models/sections/Sections";
-import { i18n } from "@/store";
+import { i18n, Tr } from "@/store";
 import type { ArticleType } from "@/types/ArticleType";
 import {
   Chainable,
@@ -47,26 +47,26 @@ export function ArticleForm(
     (t) => `<div class="mb-2">
       <div class="mb-2">
         <div class="font-bold">
-          ${t.var(i18n.tr("Name"))}:
+          ${t.var(Tr("Name"))}:
         </div>
         <input name="title" class="${t.var(Input($title))} border-1 p-2 rounded-sm w-full" />
 
       </div>
       <div class="mb-2">
         <div class="font-bold">
-          ${t.var(i18n.tr("Category"))}:
+          ${t.var(Tr("Category"))}:
         </div>
         ${t.var(Select($category, $categories))}
       </div>
       <div class="mb-2">
         <div class="font-bold">
-          ${t.var(i18n.tr("Section"))}:
+          ${t.var(Tr("Section"))}:
         </div>
         ${t.var(Select($section, $sections))}
       </div>
       <div class="mb-2">
         <div class="font-bold">
-          ${t.var(i18n.tr("Content"))}:
+          ${t.var(Tr("Content"))}:
         </div>
         <textarea rows="20" class="${t.var(Input($content))} border-1 p-2 rounded-sm w-full"></textarea>
       </div>

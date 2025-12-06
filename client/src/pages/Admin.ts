@@ -5,7 +5,7 @@ import { ArticleRouter } from "@/pages/Admin/Article/ArticleRouter";
 import { Auth } from "@/pages/Admin/Auth";
 import { CategoryRouter } from "@/pages/Admin/Category/CategoryRouter";
 import { SectionRouter } from "@/pages/Admin/Section/SectionRouter";
-import { $title, $url, i18n } from "@/store";
+import { $title, $url, Tr } from "@/store";
 import { Filtered, Late, Of } from "silentium";
 import {
   Detached,
@@ -48,7 +48,6 @@ export function Admin() {
   );
 
   const $logout = Late();
-  $logout.then(console.log);
   const $loggedOut = Polling(Logout(), $logout);
   $loggedOut.then(() => {
     location.href = "/";
@@ -59,10 +58,10 @@ export function Admin() {
       <!-- Sidebar Menu -->
       <div class="max-w-34 bg-white shadow-lg flex-1">
         <nav class="mt-4  h-full flex flex-col">
-          <a href="/admin/articles" class="block px-4 py-2 text-gray-700 hover:bg-gray-200 hover:text-gray-900">${t.var(i18n.tr("Articles"))}</a>
-          <a href="/admin/sections" class="block px-4 py-2 text-gray-700 hover:bg-gray-200 hover:text-gray-900">${t.var(i18n.tr("Sections"))}</a>
-          <a href="/admin/categories" class="block px-4 py-2 text-gray-700 hover:bg-gray-200 hover:text-gray-900">${t.var(i18n.tr("Categories"))}</a>
-          <a href="/admin/categories" class="${t.var(ClickedId($logout))} block px-4 py-2 text-gray-700 hover:bg-gray-200 hover:text-gray-900">${t.var(i18n.tr("Logout"))}</a>
+          <a href="/admin/articles" class="block px-4 py-2 text-gray-700 hover:bg-gray-200 hover:text-gray-900">${t.var(Tr("Articles"))}</a>
+          <a href="/admin/sections" class="block px-4 py-2 text-gray-700 hover:bg-gray-200 hover:text-gray-900">${t.var(Tr("Sections"))}</a>
+          <a href="/admin/categories" class="block px-4 py-2 text-gray-700 hover:bg-gray-200 hover:text-gray-900">${t.var(Tr("Categories"))}</a>
+          <a href="/admin/categories" class="${t.var(ClickedId($logout))} block px-4 py-2 text-gray-700 hover:bg-gray-200 hover:text-gray-900">${t.var(Tr("Logout"))}</a>
         </nav>
       </div>
       <div class="flex-1 p-8">

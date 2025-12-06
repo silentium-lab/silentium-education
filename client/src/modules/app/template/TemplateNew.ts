@@ -5,7 +5,7 @@ import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
 import { Mount } from "@/modules/render/Mount";
-import { $title, $url, i18n } from "@/store";
+import { $title, $url, i18n, Tr } from "@/store";
 import {
   Any,
   Applied,
@@ -65,7 +65,7 @@ export function TemplateNew(
     Constant(
       {
         type: "success",
-        content: Primitive(i18n.tr("Created success")).primitiveWithException(),
+        content: Primitive(Tr("Created success")).primitiveWithException(),
       } as const,
       $formUpdated,
     ),
@@ -81,7 +81,7 @@ export function TemplateNew(
       ${t.var(
         Mount(
           Button(
-            Branch(formUpdateLoadingSrc, i18n.tr("Saving..."), i18n.tr("Save")),
+            Branch(formUpdateLoadingSrc, Tr("Saving..."), Tr("Save")),
             Applied($validated, (v) => `btn ${v ? "" : "disabled opacity-25"}`),
             $clicked,
             Applied($validated, (v) => `${v ? "" : "disabled"}`),

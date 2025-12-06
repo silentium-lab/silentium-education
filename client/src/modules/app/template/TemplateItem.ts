@@ -3,7 +3,7 @@ import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
 import { ClickedId } from "@/modules/ClickedId";
-import { i18n } from "@/store";
+import { Tr } from "@/store";
 import {
   Chainable,
   Late,
@@ -51,7 +51,7 @@ export function TemplateItem(
     Constant(
       {
         type: "success",
-        content: Primitive(i18n.tr("Delete success")).primitiveWithException(),
+        content: Primitive(Tr("Delete success")).primitiveWithException(),
       } as const,
       $removed,
     ),

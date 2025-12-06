@@ -1,9 +1,9 @@
 import { TemplateEdit } from "@/modules/app/template/TemplateEdit";
 import { CategoryConfig } from "@/pages/Admin/Category/CategoryConfig";
 import { CategoryForm } from "@/pages/Admin/Category/CategoryForm";
-import { $title, i18n } from "@/store";
+import { $title, Tr } from "@/store";
 
 export function CategoryEdit() {
-  $title.chain(i18n.tr("Category"));
-  return TemplateEdit(CategoryConfig(), i18n.tr("Category"), CategoryForm);
+  $title.chain(Tr("Category"));
+  return TemplateEdit(CategoryConfig(), Tr("Categories"), CategoryForm);
 }

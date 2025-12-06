@@ -1,12 +1,11 @@
 import { Counter } from "@/chunks/Counter";
 import { Link } from "@/components/Link";
 import { Stencil } from "@/modules/render/Stencil";
-import { $lang, $title, i18n } from "@/store";
+import { $lang, $title, Tr } from "@/store";
 import { Local, Of } from "silentium";
 
 export function Home() {
-  $title.chain(i18n.tr("home"));
-
+  $title.chain(Tr("home"));
   return Stencil(
     (t) => `<section class="article">
 			<h1 class="title-1">
@@ -16,9 +15,9 @@ export function Home() {
       <div>
         Lang: ${t.var(Local($lang))}
       </div>
-			<div>
-				${t.var(Link(Of("/admin/articles"), Of("Статьи"), Of("underline")))}
-			</div>
-		</section>`,
+		<div>
+			${t.var(Link(Of("/admin/articles"), Of("Статьи"), Of("underline")))}
+		</div>
+	  </section>`,
   );
 }
