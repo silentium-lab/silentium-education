@@ -1,11 +1,12 @@
 import { ListPaginated } from "@/models/common/ListPaginated";
 import { TemplateItem } from "@/modules/app/template/TemplateItem";
 import { TemplateList } from "@/modules/app/template/TemplateList";
+import { Mount } from "@/modules/render/Mount";
 import { ArticleConfig } from "@/pages/Admin/Article/ArticleConfig";
 import { ArticleFilter } from "@/pages/Admin/Article/ArticleFilter";
 import { $title, Tr } from "@/store";
 import { partial } from "lodash-es";
-import { Catch, Chainable, Late } from "silentium";
+import { Applied, Catch, Chainable, Late } from "silentium";
 import { Template } from "silentium-components";
 
 export function ArticleList() {
@@ -21,7 +22,7 @@ export function ArticleList() {
   );
   const list = ListPaginated(
     () => ({
-      title: undefined,
+      title: "",
     }),
     $list,
   );
@@ -31,8 +32,12 @@ export function ArticleList() {
   return Template(
     (t) => `
     <div>
-      ${t.var(ArticleFilter(list.$filter, list.$search, list.$reset))}
+      ${t.var(Mount(ArticleFilter(list.$filter, list.$search, list.$reset)))}
       ${t.var($template)}
+      <hr class="mt-2 mb-2" />
+      <div>
+        ${t.var(Applied(list.$page, String))}
+      </div>
     </div>
   `,
   );

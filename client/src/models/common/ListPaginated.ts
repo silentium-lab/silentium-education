@@ -1,11 +1,10 @@
-import { Any, Chainable, Late, MessageSourceType, New } from "silentium";
+import { Any, Chainable, Late, MessageSourceType, New, Once } from "silentium";
 import {
   Constant,
   Loading,
   OnlyChanged,
   Polling,
   RecordTruncated,
-  Shot,
   Tick,
 } from "silentium-components";
 
@@ -26,15 +25,15 @@ export function ListPaginated(
   Chainable($page).chain(Constant(1, $actualSearch));
 
   const $listFilter = Tick(
-    Shot(
-      RecordTruncated($filter, ["", null, undefined]),
-      Any([$actualSearch, $reload]),
+    Polling(
+      Once(RecordTruncated($filter, ["", null, undefined])),
+      Any($actualSearch, $reload),
     ),
   );
 
   const $loading = Loading(
-    Any([$actualSearch, $reload, $page]),
-    Any([listSrc, OnlyChanged($error)]),
+    Any($actualSearch, $reload, $page),
+    Any(listSrc, OnlyChanged($error)),
   );
 
   return {

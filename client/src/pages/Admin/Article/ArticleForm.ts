@@ -1,9 +1,10 @@
-import { ErrorList } from "@/components/ErrorList";
+import { Error } from "@/components/Error";
 import { Input } from "@/components/Input";
 import { Select } from "@/components/Select";
 import { Textarea } from "@/components/Textarea";
 import { Categories } from "@/models/categories/Categries";
 import { Sections } from "@/models/sections/Sections";
+import { Mount } from "@/modules/render/Mount";
 import { Tr } from "@/store";
 import type { ArticleType } from "@/types/ArticleType";
 import { RequiredTr } from "@/validations";
@@ -48,29 +49,28 @@ export function ArticleForm(
     (t) => `<div class="mb-2">
       <div class="mb-2">
         <div class="font-bold">
-          ${t.var(Tr("Name"))}:
+          ${t.var(Tr("Name"))}: ${t.var(Mount(Error("title", $errors), "span"))}
         </div>
         ${t.var(Input($title))}
       </div>
       <div class="mb-2">
         <div class="font-bold">
-          ${t.var(Tr("Category"))}:
+          ${t.var(Tr("Category"))}: ${t.var(Mount(Error("category_id", $errors), "span"))}
         </div>
         ${t.var(Select($category, $categories))}
       </div>
       <div class="mb-2">
         <div class="font-bold">
-          ${t.var(Tr("Section"))}:
+          ${t.var(Tr("Section"))}: ${t.var(Mount(Error("section_id", $errors), "span"))}
         </div>
         ${t.var(Select($section, $sections))}
       </div>
       <div class="mb-2">
         <div class="font-bold">
-          ${t.var(Tr("Content"))}:
+          ${t.var(Tr("Content"))}: ${t.var(Mount(Error("content", $errors), "span"))}
         </div>
         ${t.var(Textarea($content))}
       </div>
-      ${t.var(ErrorList($errors))}
       <hr>
     </div>`,
   );
