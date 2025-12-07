@@ -1,6 +1,6 @@
 import { Button } from "@/components/Button";
 import { Error } from "@/components/Error";
-import { Input } from "@/components/Input";
+import { InputId } from "@/components/Input";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { Mount } from "@/modules/render/Mount";
@@ -70,7 +70,7 @@ export function Auth() {
         <label for="login">
           ${t.var(Tr("Login"))}
         </label>
-        <input id="login" class="${t.var(Input($username))} border-1 p-2 rounded-sm w-full" name="username" />
+        <input id="login" class="${t.var(InputId($username))} border-1 p-2 rounded-sm w-full" name="username" />
         ${t.var(Mount(Error("name", $errors)))}
       </div>
       <div class="mb-2">

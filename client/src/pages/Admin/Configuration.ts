@@ -1,6 +1,6 @@
 import { Button } from "@/components/Button";
 import { Error } from "@/components/Error";
-import { Input } from "@/components/Input";
+import { InputId } from "@/components/Input";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { Mount } from "@/modules/render/Mount";
@@ -41,7 +41,7 @@ export function Configuration() {
           ${t.var(Tr("Before using the admin panel, you need to configure the server. Specify the required parameters."))}
       </p>
       <div class="mb-2">
-        <input class="${t.var(Input(behavior.$username))} border-1 p-2 rounded-sm w-full" name="username" />
+        <input class="${t.var(InputId(behavior.$username))} border-1 p-2 rounded-sm w-full" name="username" />
         ${t.var(Mount(Error("name", $errors)))}
       </div>
       <div>

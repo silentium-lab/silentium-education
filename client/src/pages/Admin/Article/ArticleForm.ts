@@ -1,6 +1,7 @@
 import { ErrorList } from "@/components/ErrorList";
 import { Input } from "@/components/Input";
 import { Select } from "@/components/Select";
+import { Textarea } from "@/components/Textarea";
 import { Categories } from "@/models/categories/Categries";
 import { Sections } from "@/models/sections/Sections";
 import { Tr } from "@/store";
@@ -49,8 +50,7 @@ export function ArticleForm(
         <div class="font-bold">
           ${t.var(Tr("Name"))}:
         </div>
-        <input name="title" class="${t.var(Input($title))} border-1 p-2 rounded-sm w-full" />
-
+        ${t.var(Input($title))}
       </div>
       <div class="mb-2">
         <div class="font-bold">
@@ -68,7 +68,7 @@ export function ArticleForm(
         <div class="font-bold">
           ${t.var(Tr("Content"))}:
         </div>
-        <textarea rows="20" class="${t.var(Input($content))} border-1 p-2 rounded-sm w-full"></textarea>
+        ${t.var(Textarea($content))}
       </div>
       ${t.var(ErrorList($errors))}
       <hr>

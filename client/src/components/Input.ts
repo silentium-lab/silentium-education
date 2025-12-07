@@ -2,10 +2,18 @@ import { ClassName } from "@/modules/ClassName";
 import { Id } from "@/modules/Id";
 import { KeyPressed } from "@/modules/KeyPressed";
 import { All, Message, MessageSourceType, Shared } from "silentium";
-import { Task } from "silentium-components";
+import { Task, Template } from "silentium-components";
 import { Element } from "silentium-web-api";
 
 export function Input($value: MessageSourceType<string>) {
+  return Template(
+    (t) => `
+      <input name="title" class="${t.var(InputId($value))} border-1 p-2 rounded-sm w-full" />
+    `,
+  );
+}
+
+export function InputId($value: MessageSourceType<string>) {
   return Message<string>((transport) => {
     const $id = Shared(Id());
     $id.then(transport);

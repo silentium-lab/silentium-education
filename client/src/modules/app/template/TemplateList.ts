@@ -3,10 +3,12 @@ import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
 import { $title } from "@/store";
+import { clone } from "lodash-es";
 import {
   Any,
   Applied,
   Chain,
+  Computed,
   ConstructorType,
   Late,
   Local,
@@ -16,21 +18,27 @@ import {
   Shared,
   SourceType,
 } from "silentium";
-import { Path, Template } from "silentium-components";
+import { Path, Shot, Template } from "silentium-components";
 
 export function TemplateList(
   $config: MessageType<TemplateConfig>,
   $creationLabel: MessageType<string>,
+  $search: MessageType<Record<string, unknown>>,
   itemTemplate: ConstructorType<[MessageType, SourceType], MessageType<string>>,
 ) {
   const $reload = Late<any>();
-  const $search = Late({});
-  const $articles = Shared(
-    ServerResponse(CRUD(Path($config, "model")).list(Any($reload, $search))),
+  const $list = Shared(
+    ServerResponse(
+      CRUD(Path($config, "model")).list(
+        Any(Computed(clone, Shot($search, $reload)), $search),
+      ),
+    ),
   );
 
-  return Template(
-    (t) => `<div class="article">
+  return {
+    $list: $list,
+    $template: Template(
+      (t) => `<div class="article">
       <h1 class="title-1">${t.var(Local($title))}</h1>
       ${t.var(
         Link(
@@ -43,11 +51,12 @@ export function TemplateList(
         Applied(
           Any<any>(
             Chain($search, Of([])),
-            Map($articles, (article) => itemTemplate(article, $reload)),
+            Map($list, (article) => itemTemplate(article, $reload)),
           ),
           (a) => a.join(""),
         ),
       )}
     </div>`,
-  );
+    ),
+  };
 }

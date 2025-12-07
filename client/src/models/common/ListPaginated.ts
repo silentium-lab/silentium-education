@@ -25,7 +25,6 @@ export function ListPaginated(
   const $actualSearch = Any($search, Tick($reset));
   Chainable($page).chain(Constant(1, $actualSearch));
 
-  // Полный объект фильтров для запроса
   const $listFilter = Tick(
     Shot(
       RecordTruncated($filter, ["", null, undefined]),

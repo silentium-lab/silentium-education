@@ -1,5 +1,5 @@
 import { ErrorList } from "@/components/ErrorList";
-import { Input } from "@/components/Input";
+import { InputId } from "@/components/Input";
 import { Select } from "@/components/Select";
 import { Categories } from "@/models/categories/Categries";
 import { Tr } from "@/store";
@@ -45,7 +45,7 @@ export function CategoryForm(
       </div>
       <div class="mb-2">
         <div class="font-bold">${t.var(Tr("Name"))}: </div>
-        <input class="${t.var(Input($title))} border-1 p-2 rounded-sm w-full" />
+        <input class="${t.var(InputId($title))} border-1 p-2 rounded-sm w-full" />
       </div>
       ${t.var(ErrorList($errors))}
       <hr>
