@@ -3,6 +3,7 @@ import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
 import { ClickedId } from "@/modules/ClickedId";
+import { Encoded } from "@/modules/string/Encoded";
 import { Tr } from "@/store";
 import {
   Chainable,
@@ -68,7 +69,7 @@ export function TemplateItem(
               $config: Path($config, "path"),
             }),
           ),
-          Path($item, $titleField),
+          Encoded(Path($item, $titleField)),
           Of("underline"),
         ),
       )}

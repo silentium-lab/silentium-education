@@ -4,6 +4,7 @@ import {
   Loading,
   OnlyChanged,
   Polling,
+  RecordTruncated,
   Shot,
   Tick,
 } from "silentium-components";
@@ -26,7 +27,10 @@ export function ListPaginated(
 
   // Полный объект фильтров для запроса
   const $listFilter = Tick(
-    Shot(RecordTruncated($filter, ["", null]), Any([$actualSearch, $reload])),
+    Shot(
+      RecordTruncated($filter, ["", null, undefined]),
+      Any([$actualSearch, $reload]),
+    ),
   );
 
   const $loading = Loading(

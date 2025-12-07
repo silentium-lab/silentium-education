@@ -29,8 +29,6 @@ export function TemplateList(
     ServerResponse(CRUD(Path($config, "model")).list(Any($reload, $search))),
   );
 
-  $reload.then(console.log);
-
   return Template(
     (t) => `<div class="article">
       <h1 class="title-1">${t.var(Local($title))}</h1>

@@ -66,8 +66,6 @@ export function TemplateEdit(
     ),
   );
 
-  $formUpdated.then(console.log);
-
   $form.chain(
     Applied(Any($article, Task($formUpdated)), partialRight(omit, ["_id"])),
   );

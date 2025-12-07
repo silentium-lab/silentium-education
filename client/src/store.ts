@@ -15,8 +15,6 @@ import { Memo } from "silentium-components";
 
 export const $lang = Shared(StorageRecord(Of("lang"), "ru"));
 
-$lang.then(console.log);
-
 export const $url = Shared(HistoryUrl());
 
 export const $title = DocumentTitle();
