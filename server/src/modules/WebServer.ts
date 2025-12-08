@@ -49,6 +49,7 @@ export function WebServer(
         });
         process.catch((e: any) => {
           headers();
+          res.statusCode = 500;
           res.end(
             JSON.stringify({
               error: e.message,
