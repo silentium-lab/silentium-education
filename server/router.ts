@@ -1,6 +1,6 @@
 import type { IncomingMessage } from "node:http";
 import { MessageType, Of } from "silentium";
-import { Detached, Router, Tick } from "silentium-components";
+import { Deadline, Detached, Router, Tick } from "silentium-components";
 import { Query } from "./src/modules/string/Query";
 import { Auth } from "./src/routes/Auth";
 import { Configured } from "./src/routes/Configured";
@@ -11,7 +11,7 @@ import { AuthGuard } from "./src/guards/AuthGuard";
 
 export const router = (req: MessageType<IncomingMessage>) => {
   const subReq = Detached(req);
-  return Tick<any>(
+  return Deadline(
     Router(
       Query(req),
       Of([
@@ -34,5 +34,6 @@ export const router = (req: MessageType<IncomingMessage>) => {
       ]),
       NotFoundSrc,
     ),
+    10_000,
   );
 };

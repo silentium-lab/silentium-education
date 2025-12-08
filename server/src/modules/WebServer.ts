@@ -47,6 +47,14 @@ export function WebServer(
           res.end(JSON.stringify(v));
           process?.destroy();
         });
+        process.catch((e: any) => {
+          headers();
+          res.end(
+            JSON.stringify({
+              error: e.message,
+            }),
+          );
+        });
       }
     });
 
