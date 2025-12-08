@@ -1,5 +1,5 @@
 import { IncomingMessage } from "http";
-import { Any, Late, MessageType, Of, Shared } from "silentium";
+import { Any, Late, MessageType, Of, Race, Shared } from "silentium";
 import { Detached, Record, Router, Shot } from "silentium-components";
 import { NotFoundSrc } from "../../store";
 import { Created } from "../modules/mongo/Created";
@@ -10,6 +10,7 @@ import { Updated } from "../modules/mongo/Updated";
 import { Query } from "../modules/string/Query";
 import { UrlFromMessage } from "../modules/string/UrlFromMessage";
 import { Truncated } from "../modules/structure/Truncated";
+import { UrlParams } from "../modules/string/UrlParams";
 
 export const CRUDRouter = (
   req: MessageType<IncomingMessage>,
@@ -21,10 +22,13 @@ export const CRUDRouter = (
     Query(detachedReq),
     Of([
       {
-        pattern: `^GET:${baseUrl}$`,
+        pattern: `^GET:${baseUrl}(\\?[^#]*)?$`,
+        patternFlags: "g",
         message: () => {
           const $error = Late();
-          const $data = Shared(List(collectionName));
+          const $url = UrlFromMessage(detachedReq);
+          const $filter = Race(UrlParams($url), {});
+          const $data = Shared(List(collectionName, $filter));
           return Truncated(
             Record({
               data: Any($data, Shot<unknown>(Of(""), $error)),

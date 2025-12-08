@@ -6,7 +6,7 @@ import { StorageRecord } from "@/modules/plugins/storage/StorageRecord";
 import { All, Applied, Late, MessageType, Of, Shared } from "silentium";
 import { Memo } from "silentium-components";
 
-(window as any).debug = (name: string, ...messages: MessageType[]) => {
+(globalThis as any).debug = (name: string, ...messages: MessageType[]) => {
   Applied(All(...messages.map((e) => Shared(e))), (r) => ({
     name,
     ...r,

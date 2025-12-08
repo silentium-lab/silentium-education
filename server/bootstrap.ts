@@ -1,7 +1,25 @@
 import { merge } from "lodash-es";
-import { All, AppliedDestructured, ContextChain, ContextOf } from "silentium";
+import {
+  All,
+  Applied,
+  AppliedDestructured,
+  ContextChain,
+  ContextOf,
+  MessageType,
+  Primitive,
+  Shared,
+} from "silentium";
 import { CacheTransport } from "./transports/CacheTransport";
 import { MongoTransport } from "./transports/MongoTransport";
+
+(globalThis as any).debug = (name: string, ...messages: MessageType[]) => {
+  Applied(All(...messages.map((e) => Shared(e))), (r) => ({
+    name,
+    ...r,
+  })).then(console.table);
+};
+(globalThis as any).moment = ($message: MessageType) =>
+  Primitive($message).primitive();
 
 AppliedDestructured(
   All(ContextOf("db"), {
