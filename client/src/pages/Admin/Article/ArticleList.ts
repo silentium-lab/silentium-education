@@ -7,7 +7,7 @@ import { ArticleFilter } from "@/pages/Admin/Article/ArticleFilter";
 import { $title, Tr } from "@/store";
 import { partial } from "lodash-es";
 import { Applied, Catch, Chainable, Computed, Late } from "silentium";
-import { Branch, Template } from "silentium-components";
+import { Template } from "silentium-components";
 import { Log } from "silentium-web-api";
 
 export function ArticleList() {
@@ -33,7 +33,7 @@ export function ArticleList() {
   return Template(
     (t) => `
     <div>
-      ${t.var(ArticleFilter(list.$filter, list.$search, list.$reset))}
+      ${t.var(Mount(ArticleFilter(list.$filter, list.$search, list.$reset)))}
       ${t.var(Computed((v) => (v ? "Loading..." : ""), list.$loading))}
       ${t.var($template)}
       <hr class="mt-2 mb-2" />
