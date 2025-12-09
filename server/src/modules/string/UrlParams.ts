@@ -6,7 +6,7 @@ import { Applied, MessageType } from "silentium";
 export function UrlParams(
   $url: MessageType<string>,
 ): MessageType<Record<string, unknown>> {
-  return Applied($url, ([url]) => {
+  return Applied($url, (url) => {
     return Object.fromEntries(new URL(url).searchParams);
   });
 }

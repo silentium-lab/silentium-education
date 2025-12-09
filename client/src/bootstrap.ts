@@ -1,7 +1,9 @@
 import { ContextTransport } from "@/transports/ContextTransport";
 import { FetchAPITransport } from "@/transports/FetchAPITransport";
 import { merge } from "lodash-es";
-import { All, AppliedDestructured, ContextOf, Late } from "silentium";
+import { All, AppliedDestructured, ContextOf, DevTools, Late } from "silentium";
+
+DevTools();
 
 AppliedDestructured(
   All(ContextOf("request"), {

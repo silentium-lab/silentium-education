@@ -1,6 +1,22 @@
 import { IncomingMessage } from "http";
-import { Any, Late, MessageType, Of, Race, Shared } from "silentium";
-import { Detached, Record, Router, Shot } from "silentium-components";
+import {
+  Any,
+  Catch,
+  Chainable,
+  Late,
+  MessageType,
+  Of,
+  Race,
+  Shared,
+} from "silentium";
+import {
+  Detached,
+  Path,
+  Record,
+  Router,
+  Shot,
+  Tick,
+} from "silentium-components";
 import { NotFoundSrc } from "../../store";
 import { Created } from "../modules/mongo/Created";
 import { Entity } from "../modules/mongo/Entity";
@@ -11,6 +27,7 @@ import { Query } from "../modules/string/Query";
 import { UrlFromMessage } from "../modules/string/UrlFromMessage";
 import { Truncated } from "../modules/structure/Truncated";
 import { UrlParams } from "../modules/string/UrlParams";
+import { OnlyKnownFields } from "../modules/validation/OnlyKnownFIelds";
 
 export const CRUDRouter = (
   req: MessageType<IncomingMessage>,
@@ -27,10 +44,14 @@ export const CRUDRouter = (
         message: () => {
           const $error = Late();
           const $url = UrlFromMessage(detachedReq);
-          const $filter = Race(UrlParams($url), {});
+          const $filter = OnlyKnownFields(Race(UrlParams($url), Tick(Of({}))), [
+            "title",
+          ]);
+          Chainable($error).chain(Path(Catch($filter) as any, "message"));
           const $data = Shared(List(collectionName, $filter));
           return Truncated(
             Record({
+              status: Any(200, Shot(Of(500), $error)),
               data: Any($data, Shot<unknown>(Of(""), $error)),
               error: Any($error, Shot(Of(""), $data)),
             }),
@@ -46,6 +67,7 @@ export const CRUDRouter = (
           const $data = Shared(Entity($url, collectionName));
           return Truncated(
             Record({
+              status: Any(200, Shot(Of(500), $error)),
               data: Any($data, Shot(Of(""), $error)),
               error: Any($error, Shot(Of(""), $data)),
             }),
@@ -60,6 +82,7 @@ export const CRUDRouter = (
           const $data = Shared(Created(detachedReq, collectionName));
           return Truncated(
             Record({
+              status: Any(200, Shot(Of(500), $error)),
               data: Any($data, Shot(Of(""), $error)),
               error: Any($error, Shot(Of(""), $data)),
             }),
@@ -74,6 +97,7 @@ export const CRUDRouter = (
           const $data = Shared(Updated(detachedReq, collectionName));
           return Truncated(
             Record({
+              status: Any(200, Shot(Of(500), $error)),
               data: Any($data, Shot(Of(""), $error)),
               error: Any($error, Shot(Of(""), $data)),
             }),
@@ -89,6 +113,7 @@ export const CRUDRouter = (
           const $data = Shared(Removed($url, collectionName));
           return Truncated(
             Record({
+              status: Any(200, Shot(Of(500), $error)),
               data: Any($data, Shot(Of(""), $error)),
               error: Any($error, Shot(Of(""), $data)),
             }),
