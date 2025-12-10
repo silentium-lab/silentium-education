@@ -1,7 +1,6 @@
 import { ListPaginated } from "@/models/common/ListPaginated";
 import { TemplateItem } from "@/modules/app/template/TemplateItem";
 import { TemplateList } from "@/modules/app/template/TemplateList";
-import { Mount } from "@/modules/render/Mount";
 import { ArticleConfig } from "@/pages/Admin/Article/ArticleConfig";
 import { ArticleFilter } from "@/pages/Admin/Article/ArticleFilter";
 import { $title, Tr } from "@/store";
