@@ -8,7 +8,6 @@ import { $title, Tr } from "@/store";
 import { partial } from "lodash-es";
 import { Applied, Catch, Chainable, Computed, Late } from "silentium";
 import { Template } from "silentium-components";
-import { Log } from "silentium-web-api";
 
 export function ArticleList() {
   const $t = Tr("Articles");
@@ -25,7 +24,7 @@ export function ArticleList() {
     () => ({
       title: "",
     }),
-    $list.then(Log("$list")),
+    $list,
   );
   $search.chain(list.$listFilter);
   Chainable(list.$error).chain(Catch($list));
@@ -33,7 +32,7 @@ export function ArticleList() {
   return Template(
     (t) => `
     <div>
-      ${t.var(Mount(ArticleFilter(list.$filter, list.$search, list.$reset)))}
+      ${t.var(ArticleFilter(list.$filter, list.$search, list.$reset))}
       ${t.var(Computed((v) => (v ? "Loading..." : ""), list.$loading))}
       ${t.var($template)}
       <hr class="mt-2 mb-2" />

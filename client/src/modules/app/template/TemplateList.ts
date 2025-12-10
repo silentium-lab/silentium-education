@@ -2,6 +2,7 @@ import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
+import { Mount } from "@/modules/render/Mount";
 import { $title } from "@/store";
 import { clone } from "lodash-es";
 import {
