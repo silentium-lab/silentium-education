@@ -8,13 +8,7 @@ import { Mount } from "@/modules/render/Mount";
 import { Tr } from "@/store";
 import type { ArticleType } from "@/types/ArticleType";
 import { RequiredTr } from "@/validations";
-import {
-  Chainable,
-  Computed,
-  MessageSourceType,
-  Of,
-  SourceType,
-} from "silentium";
+import { Chainable, Computed, MessageSourceType, SourceType } from "silentium";
 import { Memo, Part, Template } from "silentium-components";
 import {
   Validated,
@@ -26,10 +20,10 @@ export function ArticleForm(
   $form: MessageSourceType<ArticleType>,
   validated: SourceType<boolean>,
 ) {
-  const $title = Part<string>($form, Of("title"));
-  const $content = Part<string>($form, Of("content"));
-  const $category = Part<string>($form, Of("category_id"));
-  const $section = Part<string>($form, Of("section_id"));
+  const $title = Part<string>($form, "title");
+  const $content = Part<string>($form, "content");
+  const $category = Part<string>($form, "category_id");
+  const $section = Part<string>($form, "section_id");
 
   const $categories = Categories();
   const $sections = Sections();

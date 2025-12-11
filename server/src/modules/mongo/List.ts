@@ -1,9 +1,19 @@
-import { All, Context, Message, MessageType } from "silentium";
-import { Record } from "silentium-components";
+import {
+  All,
+  Applied,
+  Computed,
+  Context,
+  Message,
+  MessageType,
+  Of,
+} from "silentium";
+import { Path, Record } from "silentium-components";
+import { PagingRange } from "./PagingRange";
+import { PagingSkip } from "./PagingSkip";
 
 export function List<T>(
   collection: string,
-  conditions?: MessageType,
+  conditions: MessageType<any> = Of({}),
 ): MessageType<T[]> {
   return Message((res, rej) => {
     const context = Context<T[]>(
@@ -12,8 +22,15 @@ export function List<T>(
         params: Record({
           method: "find",
           collection,
-          args: conditions ? All(conditions) : [],
-          postProcess: "toArray",
+          args: All(PagingSkip(conditions)),
+          postProcess: Applied(
+            Computed(
+              PagingRange,
+              Path(conditions, "page", 1),
+              Path(conditions, "limit", 100),
+            ),
+            (range) => [...range, ["toArray"]],
+          ),
         }),
       }),
     );

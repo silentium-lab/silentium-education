@@ -7,9 +7,10 @@ import {
   MessageType,
   Of,
   Shared,
+  Void,
 } from "silentium";
 import { Render } from "silentium-morphdom";
-import { Element, Log } from "silentium-web-api";
+import { Element } from "silentium-web-api";
 
 export function Mount($base: MessageType<string>, tag: string = "div") {
   return Message<string>((resolve, reject) => {
@@ -17,12 +18,7 @@ export function Mount($base: MessageType<string>, tag: string = "div") {
     const $id = Shared(Id(Of("mount-point")));
     Applied($id, (id) => `<${tag} class="${id}"></${tag}>`).then(resolve);
     const $el = Element(ClassName($id)).catch(reject);
-    const $r = Render($el, $base)
-      .catch(reject)
-      .catch(() => {
-        Render($el, $base).catch(reject).then(Log("Mount2"));
-      })
-      .then(Log("Mount"));
+    const $r = Render($el, $base).catch(reject).then(Void());
     dc.add($el);
     dc.add($r);
 

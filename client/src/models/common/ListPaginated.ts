@@ -1,9 +1,19 @@
-import { Any, Chainable, Late, MessageSourceType, New, Once } from "silentium";
+import { merge } from "lodash-es";
+import {
+  Any,
+  Chainable,
+  Computed,
+  Late,
+  MessageSourceType,
+  New,
+  Once,
+} from "silentium";
 import {
   Constant,
   Loading,
   OnlyChanged,
   Polling,
+  Record,
   RecordTruncated,
   Tick,
 } from "silentium-components";
@@ -11,6 +21,7 @@ import {
 export function ListPaginated(
   filterValues: () => any,
   listSrc: MessageSourceType,
+  limit = 10,
 ) {
   const $reload = Late();
   const $search = Late(1);
@@ -26,7 +37,20 @@ export function ListPaginated(
 
   const $listFilter = Tick(
     Polling(
-      Once(RecordTruncated($filter, ["", null, undefined])),
+      Once(
+        RecordTruncated(
+          Computed(
+            merge,
+            New(() => ({})),
+            $filter,
+            Record({
+              page: $page,
+              limit,
+            }),
+          ),
+          ["", null, undefined],
+        ),
+      ),
       Any($actualSearch, $reload),
     ),
   );

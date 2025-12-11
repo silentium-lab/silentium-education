@@ -26,7 +26,15 @@ export function MongoTransport(url: string) {
           const postProcess = context.params?.postProcess;
           if (postProcess) {
             const postProcessArgs = context.params?.postProcessArgs ?? [];
-            result = await result[postProcess](...postProcessArgs);
+            if (Array.isArray(postProcess)) {
+              await Promise.all(
+                await postProcess.map(async (p) => {
+                  result = await result[p[0]](...(p.slice(1) ?? []));
+                }),
+              );
+            } else {
+              result = await result[postProcess](...postProcessArgs);
+            }
           }
           context.result?.(result);
         } catch (e) {

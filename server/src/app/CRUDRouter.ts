@@ -46,6 +46,8 @@ export const CRUDRouter = (
           const $url = UrlFromMessage(detachedReq);
           const $filter = OnlyKnownFields(Race(UrlParams($url), Tick(Of({}))), [
             "title",
+            "page",
+            "limit",
           ]);
           Chainable($error).chain(Path(Catch($filter) as any, "message"));
           const $data = Shared(List(collectionName, $filter));
