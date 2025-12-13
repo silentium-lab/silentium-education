@@ -1,12 +1,12 @@
 import { ObjectId } from "mongodb";
-import { All, Applied, Context, Message, MessageType, Of } from "silentium";
-import { Record } from "silentium-components";
+import { All, Applied, Context, MessageType, Of } from "silentium";
+import { Path, Record } from "silentium-components";
 import { UrlParam } from "../string/UrlParam";
 
 export function Removed<T>($url: MessageType<string>, collection: string) {
-  return Message<T>((res, rej) => {
-    const $id = UrlParam($url, Of("id"));
-    const context = Context<T>(
+  const $id = UrlParam($url, Of("id"));
+  return Path<T>(
+    Context<object>(
       Record({
         transport: "db",
         params: Record({
@@ -19,8 +19,7 @@ export function Removed<T>($url: MessageType<string>, collection: string) {
           ),
         }),
       }),
-    );
-    context.then(res);
-    context.catch(rej);
-  });
+    ),
+    "data",
+  );
 }

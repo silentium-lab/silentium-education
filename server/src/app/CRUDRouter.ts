@@ -20,7 +20,7 @@ import {
 import { NotFoundSrc } from "../../store";
 import { Created } from "../modules/mongo/Created";
 import { Entity } from "../modules/mongo/Entity";
-import { List } from "../modules/mongo/List";
+import { List, ListWithMeta } from "../modules/mongo/List";
 import { Removed } from "../modules/mongo/Removed";
 import { Updated } from "../modules/mongo/Updated";
 import { Query } from "../modules/string/Query";
@@ -33,11 +33,11 @@ export const CRUDRouter = (
   req: MessageType<IncomingMessage>,
   baseUrl: string,
   collectionName: string,
-): MessageType<string> => {
+): MessageType<object> => {
   const detachedReq = Detached<any>(req);
   return Router<any>(
     Query(detachedReq),
-    Of([
+    [
       {
         pattern: `^GET:${baseUrl}(\\?[^#]*)?$`,
         patternFlags: "g",
@@ -50,11 +50,12 @@ export const CRUDRouter = (
             "limit",
           ]);
           Chainable($error).chain(Path(Catch($filter) as any, "message"));
-          const $data = Shared(List(collectionName, $filter));
+          const $data = Shared(ListWithMeta(collectionName, $filter));
           return Truncated(
             Record({
               status: Any(200, Shot(Of(500), $error)),
-              data: Any($data, Shot<unknown>(Of(""), $error)),
+              data: Any(Path($data, "data"), Shot<unknown>(Of(""), $error)),
+              meta: Any(Path($data, "meta"), Shot<unknown>(Of(""), $error)),
               error: Any($error, Shot(Of(""), $data)),
             }),
             [""],
@@ -123,7 +124,7 @@ export const CRUDRouter = (
           );
         },
       },
-    ]),
+    ],
     NotFoundSrc,
   );
 };

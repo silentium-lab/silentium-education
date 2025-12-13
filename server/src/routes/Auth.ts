@@ -66,37 +66,43 @@ function UpdateCounter(
   $passkey: MessageType<Passkey>,
   $counter: MessageType<number>,
 ) {
-  return Context(
-    Record({
-      transport: "db",
-      params: Record({
-        method: "updateOne",
-        collection: "user-passkeys",
-        args: All(
-          Record({
-            _id: Path($passkey, "_id"),
-          }),
-          Record({
-            $set: Record({
-              counter: $counter,
+  return Path(
+    Context<object>(
+      Record({
+        transport: "db",
+        params: Record({
+          method: "updateOne",
+          collection: "user-passkeys",
+          args: All(
+            Record({
+              _id: Path($passkey, "_id"),
             }),
-          }),
-        ),
+            Record({
+              $set: Record({
+                counter: $counter,
+              }),
+            }),
+          ),
+        }),
       }),
-    }),
+    ),
+    "data",
   );
 }
 
 function NewPassKey($form: MessageType) {
-  return Context(
-    Record({
-      transport: "db",
-      params: Record({
-        method: "insertOne",
-        collection: "user-passkeys",
-        args: All($form),
+  return Path<object>(
+    Context(
+      Record({
+        transport: "db",
+        params: Record({
+          method: "insertOne",
+          collection: "user-passkeys",
+          args: All($form),
+        }),
       }),
-    }),
+    ),
+    "data",
   );
 }
 

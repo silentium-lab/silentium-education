@@ -1,5 +1,5 @@
 import { All, Applied, Context, MessageType } from "silentium";
-import { Record } from "silentium-components";
+import { Path, Record } from "silentium-components";
 
 export function Sid(): MessageType<string[]> {
   return Applied(
@@ -14,27 +14,30 @@ export function Sid(): MessageType<string[]> {
         }),
       }),
     ),
-    (r: any) => r.map((i: any) => i.sid),
+    (r: any) => r.data.map((i: any) => i.sid),
   );
 }
 
 export function NewSid($sid: MessageType) {
-  return Context(
-    Record({
-      transport: "db",
-      params: Record({
-        method: "insertOne",
-        collection: "sessions",
-        args: All(
-          Record({
-            sid: $sid,
-            createdAt: 1,
-          }),
-          {
-            expireAfterSeconds: 3600,
-          },
-        ),
+  return Path(
+    Context<object>(
+      Record({
+        transport: "db",
+        params: Record({
+          method: "insertOne",
+          collection: "sessions",
+          args: All(
+            Record({
+              sid: $sid,
+              createdAt: 1,
+            }),
+            {
+              expireAfterSeconds: 3600,
+            },
+          ),
+        }),
       }),
-    }),
+    ),
+    "data",
   );
 }

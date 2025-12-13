@@ -16,10 +16,13 @@ export function MongoTransport(url: string) {
       .connect()
       .then(async () => {
         try {
+          console.log(JSON.stringify(context));
           const db = client.db(dbName);
           const collection = db.collection(
             context.params?.collection ?? "unknown",
           );
+          const total = await collection.countDocuments({});
+          console.log("total", total);
           const args = context.params?.args ?? [];
           const method = context.params?.method;
           let result = await (collection as any)[method](...args);
@@ -36,7 +39,11 @@ export function MongoTransport(url: string) {
               result = await result[postProcess](...postProcessArgs);
             }
           }
-          context.result?.(result);
+          console.log("res", JSON.stringify(result));
+          context.result?.({
+            data: result,
+            meta: { total },
+          });
         } catch (e) {
           context.error?.(e);
         }

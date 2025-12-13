@@ -4,12 +4,13 @@ import { Router } from "silentium-components";
 import { CRUDRouter } from "../app/CRUDRouter";
 import { Query } from "../modules/string/Query";
 import { Logout } from "./Logout";
+import { NotFoundSrc } from "../../store";
 
 export function Private(req: MessageType<IncomingMessage>) {
   return Message((transport) => {
     const rd = Router(
       Query(req),
-      Of([
+      [
         {
           pattern: "^.+:/private/logout.*$",
           message: Logout,
@@ -30,8 +31,8 @@ export function Private(req: MessageType<IncomingMessage>) {
           pattern: "^.+:/private/settings.*$",
           message: () => CRUDRouter(req, "/private/settings", "settings"),
         },
-      ]),
-      () => Of("Private not found"),
+      ],
+      NotFoundSrc,
     );
     rd.then(transport);
 

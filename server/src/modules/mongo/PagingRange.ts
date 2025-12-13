@@ -3,7 +3,7 @@
  */
 export function PagingRange(page: number, limit: number) {
   return [
-    ["skip", 0],
+    ["skip", (page - 1) * limit],
     ["limit", limit],
   ];
 }

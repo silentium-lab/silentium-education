@@ -12,7 +12,7 @@ export function ArticleFilter(
   const $title = Part<string>($filter, "title");
   return Template(
     (t) => `
-        <div>
+        <div class="mb-4">
           <div class="mb-2">
             <span>${t.var(Tr("Title"))}</span>
             ${t.var(Input($title))}

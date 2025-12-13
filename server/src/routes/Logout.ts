@@ -1,17 +1,15 @@
-import { Applied, Context, Message } from "silentium";
+import { Applied, Context } from "silentium";
 
 export function Logout() {
-  return Message((resolve, reject) => {
-    Applied(
-      Context({
-        transport: "db",
-        params: {
-          method: "deleteMany",
-          collection: "sessions",
-          args: [{}],
-        },
-      }).catch(reject),
-      () => ({ done: true }),
-    ).then(resolve);
-  });
+  return Applied(
+    Context({
+      transport: "db",
+      params: {
+        method: "deleteMany",
+        collection: "sessions",
+        args: [{}],
+      },
+    }),
+    () => ({ done: true }),
+  );
 }
