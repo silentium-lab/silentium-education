@@ -1,9 +1,21 @@
-import { MessageType, Of } from "silentium";
+import { MessageType } from "silentium";
 import { FromJson, Path } from "silentium-components";
 
+export function ServerAllResponse($base: MessageType<string>) {
+  return FromJson($base);
+}
+
 /**
- * Base backend format
+ * Base backend response
+ * from data field
  */
 export function ServerResponse($base: MessageType<string>) {
-  return Path<any>(FromJson($base), Of("data"));
+  return Path<unknown[]>(ServerAllResponse($base), "data");
+}
+
+/**
+ * Backend response from meta field
+ */
+export function ServerMeta($base: MessageType<string>) {
+  return Path<object>(ServerAllResponse($base), "meta");
 }

@@ -72,5 +72,6 @@ export function ListPaginated(
     $listFilter,
     $loading,
     $error,
+    limit,
   };
 }
