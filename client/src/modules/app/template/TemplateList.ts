@@ -23,7 +23,7 @@ import { Path, Shot, Template } from "silentium-components";
 export function TemplateList(
   $config: MessageType<TemplateConfig>,
   $creationLabel: MessageType<string>,
-  $filter: MessageType<Record<string, unknown>>,
+  $filter: MessageType<object>,
   itemTemplate: ConstructorType<[MessageType, SourceType], MessageType<string>>,
 ) {
   const $reload = Late<any>();
@@ -34,10 +34,12 @@ export function TemplateList(
   );
   const $list = Shared(ServerResponse($listResponse));
   const $meta = ServerMeta($listResponse);
+  const $total = Path($meta, "total");
 
   return {
     $list: $list,
     $meta,
+    $total,
     $template: Template(
       (t) => `<div class="article">
       <h1 class="title-1">${t.var(Local($title))}</h1>

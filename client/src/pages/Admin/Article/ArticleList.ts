@@ -16,14 +16,14 @@ import {
   Map,
   Primitive,
 } from "silentium";
-import { Concatenated, Path, Template } from "silentium-components";
+import { Template } from "silentium-components";
 
 export function ArticleList() {
   const $t = Tr("Articles");
   $title.chain($t);
   const $config = ArticleConfig();
-  const $filter = Late<any>();
-  const { $template, $list, $meta } = TemplateList(
+  const $filter = Late<object>();
+  const { $template, $list, $total } = TemplateList(
     $config,
     Tr("Create article"),
     $filter,
@@ -38,12 +38,11 @@ export function ArticleList() {
   $filter.chain(list.$listFilter);
   Chainable(list.$error).chain(Catch($list));
 
-  list.$page.then(console.log);
-  const $pages = Computed(PagesRange, Path($meta, "total"), list.limit);
+  const $pages = Computed(PagesRange, $total, list.limit);
 
   return Template(
     (t) => `
-    <div>
+    <div class="articles">
       ${t.var(ArticleFilter(list.$filter, list.$search, list.$reset))}
       ${t.var(Computed((v) => (v ? "Loading..." : ""), list.$loading))}
       ${t.var($template)}
