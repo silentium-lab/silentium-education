@@ -6,8 +6,10 @@ import { ClickedId } from "@/modules/ClickedId";
 import { Encoded } from "@/modules/string/Encoded";
 import { Tr } from "@/store";
 import {
+  ActualMessage,
   Chainable,
   Late,
+  MaybeMessage,
   MessageType,
   New,
   Of,
@@ -30,7 +32,7 @@ export function TemplateItem(
   $config: MessageType<TemplateConfig>,
   $item: MessageType<any>,
   reload: SourceType,
-  $titleField = Of("title"),
+  $titleField?: MaybeMessage<string>,
 ) {
   const removeTrigger = Late();
 
@@ -69,7 +71,7 @@ export function TemplateItem(
               $config: Path($config, "path"),
             }),
           ),
-          Encoded(Path($item, $titleField)),
+          ActualMessage($titleField ?? Encoded(Path($item, "title"))),
           Of("underline"),
         ),
       )}

@@ -1,3 +1,4 @@
+import { Checkbox } from "@/components/Checkbox";
 import { Editor } from "@/components/Editor";
 import { Error } from "@/components/Error";
 import { Input } from "@/components/Input";
@@ -24,6 +25,7 @@ export function ArticleForm(
   const $content = Part<string>($form, "content");
   const $category = Part<string>($form, "category_id");
   const $section = Part<string>($form, "section_id");
+  const $published = Part<boolean>($form, "published");
 
   const $categories = Categories();
   const $sections = Sections();
@@ -46,6 +48,9 @@ export function ArticleForm(
           ${t.var(Tr("Name"))}: ${t.var(Mount(Error("title", $errors), "span"))}
         </div>
         ${t.var(Input($title))}
+      </div>
+      <div class="mb-2">
+        ${t.var(Checkbox(Tr("Published"), $published))}
       </div>
       <div class="mb-2">
         <div class="font-bold">

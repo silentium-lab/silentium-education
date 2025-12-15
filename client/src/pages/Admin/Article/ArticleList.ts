@@ -1,12 +1,14 @@
 import { Button } from "@/components/Button";
+import { Published } from "@/components/common/Published";
 import { ListPaginated } from "@/models/common/ListPaginated";
 import { PagesRange } from "@/models/common/PagesRange";
 import { TemplateItem } from "@/modules/app/template/TemplateItem";
 import { TemplateList } from "@/modules/app/template/TemplateList";
+import { Encoded } from "@/modules/string/Encoded";
 import { ArticleConfig } from "@/pages/Admin/Article/ArticleConfig";
 import { ArticleFilter } from "@/pages/Admin/Article/ArticleFilter";
 import { $title, Tr } from "@/store";
-import { join, partial, partialRight } from "lodash-es";
+import { join, partialRight } from "lodash-es";
 import {
   Applied,
   Catch,
@@ -14,9 +16,9 @@ import {
   Computed,
   Late,
   Map,
-  Primitive,
+  Primitive
 } from "silentium";
-import { Branch, Template } from "silentium-components";
+import { Branch, Path, Template } from "silentium-components";
 
 export function ArticleList() {
   const $t = Tr("Articles");
@@ -27,7 +29,16 @@ export function ArticleList() {
     $config,
     Tr("Create article"),
     $filter,
-    partial(TemplateItem, $config),
+    ($item: any, $reload) =>
+      TemplateItem(
+        $config,
+        $item,
+        $reload,
+        Template(
+          (t) =>
+            `<div class="grid grid-cols-[1fr_1fr] w-full mb-2 gap-2"><div>${t.var(Encoded(Path($item, "title")))}</div><div>${t.var(Published(Path($item, "published", false)))}</div></div>`,
+        ),
+      ),
   );
   const list = ListPaginated(
     () => ({

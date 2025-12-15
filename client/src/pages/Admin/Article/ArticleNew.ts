@@ -10,5 +10,6 @@ export function ArticleNew() {
     content: undefined,
     category_id: undefined,
     section_id: undefined,
+    published: false,
   });
 }
