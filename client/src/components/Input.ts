@@ -8,7 +8,7 @@ import { Element } from "silentium-web-api";
 export function Input($value: MessageSourceType<string>) {
   return Template(
     (t) => `
-      <input name="title" class="${t.var(InputId($value))} border-1 p-2 rounded-sm w-full" />
+      <input name="title" class="${t.var(InputId($value))} border-1 border-gray-300 bg-white p-2 rounded-sm w-full" />
     `,
   );
 }

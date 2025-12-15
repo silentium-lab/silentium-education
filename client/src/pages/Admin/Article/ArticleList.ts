@@ -16,7 +16,7 @@ import {
   Map,
   Primitive,
 } from "silentium";
-import { Template } from "silentium-components";
+import { Branch, Template } from "silentium-components";
 
 export function ArticleList() {
   const $t = Tr("Articles");
@@ -49,11 +49,21 @@ export function ArticleList() {
       <hr class="mt-2 mb-2" />
       <div class="flex gap-2">
         ${t.var(
-          Applied(
-            Map($pages, (page) =>
-              Button(page, "btn", list.$page, "", Primitive(page).primitive()),
+          Branch(
+            Applied($pages, (p) => p.length > 1),
+            Applied(
+              Map($pages, (page) =>
+                Button(
+                  page,
+                  "btn",
+                  list.$page,
+                  "",
+                  Primitive(page).primitive(),
+                ),
+              ),
+              partialRight(join, ""),
             ),
-            partialRight(join, ""),
+            "",
           ),
         )}
       </div>

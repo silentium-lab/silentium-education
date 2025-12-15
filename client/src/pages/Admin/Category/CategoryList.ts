@@ -7,7 +7,7 @@ import { CategoryConfig } from "@/pages/Admin/Category/CategoryConfig";
 import { $title, Tr } from "@/store";
 import { join, partial, partialRight } from "lodash-es";
 import { Applied, Computed, Late, Map, Primitive } from "silentium";
-import { Template } from "silentium-components";
+import { Branch, Template } from "silentium-components";
 
 export function CategoryList() {
   const $t = Tr("Categories");
@@ -17,7 +17,7 @@ export function CategoryList() {
   const $filter = Late<object>({});
   const { $template, $list, $total } = TemplateList(
     $config,
-    Tr("Create section"),
+    Tr("Create category"),
     $filter,
     partial(TemplateItem, $config),
   );
@@ -33,11 +33,21 @@ export function CategoryList() {
       <hr class="mt-2 mb-2" />
       <div class="flex gap-2">
         ${t.var(
-          Applied(
-            Map($pages, (page) =>
-              Button(page, "btn", list.$page, "", Primitive(page).primitive()),
+          Branch(
+            Applied($pages, (p) => p.length > 1),
+            Applied(
+              Map($pages, (page) =>
+                Button(
+                  page,
+                  "btn",
+                  list.$page,
+                  "",
+                  Primitive(page).primitive(),
+                ),
+              ),
+              partialRight(join, ""),
             ),
-            partialRight(join, ""),
+            "",
           ),
         )}
       </div>

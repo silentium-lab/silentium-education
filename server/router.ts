@@ -1,5 +1,5 @@
 import type { IncomingMessage } from "node:http";
-import { MessageType, Of } from "silentium";
+import { MessageType, Of, Piped } from "silentium";
 import { Deadline, Detached, Router, Tick } from "silentium-components";
 import { Query } from "./src/modules/string/Query";
 import { Auth } from "./src/routes/Auth";
@@ -8,6 +8,7 @@ import { Health } from "./src/routes/Health";
 import { Private } from "./src/routes/Private";
 import { NotFoundSrc } from "./store";
 import { AuthGuard } from "./src/guards/AuthGuard";
+import { partial } from "lodash-es";
 
 export const router = (req: MessageType<IncomingMessage>) => {
   const subReq = Detached(req);
@@ -29,7 +30,7 @@ export const router = (req: MessageType<IncomingMessage>) => {
         },
         {
           pattern: "^.+:/private.+$",
-          message: () => AuthGuard(subReq, Private(subReq)),
+          message: () => AuthGuard(subReq, partial(Private, subReq)),
         },
       ]),
       NotFoundSrc,

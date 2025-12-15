@@ -40,10 +40,11 @@
   "dependencies": {
     "@ownid/webauthn": "^1.0.0",
     "@simplewebauthn/browser": "^13.2.2",
+    "easymde": "^2.20.0",
     "lodash-es": "^4.17.21",
     "mustache": "^4.2.0",
     "silentium": "^0.0.173",
-    "silentium-components": "^0.0.95",
+    "silentium-components": "^0.0.97",
     "silentium-morphdom": "^0.0.24",
     "silentium-validation": "^0.0.4",
     "silentium-web-api": "^0.0.35",

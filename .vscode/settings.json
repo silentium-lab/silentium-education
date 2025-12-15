@@ -4,5 +4,8 @@
         "server",
         "client",
         "common"
+    ],
+    "cSpell.words": [
+        "easymde"
     ]
 }

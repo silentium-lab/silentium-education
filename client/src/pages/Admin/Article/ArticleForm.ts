@@ -1,7 +1,7 @@
+import { Editor } from "@/components/Editor";
 import { Error } from "@/components/Error";
 import { Input } from "@/components/Input";
 import { Select } from "@/components/Select";
-import { Textarea } from "@/components/Textarea";
 import { Categories } from "@/models/categories/Categries";
 import { Sections } from "@/models/sections/Sections";
 import { Mount } from "@/modules/render/Mount";
@@ -63,7 +63,7 @@ export function ArticleForm(
         <div class="font-bold">
           ${t.var(Tr("Content"))}: ${t.var(Mount(Error("content", $errors), "span"))}
         </div>
-        ${t.var(Textarea($content))}
+        ${t.var(Editor($content))}
       </div>
       <hr>
     </div>`,

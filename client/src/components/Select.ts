@@ -18,7 +18,7 @@ export function Select(
 ) {
   return Template(
     (t) => `
-      <select class="${t.var(SelectId($value))} border-1 p-2 rounded-sm w-full">
+      <select class="${t.var(SelectId($value))} border-1 border-gray-300 bg-white p-2 rounded-sm w-full">
         <option value=""></option>
         ${t.var(
           Applied($items, (s) =>
