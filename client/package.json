@@ -43,7 +43,7 @@
     "easymde": "^2.20.0",
     "lodash-es": "^4.17.21",
     "mustache": "^4.2.0",
-    "silentium": "^0.0.173",
+    "silentium": "^0.0.180",
     "silentium-components": "^0.0.98",
     "silentium-morphdom": "^0.0.24",
     "silentium-validation": "^0.0.4",

@@ -6,7 +6,7 @@ import { Auth } from "@/pages/Admin/Auth";
 import { CategoryRouter } from "@/pages/Admin/Category/CategoryRouter";
 import { SectionRouter } from "@/pages/Admin/Section/SectionRouter";
 import { $title, $url, Tr } from "@/store";
-import { Filtered, Late, Of } from "silentium";
+import { Connected, Filtered, Late, Of } from "silentium";
 import { Detached, Polling, Router, Template } from "silentium-components";
 
 export function Admin() {
@@ -67,5 +67,5 @@ export function Admin() {
   );
   result.chain(t);
 
-  return result;
+  return Connected(result, t, rd);
 }

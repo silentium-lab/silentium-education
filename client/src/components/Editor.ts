@@ -6,6 +6,7 @@ import {
   All,
   Any,
   Chainable,
+  Connected,
   DestroyContainer,
   Message,
   MessageSourceType,
@@ -30,6 +31,8 @@ const EditorValue = (
           dc.destroy();
           let easyMDE: EasyMDE | null = new EasyMDE({
             element,
+            initialValue: value,
+            spellChecker: false,
             toolbar: [
               "bold",
               "italic",
@@ -52,7 +55,6 @@ const EditorValue = (
               easyMDE = null;
             }
           });
-          easyMDE.value(value);
           easyMDE.codemirror.on("change", () => {
             if (easyMDE !== null) {
               resolve(easyMDE.value());
@@ -60,9 +62,7 @@ const EditorValue = (
           });
         });
 
-      return () => {
-        dc.destroy();
-      };
+      return dc.destructor();
     }),
   );
 
@@ -72,6 +72,11 @@ const EditorValue = (
 export function Editor($value: MessageSourceType<string>) {
   const $id = Shared(Id());
   const $el = Shared(Element<HTMLInputElement>(ClassName($id)));
-  Chainable($value).chain(EditorValue($el, $value));
-  return Template((t) => `<textarea class="${t.var($id)}"></textarea>`);
+  const $editorValue = EditorValue($el, $value);
+  Chainable($value).chain($editorValue);
+  return Connected(
+    Template((t) => `<textarea class="${t.var($id)}"></textarea>`),
+    $editorValue,
+    $el,
+  );
 }
