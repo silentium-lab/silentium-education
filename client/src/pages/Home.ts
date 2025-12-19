@@ -1,22 +1,20 @@
-import { Counter } from "@/chunks/Counter";
-import { Link } from "@/components/Link";
-import { $lang, $title, Tr } from "@/store";
-import { Local, Of } from "silentium";
+import { $title, Tr } from "@/store";
+import { Context } from "silentium";
 import { Template } from "silentium-components";
 
 export function Home() {
   $title.chain(Tr("home"));
+  const $articles = Context("request", {
+    method: "get",
+    model: "articles",
+  });
   return Template(
     (t) => `<section class="article">
 	  <h1 class="title-1">
 	    Silentium
 	  </h1>
-	  <div class="mb-3">${t.var(Counter())}</div>
-      <div>
-        Lang: ${t.var(Local($lang))}
-      </div>
 	  <div>
-	    ${t.var(Link(Of("/admin/articles"), Of("Статьи"), Of("underline")))}
+		${t.var($articles)}
 	  </div>
 	</section>`,
   );
