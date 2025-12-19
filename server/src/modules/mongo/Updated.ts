@@ -1,7 +1,14 @@
 import { IncomingMessage } from "http";
 import { ObjectId } from "mongodb";
 import getRawBody from "raw-body";
-import { All, Applied, Context, Message, MessageType } from "silentium";
+import {
+  All,
+  Applied,
+  Computed,
+  Context,
+  Message,
+  MessageType,
+} from "silentium";
 import { Record } from "silentium-components";
 import { UrlFromMessage } from "../string/UrlFromMessage";
 import { UrlId } from "../string/UrlId";
@@ -11,7 +18,7 @@ export function Updated<T>(
   collection: string,
 ) {
   return Message<T>((res, rej) => {
-    const $id = UrlId(UrlFromMessage($req));
+    const $id = UrlId(Computed(UrlFromMessage, $req));
 
     $req.then(async (req) => {
       try {

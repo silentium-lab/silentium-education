@@ -3,7 +3,7 @@ import { Path, Record } from "silentium-components";
 import { PagingRange } from "./PagingRange";
 import { PagingSkip } from "./PagingSkip";
 
-export function List<T>(
+export function List<T extends object>(
   collection: string,
   conditions: MessageType<any> = Of({}),
 ): MessageType<T[]> {

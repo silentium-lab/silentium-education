@@ -3,6 +3,7 @@ import {
   Any,
   Catch,
   Chainable,
+  Computed,
   Context,
   Late,
   MessageType,
@@ -36,12 +37,11 @@ export const CRUDRouter = (
         patternFlags: "g",
         message: () => {
           const $error = Late();
-          const $url = UrlFromMessage($req);
-          const $filter = OnlyKnownFields(Race(UrlParams($url), Tick(Of({}))), [
-            "title",
-            "page",
-            "limit",
-          ]);
+          const $url = Computed(UrlFromMessage, $req);
+          const $filter = OnlyKnownFields(
+            Race(Computed(UrlParams, $url), Tick(Of({}))),
+            ["title", "page", "limit"],
+          );
           Chainable($error).chain(Path(Catch($filter) as any, "message"));
           const $data = Shared(ListWithMeta(collectionName, $filter));
           return Truncated(
@@ -58,7 +58,7 @@ export const CRUDRouter = (
       {
         pattern: `^GET:${baseUrl}/.+/$`,
         message: () => {
-          const $url = UrlFromMessage($req);
+          const $url = Computed(UrlFromMessage, $req);
           const $error = Late();
           const $data = Shared(Entity($url, collectionName));
           return Truncated(
@@ -105,7 +105,7 @@ export const CRUDRouter = (
         pattern: `^DELETE:${baseUrl}.*$`,
         message: () => {
           const $error = Late();
-          const $url = UrlFromMessage($req);
+          const $url = Computed(UrlFromMessage, $req);
           const $data = Shared(Removed($url, collectionName));
           return Truncated(
             Record({

@@ -8,5 +8,6 @@ export function SectionNew() {
   $title.chain($label);
   return TemplateNew(SectionConfig(), Tr("Sections"), SectionForm, {
     title: undefined,
+    code: undefined,
   });
 }

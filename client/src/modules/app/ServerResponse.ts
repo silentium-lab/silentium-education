@@ -10,7 +10,7 @@ export function ServerAllResponse($base: MessageType<string>) {
  * from data field
  */
 export function ServerResponse($base: MessageType<string>) {
-  return Path<unknown[]>(ServerAllResponse($base), "data");
+  return Path<any[]>(ServerAllResponse($base), "data");
 }
 
 /**
