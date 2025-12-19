@@ -1,7 +1,7 @@
 import { IncomingMessage } from "http";
 import { ObjectId } from "mongodb";
 import getRawBody from "raw-body";
-import { All, Applied, Context, Message, MessageType, Of } from "silentium";
+import { All, Applied, Context, Message, MessageType } from "silentium";
 import { Record } from "silentium-components";
 import { UrlFromMessage } from "../string/UrlFromMessage";
 import { UrlId } from "../string/UrlId";
@@ -18,19 +18,17 @@ export function Updated<T>(
         const body = await getRawBody(req);
         const bodyText = body.toString("utf8");
         const context = Context<T>(
+          "db",
           Record({
-            transport: Of("db"),
-            params: Record({
-              method: Of("findOneAndUpdate"),
-              collection: Of(collection),
-              args: All(
-                Record({
-                  _id: Applied($id, (id) => new ObjectId(id)),
-                }),
-                Of({ $set: JSON.parse(bodyText) }),
-                Of({ returnDocument: "after" }),
-              ),
-            }),
+            method: "findOneAndUpdate",
+            collection,
+            args: All(
+              Record({
+                _id: Applied($id, (id) => new ObjectId(id)),
+              }),
+              { $set: JSON.parse(bodyText) },
+              { returnDocument: "after" },
+            ),
           }),
         );
         context.then(res);

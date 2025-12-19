@@ -1,15 +1,16 @@
 import { IncomingMessage } from "http";
-import { Message, MessageType, Of } from "silentium";
+import { Context, Message } from "silentium";
 import { Router } from "silentium-components";
+import { NotFoundSrc } from "../../store";
 import { CRUDRouter } from "../app/CRUDRouter";
 import { Query } from "../modules/string/Query";
 import { Logout } from "./Logout";
-import { NotFoundSrc } from "../../store";
 
-export function Private(req: MessageType<IncomingMessage>) {
+export function Private() {
+  const $req = Context<IncomingMessage>("request");
   return Message((transport) => {
     const rd = Router(
-      Query(req),
+      Query($req),
       [
         {
           pattern: "^.+:/private/logout.*$",
@@ -17,19 +18,19 @@ export function Private(req: MessageType<IncomingMessage>) {
         },
         {
           pattern: "^.+:/private/articles.*$",
-          message: () => CRUDRouter(req, "/private/articles", "documents"),
+          message: () => CRUDRouter("/private/articles", "documents"),
         },
         {
           pattern: "^.+:/private/categories.*$",
-          message: () => CRUDRouter(req, "/private/categories", "categories"),
+          message: () => CRUDRouter("/private/categories", "categories"),
         },
         {
           pattern: "^.+:/private/sections.*$",
-          message: () => CRUDRouter(req, "/private/sections", "sections"),
+          message: () => CRUDRouter("/private/sections", "sections"),
         },
         {
           pattern: "^.+:/private/settings.*$",
-          message: () => CRUDRouter(req, "/private/settings", "settings"),
+          message: () => CRUDRouter("/private/settings", "settings"),
         },
       ],
       NotFoundSrc,

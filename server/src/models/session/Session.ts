@@ -3,12 +3,10 @@ import { Record } from "silentium-components";
 
 export function Session($key: MessageType<string>) {
   return Context(
+    "cache",
     Record({
-      transport: "cache",
-      params: Record({
-        method: "get",
-        key: $key,
-      }),
+      method: "get",
+      key: $key,
     }),
   );
 }

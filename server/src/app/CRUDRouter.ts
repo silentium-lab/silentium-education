@@ -3,20 +3,14 @@ import {
   Any,
   Catch,
   Chainable,
+  Context,
   Late,
   MessageType,
   Of,
   Race,
   Shared,
 } from "silentium";
-import {
-  Detached,
-  Path,
-  Record,
-  Router,
-  Shot,
-  Tick,
-} from "silentium-components";
+import { Path, Record, Router, Shot, Tick } from "silentium-components";
 import { NotFoundSrc } from "../../store";
 import { Created } from "../modules/mongo/Created";
 import { Entity } from "../modules/mongo/Entity";
@@ -30,20 +24,19 @@ import { Truncated } from "../modules/structure/Truncated";
 import { OnlyKnownFields } from "../modules/validation/OnlyKnownFIelds";
 
 export const CRUDRouter = (
-  req: MessageType<IncomingMessage>,
   baseUrl: string,
   collectionName: string,
 ): MessageType<object> => {
-  const detachedReq = Detached<any>(req);
+  const $req = Context<IncomingMessage>("request");
   return Router<any>(
-    Query(detachedReq),
+    Query($req),
     [
       {
         pattern: `^GET:${baseUrl}(\\?[^#]*)?$`,
         patternFlags: "g",
         message: () => {
           const $error = Late();
-          const $url = UrlFromMessage(detachedReq);
+          const $url = UrlFromMessage($req);
           const $filter = OnlyKnownFields(Race(UrlParams($url), Tick(Of({}))), [
             "title",
             "page",
@@ -65,7 +58,7 @@ export const CRUDRouter = (
       {
         pattern: `^GET:${baseUrl}/.+/$`,
         message: () => {
-          const $url = UrlFromMessage(detachedReq);
+          const $url = UrlFromMessage($req);
           const $error = Late();
           const $data = Shared(Entity($url, collectionName));
           return Truncated(
@@ -82,7 +75,7 @@ export const CRUDRouter = (
         pattern: `^POST:${baseUrl}$`,
         message: () => {
           const $error = Late();
-          const $data = Shared(Created(detachedReq, collectionName));
+          const $data = Shared(Created($req, collectionName));
           return Truncated(
             Record({
               status: Any(200, Shot(Of(500), $error)),
@@ -97,7 +90,7 @@ export const CRUDRouter = (
         pattern: `^PUT:${baseUrl}/.+/$`,
         message: () => {
           const $error = Late();
-          const $data = Shared(Updated(detachedReq, collectionName));
+          const $data = Shared(Updated($req, collectionName));
           return Truncated(
             Record({
               status: Any(200, Shot(Of(500), $error)),
@@ -112,7 +105,7 @@ export const CRUDRouter = (
         pattern: `^DELETE:${baseUrl}.*$`,
         message: () => {
           const $error = Late();
-          const $url = UrlFromMessage(detachedReq);
+          const $url = UrlFromMessage($req);
           const $data = Shared(Removed($url, collectionName));
           return Truncated(
             Record({

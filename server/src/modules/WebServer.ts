@@ -1,5 +1,26 @@
+import { AsyncLocalStorage } from "node:async_hooks";
 import http, { IncomingMessage } from "node:http";
-import { ConstructorType, Message, MessageType, Of, Shared } from "silentium";
+import {
+  ConstructorType,
+  ContextOf,
+  ContextType,
+  Message,
+  MessageType,
+  Of,
+  Shared,
+} from "silentium";
+
+const requestStorage = new AsyncLocalStorage();
+
+// Configure request to every thread
+ContextOf("request").then((context: ContextType) => {
+  const req = requestStorage.getStore();
+  if (req && context.result) {
+    context.result(req);
+  } else if (context.error) {
+    context.error("No request in context!");
+  }
+});
 
 export function WebServer(
   processSrc: ConstructorType<
@@ -32,7 +53,14 @@ export function WebServer(
         res.end("");
       } else {
         const process = Shared(processSrc(Of(req)));
-        process.then((v) => {
+        const processInStore = Message<Record<string, unknown>>(
+          (resolve, reject) => {
+            requestStorage.run(req, () => {
+              process.catch(reject).then(resolve);
+            });
+          },
+        );
+        processInStore.then((v) => {
           headers();
           if (v.headers) {
             Object.entries(v.headers).forEach(([name, value]) => {

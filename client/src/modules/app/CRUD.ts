@@ -31,14 +31,12 @@ class CRUDImpl {
    */
   public list<R = unknown>($search?: MessageType<Record<string, unknown>>) {
     const $r = Context<R>(
+      this.$transport,
       Record({
-        transport: this.$transport,
-        params: Record({
-          method: "get",
-          model: this.$model,
-          query: $search ?? {},
-          credentials: "include",
-        }),
+        method: "get",
+        model: this.$model,
+        query: $search ?? {},
+        credentials: "include",
       }),
     );
 
@@ -52,13 +50,11 @@ class CRUDImpl {
    */
   public entity<R = unknown>($id: MessageType<string>) {
     const $r = Context<R>(
+      this.$transport,
       Record({
-        transport: this.$transport,
-        params: Record({
-          method: "get",
-          model: Concatenated([this.$model, Of("/"), $id, Of("/")]),
-          credentials: "include",
-        }),
+        method: "get",
+        model: Concatenated([this.$model, Of("/"), $id, Of("/")]),
+        credentials: "include",
       }),
     );
 
@@ -72,14 +68,12 @@ class CRUDImpl {
    */
   public custom<R = unknown>($search?: MessageType<Record<string, unknown>>) {
     const $r = Context<R>(
+      this.$transport,
       Record({
-        transport: this.$transport,
-        params: Record({
-          method: "get",
-          model: this.$model,
-          query: $search ?? {},
-          credentials: "include",
-        }),
+        method: "get",
+        model: this.$model,
+        query: $search ?? {},
+        credentials: "include",
       }),
     );
 
@@ -93,14 +87,12 @@ class CRUDImpl {
    */
   public created<R = unknown>($form: MessageType) {
     const $r = Context<R>(
+      this.$transport,
       Record({
-        transport: this.$transport,
-        params: Record({
-          method: "post",
-          model: this.$model,
-          body: $form,
-          credentials: "include",
-        }),
+        method: "post",
+        model: this.$model,
+        body: $form,
+        credentials: "include",
       }),
     );
 
@@ -114,14 +106,12 @@ class CRUDImpl {
    */
   public updated<R = unknown>($id: MessageType<string>, $form: MessageType) {
     const $r = Context<R>(
+      this.$transport,
       Record({
-        transport: this.$transport,
-        params: Record({
-          method: "put",
-          model: Concatenated([this.$model, Of("/"), $id, Of("/")]),
-          body: $form,
-          credentials: "include",
-        }),
+        method: "put",
+        model: Concatenated([this.$model, Of("/"), $id, Of("/")]),
+        body: $form,
+        credentials: "include",
       }),
     );
 
@@ -135,16 +125,14 @@ class CRUDImpl {
    */
   public deleted<R = unknown>($id: MessageType<string>) {
     const $r = Context<R>(
+      this.$transport,
       Record({
-        transport: this.$transport,
-        params: Record({
-          method: "delete",
-          model: this.$model,
-          query: Record({
-            id: $id,
-          }),
-          credentials: "include",
+        method: "delete",
+        model: this.$model,
+        query: Record({
+          id: $id,
         }),
+        credentials: "include",
       }),
     );
 

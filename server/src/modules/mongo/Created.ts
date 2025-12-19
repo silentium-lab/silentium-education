@@ -13,13 +13,10 @@ export function Created<T>(
         const body = await getRawBody(req);
         const bodyText = body.toString("utf8");
         const rpc = Path<T>(
-          Context<object>({
-            transport: "db",
-            params: {
-              method: "insertOne",
-              collection,
-              args: [JSON.parse(bodyText)],
-            },
+          Context<object>("db", {
+            method: "insertOne",
+            collection,
+            args: [JSON.parse(bodyText)],
           }),
           "data",
         );

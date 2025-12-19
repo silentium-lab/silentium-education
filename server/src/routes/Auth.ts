@@ -68,22 +68,20 @@ function UpdateCounter(
 ) {
   return Path(
     Context<object>(
+      "db",
       Record({
-        transport: "db",
-        params: Record({
-          method: "updateOne",
-          collection: "user-passkeys",
-          args: All(
-            Record({
-              _id: Path($passkey, "_id"),
+        method: "updateOne",
+        collection: "user-passkeys",
+        args: All(
+          Record({
+            _id: Path($passkey, "_id"),
+          }),
+          Record({
+            $set: Record({
+              counter: $counter,
             }),
-            Record({
-              $set: Record({
-                counter: $counter,
-              }),
-            }),
-          ),
-        }),
+          }),
+        ),
       }),
     ),
     "data",
@@ -93,13 +91,11 @@ function UpdateCounter(
 function NewPassKey($form: MessageType) {
   return Path<object>(
     Context(
+      "db",
       Record({
-        transport: "db",
-        params: Record({
-          method: "insertOne",
-          collection: "user-passkeys",
-          args: All($form),
-        }),
+        method: "insertOne",
+        collection: "user-passkeys",
+        args: All($form),
       }),
     ),
     "data",
@@ -107,20 +103,12 @@ function NewPassKey($form: MessageType) {
 }
 
 function PassKeyConfig() {
-  return Context<PassKeyConfigType>({
-    transport: "config",
-    params: { method: "get" },
-  });
+  return Context<PassKeyConfigType>("config");
 }
 
 export function Auth($req: MessageType<IncomingMessage>) {
   return Message((transport) => {
-    const $config = Context<PassKeyConfigType>({
-      transport: "config",
-      params: {
-        method: "get",
-      },
-    });
+    const $config = Context<PassKeyConfigType>("config");
 
     const rd = Router<any>(
       Query($req),
@@ -150,13 +138,10 @@ export function Auth($req: MessageType<IncomingMessage>) {
                         authenticatorAttachment: "platform",
                       },
                     });
-                  Context({
-                    transport: "cache",
-                    params: {
-                      method: "put",
-                      key: username,
-                      value: options,
-                    },
+                  Context("cache", {
+                    method: "put",
+                    key: username,
+                    value: options,
                   }).then(Void());
                   transport({
                     data: options,
@@ -169,18 +154,13 @@ export function Auth($req: MessageType<IncomingMessage>) {
           pattern: "^POST:/auth/registration/finish$",
           message: () =>
             Message<unknown>((resolve) => {
-              const $config = Context<PassKeyConfigType>({
-                transport: "config",
-                method: "get",
-              });
+              const $config = Context<PassKeyConfigType>("config");
               const $body = RequestBody<Record<string, any>>($req);
               const $options = Context<PassKeyChallenge>(
+                "cache",
                 Record({
-                  transport: "cache",
-                  params: Record({
-                    method: "get",
-                    key: Path($body, "username"),
-                  }),
+                  method: "get",
+                  key: Path($body, "username"),
                 }),
               );
               All($body, $options, $config).then(
@@ -255,16 +235,11 @@ export function Auth($req: MessageType<IncomingMessage>) {
                         transports: passkey.transports,
                       })),
                     });
-                  Context(
-                    Of({
-                      transport: "cache",
-                      params: {
-                        method: "put",
-                        key: `${body.username}-login`,
-                        value: options,
-                      },
-                    }),
-                  ).then(Void());
+                  Context("cache", {
+                    method: "put",
+                    key: `${body.username}-login`,
+                    value: options,
+                  }).then(Void());
                   resolve({
                     data: options,
                   });
@@ -280,12 +255,10 @@ export function Auth($req: MessageType<IncomingMessage>) {
               const $username = Path<string>($body, "username");
               const $passkey = ConcretePassKey($username);
               const $options = Context<PassKeyChallenge>(
+                "cache",
                 Record({
-                  transport: "cache",
-                  params: Record({
-                    method: "get",
-                    key: Concatenated([$username, Of("-login")]),
-                  }),
+                  method: "get",
+                  key: Concatenated([$username, Of("-login")]),
                 }),
               );
               const $config = PassKeyConfig();

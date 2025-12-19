@@ -15,21 +15,19 @@ export function ListWithMeta<T>(
   conditions: MessageType<any> = Of({}),
 ): MessageType<{ data: T[]; meta: unknown }> {
   return Context(
+    "db",
     Record({
-      transport: "db",
-      params: Record({
-        method: "find",
-        collection,
-        args: All(PagingSkip(conditions)),
-        postProcess: Applied(
-          Computed(
-            PagingRange,
-            Applied(Path(conditions, "page", 1), Number),
-            Applied(Path(conditions, "limit", 100), Number),
-          ),
-          (range) => [...range, ["toArray"]],
+      method: "find",
+      collection,
+      args: All(PagingSkip(conditions)),
+      postProcess: Applied(
+        Computed(
+          PagingRange,
+          Applied(Path(conditions, "page", 1), Number),
+          Applied(Path(conditions, "limit", 100), Number),
         ),
-      }),
+        (range) => [...range, ["toArray"]],
+      ),
     }),
   );
 }

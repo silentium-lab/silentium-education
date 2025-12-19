@@ -9,17 +9,15 @@ export function Entity<T>($url: MessageType<string>, collection: string) {
     const $id = UrlId($url);
     const rpc = Path<T>(
       Context<object>(
+        "db",
         Record({
-          transport: "db",
-          params: Record({
-            method: "findOne",
-            collection,
-            args: All(
-              Record({
-                _id: Applied($id, (id) => new ObjectId(id)),
-              }),
-            ),
-          }),
+          method: "findOne",
+          collection,
+          args: All(
+            Record({
+              _id: Applied($id, (id) => new ObjectId(id)),
+            }),
+          ),
         }),
       ),
       "data",
