@@ -29,10 +29,8 @@ export function LiveCodeExample($html: MessageType<string>) {
         const id = v4();
         return `
         ${match}
-        <div class="result border-gray-700 border-2 mb-2 p-2 id_${id}">
-            ${t.var(Tr("Press Run to see result"))}
-        </div>
         <div>${t.var(Button(Tr("Run"), "btn mb-2", $run, "", [decode(code), `.id_${id}`]))}</div>
+        <div class="result whitespace-pre border-gray-700 border-2 mb-2 p-2 id_${id}">${t.var(Tr("Press Run to see result"))}</div>
         `;
       }),
     );

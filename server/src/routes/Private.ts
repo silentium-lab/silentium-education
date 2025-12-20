@@ -1,5 +1,5 @@
 import { IncomingMessage } from "http";
-import { Context, Message } from "silentium";
+import { Context, Message, Of } from "silentium";
 import { Router } from "silentium-components";
 import { NotFoundSrc } from "../../store";
 import { CRUDRouter } from "../app/CRUDRouter";
@@ -15,6 +15,13 @@ export function Private() {
         {
           pattern: "^.+:/private/logout.*$",
           message: Logout,
+        },
+        {
+          pattern: "^.+:/private/auth$",
+          message: () =>
+            Of({
+              auth: true,
+            }),
         },
         {
           pattern: "^.+:/private/articles.*$",

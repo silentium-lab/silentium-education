@@ -16,7 +16,7 @@ export async function JSCodeResult(code: string, selector: string) {
         const url = URL.createObjectURL(blob);
         await import(url);
         URL.revokeObjectURL(url);
-        result.innerHTML = logs.join("");
+        result.innerHTML = logs.join("\n");
       } catch (e) {
         result.innerHTML = "Error: " + e.message;
       }

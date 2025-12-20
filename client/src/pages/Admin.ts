@@ -4,10 +4,12 @@ import { FromContext } from "@/modules/context/Context";
 import { ArticleRouter } from "@/pages/Admin/Article/ArticleRouter";
 import { Auth } from "@/pages/Admin/Auth";
 import { CategoryRouter } from "@/pages/Admin/Category/CategoryRouter";
+import { Dashboard } from "@/pages/Admin/Dashboard";
 import { SectionRouter } from "@/pages/Admin/Section/SectionRouter";
 import { $title, $url, Tr } from "@/store";
 import { Connected, Filtered, Late, Of } from "silentium";
 import { Detached, Polling, Router, Template } from "silentium-components";
+import { Log } from "silentium-web-api";
 
 export function Admin() {
   $title.use("Админ панель");
@@ -18,12 +20,14 @@ export function Admin() {
 
   result.chain(Polling<string>(Auth(), $error));
 
+  $error.then(Log("login error"));
+
   const rd = Router(
     $localUrl,
-    Of([
+    [
       {
         pattern: "^/admin$",
-        message: Auth,
+        message: Dashboard,
       },
       {
         pattern: "^/admin/articles.*$",
@@ -37,7 +41,7 @@ export function Admin() {
         pattern: "^/admin/categories.*$",
         message: CategoryRouter,
       },
-    ]),
+    ],
     () => Of("Admin page not found"),
   );
 
