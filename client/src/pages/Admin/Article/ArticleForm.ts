@@ -25,6 +25,7 @@ export function ArticleForm(
   const $content = Part<string>($form, "content");
   const $category = Part<string>($form, "category_id");
   const $section = Part<string>($form, "section_id");
+  const $code = Part<string>($form, "code");
   const $published = Part<boolean>($form, "published");
 
   const $categories = Categories();
@@ -36,6 +37,7 @@ export function ArticleForm(
       content: [RequiredTr],
       category_id: [RequiredTr],
       section_id: [RequiredTr],
+      code: [],
     }),
   );
   const $validated = Computed(Validated, $errors);
@@ -69,6 +71,12 @@ export function ArticleForm(
           ${t.var(Tr("Content"))}: ${t.var(Mount(Error("content", $errors), "span"))}
         </div>
         ${t.var(Editor($content))}
+      </div>
+      <div class="mb-2">
+        <div class="font-bold">
+          ${t.var(Tr("Code"))}: ${t.var(Mount(Error("code", $errors), "span"))}
+        </div>
+        ${t.var(Input($code))}
       </div>
       <hr>
     </div>`,
