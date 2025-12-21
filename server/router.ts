@@ -9,6 +9,7 @@ import { Health } from "./src/routes/Health";
 import { Private } from "./src/routes/Private";
 import { NotFoundSrc } from "./store";
 import { Articles } from "./src/routes/Articles";
+import { Categories } from "./src/routes/Categories";
 
 export const router = (req: MessageType<IncomingMessage>) => {
   const subReq = Detached(req);
@@ -31,6 +32,10 @@ export const router = (req: MessageType<IncomingMessage>) => {
         {
           pattern: "^GET:/articles.*$",
           message: Articles,
+        },
+        {
+          pattern: "^GET:/categories.*$",
+          message: Categories,
         },
         {
           pattern: "^.+:/private.+$",

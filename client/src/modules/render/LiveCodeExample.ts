@@ -20,7 +20,13 @@ import { v4 } from "uuid";
 export function LiveCodeExample($html: MessageType<string>) {
   return Applied($html, (html: string) => {
     const $run = Late<[string, string]>();
-    $run.then(() => {
+    $run.then((v) => {
+      Tr("Loading...").then((label) => {
+        const el = document.querySelector(v[1]);
+        if (el) {
+          el.innerHTML = label;
+        }
+      });
       $run.use(ResetSilenceCache as any);
     });
     AppliedDestructured($run, JSCodeResult).then(Void());

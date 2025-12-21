@@ -8,5 +8,7 @@ export function CategoryNew() {
   return TemplateNew(CategoryConfig(), Tr("Categories"), CategoryForm, {
     title: undefined,
     parent_id: undefined,
+    section_id: undefined,
+    code: undefined,
   });
 }

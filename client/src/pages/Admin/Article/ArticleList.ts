@@ -16,7 +16,7 @@ import {
   Computed,
   Late,
   Map,
-  Primitive
+  Primitive,
 } from "silentium";
 import { Branch, Path, Template } from "silentium-components";
 

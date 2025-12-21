@@ -8,7 +8,6 @@ import {
   Any,
   Applied,
   Chain,
-  Computed,
   ConstructorType,
   Late,
   Local,
@@ -18,7 +17,7 @@ import {
   Shared,
   SourceType,
 } from "silentium";
-import { Path, Shot, Template } from "silentium-components";
+import { Path, Polling, Template } from "silentium-components";
 
 export function TemplateList(
   $config: MessageType<TemplateConfig>,
@@ -29,7 +28,7 @@ export function TemplateList(
   const $reload = Late<any>();
   const $listResponse = Shared<string>(
     CRUD(Path($config, "model")).list(
-      Any(Computed(clone, Shot($filter, $reload)), $filter),
+      Any(Polling<any>(Applied($filter, clone), $reload), $filter),
     ),
   );
   const $list = Shared(ServerResponse($listResponse));

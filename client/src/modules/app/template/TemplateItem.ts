@@ -7,7 +7,6 @@ import { Encoded } from "@/modules/string/Encoded";
 import { Tr } from "@/store";
 import {
   ActualMessage,
-  Chainable,
   Late,
   MaybeMessage,
   MessageType,
@@ -19,7 +18,6 @@ import {
   SourceType,
 } from "silentium";
 import {
-  Constant,
   Detached,
   Path,
   Polling,
@@ -37,25 +35,24 @@ export function TemplateItem(
   const removeTrigger = Late();
 
   const localItem = Detached<any>($item);
-  const $removed = Shared(
+  const $removed = Shared<string>(
     CRUD(Path($config, "model")).deleted(
       Shot(Once(Path(localItem, "_id")), Once(removeTrigger)),
     ),
   );
-
-  Chainable(reload).chain(
-    Polling(
-      New(() => ({})),
-      $removed,
-    ),
-  );
+  $removed.then(() => {
+    reload.use(Date.now());
+  });
 
   $notification.chain(
-    Constant(
-      {
-        type: "success",
-        content: Primitive(Tr("Delete success")).primitiveWithException(),
-      } as const,
+    Polling(
+      New(
+        () =>
+          ({
+            type: "success",
+            content: Primitive(Tr("Delete success")).primitiveWithException(),
+          }) as const,
+      ),
       $removed,
     ),
   );
