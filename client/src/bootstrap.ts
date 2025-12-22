@@ -1,4 +1,5 @@
 import { DocumentTitle } from "@/modules/DocumentTitle";
+import { HistoryUrl } from "@/modules/HistoryUrl";
 import { ContextTransport } from "@/transports/ContextTransport";
 import { FetchAPITransport } from "@/transports/FetchAPITransport";
 import { merge } from "lodash-es";
@@ -9,6 +10,7 @@ import {
   ContextOf,
   DevTools,
   Late,
+  Shared,
 } from "silentium";
 
 DevTools();
@@ -30,3 +32,4 @@ export const $notification = Late<{
 }>();
 
 ContextOf("title").then(ContextChain(DocumentTitle()));
+ContextOf("url").then(ContextChain(Shared(HistoryUrl())));

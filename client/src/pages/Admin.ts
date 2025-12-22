@@ -71,5 +71,5 @@ export function Admin() {
   );
   result.chain(t);
 
-  return Connected(result, t, rd);
+  return Connected<string>(result, t, rd);
 }

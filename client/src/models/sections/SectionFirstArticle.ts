@@ -12,7 +12,7 @@ export function SectionFirstArticle(section: string) {
           method: "get",
           model: "articles",
           query: {
-            code: section,
+            section,
           },
         }),
       ),

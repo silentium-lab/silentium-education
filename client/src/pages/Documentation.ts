@@ -18,7 +18,7 @@ export function Documentation() {
                 return Applied(
                   category,
                   (c) => `<div>
-                  <a href="/documentation/${c.code}">
+                  <a href="/documentation/${c.code}/list">
                     ${c.title}
                   </a>
                 </div>`,

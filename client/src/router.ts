@@ -9,6 +9,7 @@ import { Router } from "silentium-components";
 import { NotFound } from "./pages/NotFound";
 import { $url } from "./store";
 import { AdminAuthGuard } from "@/pages/Admin/AdminAuthGuard";
+import { BlogView } from "@/pages/BlogView";
 
 export const $router = Shared(
   Router(
@@ -19,16 +20,20 @@ export const $router = Shared(
         message: Home,
       },
       {
-        pattern: "/about",
+        pattern: "^/about$",
         message: About,
       },
       {
-        pattern: "/documentation",
+        pattern: "^/documentation$|^/documentation.*/list$",
         message: Documentation,
       },
       {
-        pattern: "/blog",
+        pattern: "^/blog$|^/blog.*/list$",
         message: Blog,
+      },
+      {
+        pattern: "^/blog.*/view$",
+        message: BlogView,
       },
       {
         pattern: "/admin.*",
