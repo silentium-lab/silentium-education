@@ -2,15 +2,14 @@ import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerMeta, ServerResponse } from "@/modules/app/ServerResponse";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
-import { $title } from "@/store";
 import { clone } from "lodash-es";
 import {
   Any,
   Applied,
   Chain,
   ConstructorType,
+  Context,
   Late,
-  Local,
   Map,
   MessageType,
   Of,
@@ -35,13 +34,15 @@ export function TemplateList(
   const $meta = ServerMeta($listResponse);
   const $total = Path($meta, "total");
 
+  const $title = Context("title");
+
   return {
     $list: $list,
     $meta,
     $total,
     $template: Template(
       (t) => `<div class="article">
-      <h1 class="title-1">${t.var(Local($title))}</h1>
+      <h1 class="title-1">${t.var($title)}</h1>
       ${t.var(
         Link(
           Applied($config, (c) => `${c.path}/create`),

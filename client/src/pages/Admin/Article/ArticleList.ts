@@ -7,13 +7,14 @@ import { TemplateList } from "@/modules/app/template/TemplateList";
 import { Encoded } from "@/modules/string/Encoded";
 import { ArticleConfig } from "@/pages/Admin/Article/ArticleConfig";
 import { ArticleFilter } from "@/pages/Admin/Article/ArticleFilter";
-import { $title, Tr } from "@/store";
+import { Tr } from "@/store";
 import { join, partialRight } from "lodash-es";
 import {
   Applied,
   Catch,
   Chainable,
   Computed,
+  Context,
   Late,
   Map,
   Primitive,
@@ -21,8 +22,7 @@ import {
 import { Branch, Path, Template } from "silentium-components";
 
 export function ArticleList() {
-  const $t = Tr("Articles");
-  $title.chain($t);
+  Context("title").chain(Tr("Articles"));
   const $config = ArticleConfig();
   const $filter = Late<object>();
   const { $template, $list, $total } = TemplateList(

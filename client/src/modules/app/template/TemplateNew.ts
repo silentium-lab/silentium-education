@@ -5,13 +5,13 @@ import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
 import { Mount } from "@/modules/render/Mount";
-import { $title, $url, i18n, Tr } from "@/store";
+import { $url, Tr } from "@/store";
 import {
   Any,
   Applied,
   ConstructorType,
+  Context,
   Late,
-  Local,
   MessageSourceType,
   MessageType,
   Of,
@@ -73,10 +73,12 @@ export function TemplateNew(
 
   const $validated = Late(false);
 
+  const $title = Context("title");
+
   return Template(
     (t) => `<div class="article">
       ${t.var(Link(Path($config, "path"), $listLabel, Of("underline")))}
-      <h1 class="title-1">${t.var(Local($title))}</h1>
+      <h1 class="title-1">${t.var($title)}</h1>
       ${t.var(form($form, $validated))}
       ${t.var(
         Mount(

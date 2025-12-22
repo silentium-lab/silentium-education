@@ -4,10 +4,18 @@ import { InputId } from "@/components/Input";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { Mount } from "@/modules/render/Mount";
-import { $title, Tr } from "@/store";
+import { Tr } from "@/store";
 import { MinLength, RequiredTr } from "@/validations";
 import { startAuthentication } from "@simplewebauthn/browser";
-import { Computed, Late, MessageType, Of, Process, Shared } from "silentium";
+import {
+  Computed,
+  Context,
+  Late,
+  MessageType,
+  Of,
+  Process,
+  Shared,
+} from "silentium";
 import { Branch, Record, Shot, Template } from "silentium-components";
 import {
   Validated,
@@ -16,7 +24,7 @@ import {
 } from "silentium-validation";
 
 export function Auth() {
-  $title.chain(Tr("Auth"));
+  Context("title").chain(Tr("Auth"));
   const $username = Late<string>("");
   const $authenticated = Late();
 

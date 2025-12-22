@@ -1,15 +1,15 @@
 import { CategoriesOfSection } from "@/models/categories/CategoriesOfSection";
 import { List } from "@/modules/app/common/List";
-import { $title, Tr } from "@/store";
-import { Applied, Local, Map } from "silentium";
+import { Tr } from "@/store";
+import { Applied, Context, Map } from "silentium";
 import { Template } from "silentium-components";
 
 export function Blog() {
-  $title.chain(Tr("blog"));
+  const $title = Context("title").chain(Tr("blog"));
   const $categories = CategoriesOfSection("blog");
   return Template(
     (t) => `<div class='article'>
-      <h1>${t.var(Local($title))}</h1>
+      <h1>${t.var($title)}</h1>
       <div class="flex gap-2">
         <div class="flex-1 max-w-34">
           ${t.var(

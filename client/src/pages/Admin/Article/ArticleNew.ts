@@ -1,10 +1,11 @@
 import { TemplateNew } from "@/modules/app/template/TemplateNew";
 import { ArticleConfig } from "@/pages/Admin/Article/ArticleConfig";
 import { ArticleForm } from "@/pages/Admin/Article/ArticleForm";
-import { $title, Tr } from "@/store";
+import { Tr } from "@/store";
+import { Context } from "silentium";
 
 export function ArticleNew() {
-  $title.chain(Tr("Create article"));
+  Context("title").chain(Tr("Create article"));
   return TemplateNew(ArticleConfig(), Tr("Articles"), ArticleForm, {
     title: undefined,
     content: undefined,

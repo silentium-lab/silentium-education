@@ -4,14 +4,13 @@ import { PagesRange } from "@/models/common/PagesRange";
 import { TemplateItem } from "@/modules/app/template/TemplateItem";
 import { TemplateList } from "@/modules/app/template/TemplateList";
 import { SectionConfig } from "@/pages/Admin/Section/SectionConfig";
-import { $title, Tr } from "@/store";
+import { Tr } from "@/store";
 import { join, partial, partialRight } from "lodash-es";
-import { Applied, Computed, Late, Map, Primitive } from "silentium";
+import { Applied, Computed, Context, Late, Map, Primitive } from "silentium";
 import { Branch, Template } from "silentium-components";
 
 export function SectionList() {
-  const $t = Tr("Sections");
-  $title.chain($t);
+  Context("title").chain(Tr("Sections"));
   const $config = SectionConfig();
 
   const $filter = Late<object>({});

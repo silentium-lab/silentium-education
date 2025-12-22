@@ -1,9 +1,10 @@
 import { SectionFirstArticle } from "@/models/sections/SectionFirstArticle";
-import { $title, Tr } from "@/store";
+import { Tr } from "@/store";
+import { Context } from "silentium";
 import { Template } from "silentium-components";
 
 export function About() {
-  $title.chain(Tr("about"));
+  Context("title").chain(Tr("about"));
   const $section = SectionFirstArticle("about");
   return Template(
     (t) => `<section class="article">

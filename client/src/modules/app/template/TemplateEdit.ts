@@ -6,14 +6,14 @@ import { ServerResponse } from "@/modules/app/ServerResponse";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
 import { Mount } from "@/modules/render/Mount";
 import { SplitPart } from "@/modules/string/SplitPart";
-import { $title, $url, Tr } from "@/store";
+import { $url, Tr } from "@/store";
 import { omit, partialRight } from "lodash-es";
 import {
   Any,
   Applied,
   ConstructorType,
+  Context,
   Late,
-  Local,
   MessageSourceType,
   MessageType,
   New,
@@ -41,6 +41,7 @@ export function TemplateEdit(
     MessageType<string>
   >,
 ) {
+  const $title = Context("title");
   const $localUrl = Detached($url);
   const $id = Shared(SplitPart($localUrl, Of("/"), Of(3)));
   const $article = Shared(
@@ -74,7 +75,7 @@ export function TemplateEdit(
   return Template(
     (t) => `<div class="article">
 			${t.var(Link(Path($config, "path"), $listLabel, Of("underline")))}
-      <h1 class="title-1">${t.var(Local($title))}</h1>
+      <h1 class="title-1">${t.var($title)}</h1>
       <div class="mb-2">
         <div>
           <b>id: </b>

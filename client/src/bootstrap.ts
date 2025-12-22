@@ -1,7 +1,15 @@
+import { DocumentTitle } from "@/modules/DocumentTitle";
 import { ContextTransport } from "@/transports/ContextTransport";
 import { FetchAPITransport } from "@/transports/FetchAPITransport";
 import { merge } from "lodash-es";
-import { All, AppliedDestructured, ContextOf, DevTools, Late } from "silentium";
+import {
+  All,
+  AppliedDestructured,
+  ContextChain,
+  ContextOf,
+  DevTools,
+  Late,
+} from "silentium";
 
 DevTools();
 
@@ -20,3 +28,5 @@ export const $notification = Late<{
   type: "error" | "success" | "info";
   content: string | object;
 }>();
+
+ContextOf("title").then(ContextChain(DocumentTitle()));
