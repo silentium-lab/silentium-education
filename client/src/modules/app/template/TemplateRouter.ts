@@ -1,8 +1,7 @@
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
 import { NotFound } from "@/pages/NotFound";
-import { $url } from "@/store";
-import { All, Applied, ConstructorType, MessageType } from "silentium";
-import { Detached, Record, Router } from "silentium-components";
+import { All, Applied, ConstructorType, Context, MessageType } from "silentium";
+import { Record, Router } from "silentium-components";
 
 export function TemplateRouter(
   $config: MessageType<TemplateConfig>,
@@ -10,10 +9,10 @@ export function TemplateRouter(
   newTemplate: ConstructorType<[], MessageType>,
   editTemplate: ConstructorType<[], MessageType>,
 ) {
-  const $localUrl = Detached($url);
+  const $url = Context<string>("url");
 
   return Router(
-    $localUrl,
+    $url,
     All(
       Record({
         pattern: Applied($config, (c) => `^${c.path}$`),

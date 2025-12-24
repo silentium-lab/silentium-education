@@ -5,7 +5,7 @@ import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
 import { Mount } from "@/modules/render/Mount";
-import { $url, Tr } from "@/store";
+import { Tr } from "@/store";
 import {
   Any,
   Applied,
@@ -39,6 +39,7 @@ export function TemplateNew(
   >,
   defaultForm: unknown = {},
 ) {
+  const $url = Context<string>("url");
   const $clicked = Late();
   const $form = Late<any>(defaultForm);
 

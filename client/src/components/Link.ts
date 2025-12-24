@@ -1,8 +1,7 @@
 import { ClassName } from "@/modules/ClassName";
 import { Clicked } from "@/modules/Clicked";
 import { Id } from "@/modules/Id";
-import { $url } from "@/store";
-import { MessageType, Of, Primitive, Shared } from "silentium";
+import { MessageType, Of, Primitive, Shared, Context } from "silentium";
 import { Template } from "silentium-components";
 
 export function Link(
@@ -10,6 +9,7 @@ export function Link(
   $text: MessageType<string>,
   $class: MessageType<string> = Of(""),
 ) {
+  const $url = Context<string>("url");
   const $id = Shared(Id());
   const url = Primitive($linkUrl);
 

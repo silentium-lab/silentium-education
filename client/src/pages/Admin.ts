@@ -6,13 +6,14 @@ import { Auth } from "@/pages/Admin/Auth";
 import { CategoryRouter } from "@/pages/Admin/Category/CategoryRouter";
 import { Dashboard } from "@/pages/Admin/Dashboard";
 import { SectionRouter } from "@/pages/Admin/Section/SectionRouter";
-import { $url, Tr } from "@/store";
+import { Tr } from "@/store";
 import { Connected, Context, Filtered, Late, Of } from "silentium";
 import { Detached, Polling, Router, Template } from "silentium-components";
 import { Log } from "silentium-web-api";
 
 export function Admin() {
   Context("title").use("Админ панель");
+  const $url = Context<string>("url");
 
   const $localUrl = Detached($url);
   const $error = Filtered(FromContext("error"), (e: any) => e.status === 401);

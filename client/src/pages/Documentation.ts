@@ -2,6 +2,7 @@ import { CategoriesOfSection } from "@/models/categories/CategoriesOfSection";
 import { CategoryArticles } from "@/models/categories/CategoryArticles";
 import { SectionArticles } from "@/models/sections/SectionArticles";
 import { List } from "@/modules/app/common/List";
+import { ListFilled } from "@/modules/list/ListFilled";
 import { SegmentBetween } from "@/modules/string/SegmentBetween";
 import { Tr } from "@/store";
 import { Applied, Computed, Context, Default, Map } from "silentium";
@@ -42,17 +43,22 @@ export function Documentation() {
         </div>
         <div class="column-right">
           ${t.var(
-            List(
-              Map($articles, (article: any) => {
-                return Applied(
-                  article,
-                  (c) => `<div class="mb-2">
-                  <a href="/blog/${c.code}/view">
-                    ${c.title}
-                  </a>
-                </div>`,
-                );
-              }),
+            BranchLazy(
+              Computed(ListFilled, $articles),
+              () =>
+                List(
+                  Map($articles, (article: any) => {
+                    return Applied(
+                      article,
+                      (c) => `<div class="mb-2">
+                        <a href="/documentation/${c.code}/view">
+                          ${c.title}
+                        </a>
+                      </div>`,
+                    );
+                  }),
+                ),
+              () => Tr("No items"),
             ),
           )}
         </div>

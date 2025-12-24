@@ -6,7 +6,7 @@ import { ServerResponse } from "@/modules/app/ServerResponse";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
 import { Mount } from "@/modules/render/Mount";
 import { SplitPart } from "@/modules/string/SplitPart";
-import { $url, Tr } from "@/store";
+import { Tr } from "@/store";
 import { omit, partialRight } from "lodash-es";
 import {
   Any,
@@ -41,6 +41,7 @@ export function TemplateEdit(
     MessageType<string>
   >,
 ) {
+  const $url = Context<string>("url");
   const $title = Context("title");
   const $localUrl = Detached($url);
   const $id = Shared(SplitPart($localUrl, Of("/"), Of(3)));
