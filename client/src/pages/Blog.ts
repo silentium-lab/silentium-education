@@ -31,10 +31,10 @@ export function Blog() {
                 return Applied(
                   category,
                   (c) => `<div>
-                  <a href="/blog/${c.code}/list">
-                    ${c.title}
-                  </a>
-                </div>`,
+                    <a href="/blog/${c.code}/list">
+                      ${c.title}
+                    </a>
+                  </div>`,
                 );
               }),
             ),
@@ -47,10 +47,10 @@ export function Blog() {
                 return Applied(
                   article,
                   (c) => `<div class="mb-2">
-                  <a href="/blog/${c.code}/view">
-                    ${c.title}
-                  </a>
-                </div>`,
+                    <a href="/blog/${c.code}/view">
+                      ${c.title}
+                    </a>
+                  </div>`,
                 );
               }),
             ),

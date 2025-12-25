@@ -13,7 +13,7 @@ export function Documentation() {
   const $categories = CategoriesOfSection("docs");
   const $url = Context("url");
   const $code = Default<string>(
-    Computed(SegmentBetween, $url, "documentation/", "/list"),
+    Computed(SegmentBetween, $url, "documentation/", "/view"),
     "",
   );
   const $articles = BranchLazy(
@@ -32,10 +32,10 @@ export function Documentation() {
                 return Applied(
                   category,
                   (c) => `<div>
-                  <a href="/documentation/${c.code}/list">
-                    ${c.title}
-                  </a>
-                </div>`,
+                    <a href="/documentation/${c.code}/list">
+                      ${c.title}
+                    </a>
+                  </div>`,
                 );
               }),
             ),

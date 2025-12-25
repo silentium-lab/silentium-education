@@ -1,12 +1,10 @@
-import { BlogLatest } from "@/components/widgets/BlogLatest";
-import { Record } from "silentium-components";
+import { ArticleListWidget } from "@/modules/render/ArticleListWidget";
+import { BlogWidget } from "@/modules/render/BlogWidget";
+import { MessageType, Piped } from "silentium";
 
 /**
- * Map of available widgets what can be used inside
- * article contents
+ * Process widgets on text
  */
-export function Widgets() {
-  return Record({
-    "[blog]": BlogLatest(),
-  });
+export function Widgets($base: MessageType<string>) {
+  return Piped($base, ArticleListWidget, BlogWidget);
 }

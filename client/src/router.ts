@@ -8,7 +8,8 @@ import { Context, Of, Shared } from "silentium";
 import { Router } from "silentium-components";
 import { NotFound } from "./pages/NotFound";
 import { AdminAuthGuard } from "@/pages/Admin/AdminAuthGuard";
-import { BlogView } from "@/pages/BlogView";
+import { ArticleView } from "@/pages/ArticleView";
+import { partial } from "lodash-es";
 
 const $url = Context<string>("url");
 
@@ -30,7 +31,7 @@ export const $router = Shared(
       },
       {
         pattern: "^/documentation.*/view$",
-        message: BlogView,
+        message: partial(ArticleView, "documentation"),
       },
       {
         pattern: "^/blog$|^/blog.*/list$",
@@ -38,7 +39,7 @@ export const $router = Shared(
       },
       {
         pattern: "^/blog.*/view$",
-        message: BlogView,
+        message: partial(ArticleView, "blog"),
       },
       {
         pattern: "/admin.*",
