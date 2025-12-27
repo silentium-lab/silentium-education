@@ -1,5 +1,6 @@
 import { ClassName } from "@/modules/ClassName";
 import { Id } from "@/modules/Id";
+import { html } from "@/modules/plugins/lang/html";
 import {
   All,
   Applied,
@@ -17,8 +18,12 @@ export function Select(
   $items: MessageType<unknown[]>,
 ) {
   return Template(
-    (t) => `
-      <select class="${t.var(SelectId($value))} border-1 border-gray-300 bg-white p-2 rounded-sm w-full">
+    (t) => html`
+      <select
+        class="${t.var(
+          SelectId($value),
+        )} border-1 border-gray-300 bg-white p-2 rounded-sm w-full"
+      >
         <option value=""></option>
         ${t.var(
           Applied($items, (s) =>
@@ -28,7 +33,7 @@ export function Select(
           ),
         )}
       </select>
-  `,
+    `,
   );
 }
 

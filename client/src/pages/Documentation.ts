@@ -3,9 +3,10 @@ import { CategoryArticles } from "@/models/categories/CategoryArticles";
 import { SectionArticles } from "@/models/sections/SectionArticles";
 import { List } from "@/modules/app/common/List";
 import { ListFilled } from "@/modules/list/ListFilled";
+import { html } from "@/modules/plugins/lang/html";
 import { SegmentBetween } from "@/modules/string/SegmentBetween";
 import { Tr } from "@/store";
-import { Applied, Computed, Context, Default, Map } from "silentium";
+import { Applied, Computed, Context, Default, Map, Shared } from "silentium";
 import { BranchLazy, Template } from "silentium-components";
 
 export function Documentation() {
@@ -16,53 +17,57 @@ export function Documentation() {
     Computed(SegmentBetween, $url, "documentation/", "/view"),
     "",
   );
-  const $articles = BranchLazy(
-    Applied($code, Boolean),
-    () => CategoryArticles($code),
-    () => SectionArticles("docs"),
+  const $articles = Shared(
+    BranchLazy(
+      Applied($code, Boolean),
+      () => CategoryArticles($code),
+      () => SectionArticles("docs"),
+    ),
   );
   return Template(
-    (t) => `<div class="article">
-      <h1>${t.var($title)}</h1>
-      <div class="flex gap-2">
-        <div class="flex-1 max-w-34">
-          ${t.var(
-            List(
-              Map($categories, (category: any) => {
-                return Applied(
-                  category,
-                  (c) => `<div>
-                    <a href="/documentation/${c.code}/list">
-                      ${c.title}
-                    </a>
-                  </div>`,
-                );
-              }),
-            ),
-          )}
-        </div>
-        <div class="column-right">
-          ${t.var(
-            BranchLazy(
-              Computed(ListFilled, $articles),
-              () =>
-                List(
-                  Map($articles, (article: any) => {
-                    return Applied(
-                      article,
-                      (c) => `<div class="mb-2">
-                        <a href="/documentation/${c.code}/view">
-                          ${c.title}
-                        </a>
+    (t) =>
+      html`<div class="article">
+        <h1>${t.var($title)}</h1>
+        <div class="flex gap-2">
+          <div class="flex-1 max-w-34">
+            ${t.var(
+              List(
+                Map($categories, (category: any) => {
+                  return Applied(
+                    category,
+                    (c) =>
+                      html`<div>
+                        <a href="/documentation/${c.code}/list"> ${c.title} </a>
                       </div>`,
-                    );
-                  }),
-                ),
-              () => Tr("No items"),
-            ),
-          )}
+                  );
+                }),
+              ),
+            )}
+          </div>
+          <div class="column-right">
+            ${t.var(
+              BranchLazy(
+                Computed(ListFilled, $articles),
+                () =>
+                  List(
+                    Map($articles, (article: any) => {
+                      return Applied(
+                        article,
+                        (c) =>
+                          html`<div class="mb-2">
+                            <h4>
+                              <a href="/article/${c.code}/view"> ${c.title} </a>
+                            </h4>
+                            <p>${c.description}</p>
+                          </div>`,
+                      );
+                    }),
+                  ),
+                () => Tr("No items"),
+              ),
+            )}
+          </div>
         </div>
-      </div>
-    </div>`,
+      </div>`,
   );
 }

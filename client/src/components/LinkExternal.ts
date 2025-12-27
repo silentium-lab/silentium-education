@@ -1,3 +1,4 @@
+import { html } from "@/modules/plugins/lang/html";
 import { MessageType, Of } from "silentium";
 import { Template } from "silentium-components";
 
@@ -7,12 +8,9 @@ export function LinkExternal(
   $class: MessageType<string> = Of(""),
 ) {
   return Template(
-    (t) => `<a
-			href="${t.var($url)}"
-			target="_blank"
-			class="${t.var($class)}"
-		>
-			${t.var($text)}
-		</a>`,
+    (t) =>
+      html`<a href="${t.var($url)}" target="_blank" class="${t.var($class)}">
+        ${t.var($text)}
+      </a>`,
   );
 }
