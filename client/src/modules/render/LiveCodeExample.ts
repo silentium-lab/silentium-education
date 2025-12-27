@@ -13,6 +13,11 @@ import {
 } from "silentium";
 import { Template } from "silentium-components";
 import { v4 } from "uuid";
+import hljs from "highlight.js/lib/core";
+import javascript from "highlight.js/lib/languages/javascript";
+import "highlight.js/styles/github-dark.min.css";
+
+hljs.registerLanguage("javascript", javascript);
 
 /**
  * Helps to make code examples
@@ -32,23 +37,29 @@ export function LiveCodeExample($html: MessageType<string>) {
     });
     AppliedDestructured($run, JSCodeResult).then(Void());
     return Template((t) =>
-      _html.replace(/<pre><code>(.*?)<\/code><\/pre>/gs, (match, code) => {
-        const id = v4();
-        return html`
-          ${match}
-          <div>
-            ${t.raw(
-              Button(Tr("Run"), "btn mb-2", $run, "", [
-                decode(code),
-                `.id_${id}`,
-              ]),
-            )}
-          </div>
-          <div class="result border-gray-700 border-2 mb-2 p-2 id_${id}">
-            ${t.escaped(Tr("Press Run to see result"))}
-          </div>
-        `;
-      }),
+      _html.replace(
+        /<pre><code class\="language-js">(.*?)<\/code><\/pre>/gs,
+        (_, code) => {
+          const id = v4();
+          const highlightedCode = hljs.highlight(decode(code), {
+            language: "javascript",
+          }).value;
+          return html`
+            <pre>${highlightedCode}</pre>
+            <div>
+              ${t.raw(
+                Button(Tr("Run"), "btn mb-2", $run, "", [
+                  decode(code),
+                  `.id_${id}`,
+                ]),
+              )}
+            </div>
+            <div class="result border-gray-700 border-2 mb-2 p-2 id_${id}">
+              ${t.escaped(Tr("Press Run to see result"))}
+            </div>
+          `;
+        },
+      ),
     );
   });
 }

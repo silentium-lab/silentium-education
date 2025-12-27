@@ -22,14 +22,12 @@ export function Notifications() {
     (t) =>
       html`<div
         class="fixed top-2 right-2 p-2 rounded-md bg-${t.escaped(
-          Of(Primitive(Path($notification, "type")) as unknown as string),
+          Path($notification, "type"),
         )} ${t.escaped(
           Applied($notified, (show) => (show ? "visible" : "hidden")),
         )}"
       >
-        ${t.raw(
-          Of(Primitive(Path($notification, "content")) as unknown as string),
-        )}
+        ${t.raw(Path($notification, "content"))}
       </div>`,
   );
 }
