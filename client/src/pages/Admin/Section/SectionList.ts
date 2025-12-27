@@ -3,6 +3,7 @@ import { ListPaginated } from "@/models/common/ListPaginated";
 import { PagesRange } from "@/models/common/PagesRange";
 import { TemplateItem } from "@/modules/app/template/TemplateItem";
 import { TemplateList } from "@/modules/app/template/TemplateList";
+import { html } from "@/modules/plugins/lang/html";
 import { SectionConfig } from "@/pages/Admin/Section/SectionConfig";
 import { Tr } from "@/store";
 import { join, partial, partialRight } from "lodash-es";
@@ -25,32 +26,32 @@ export function SectionList() {
   const $pages = Computed(PagesRange, $total, list.limit);
 
   return Template(
-    (t) => `
-    <div class="articles">
-      ${t.var(Computed((v) => (v ? "Loading..." : ""), list.$loading))}
-      ${t.var($template)}
-      <hr class="mt-2 mb-2" />
-      <div class="flex gap-2">
-        ${t.var(
-          Branch(
-            Applied($pages, (p) => p.length > 1),
-            Applied(
-              Map($pages, (page) =>
-                Button(
-                  page,
-                  "btn",
-                  list.$page,
-                  "",
-                  Primitive(page).primitive(),
+    (t) => html`
+      <div class="articles">
+        ${t.var(Computed((v) => (v ? "Loading..." : ""), list.$loading))}
+        ${t.var($template)}
+        <hr class="mt-2 mb-2" />
+        <div class="flex gap-2">
+          ${t.var(
+            Branch(
+              Applied($pages, (p) => p.length > 1),
+              Applied(
+                Map($pages, (page) =>
+                  Button(
+                    page,
+                    "btn",
+                    list.$page,
+                    "",
+                    Primitive(page).primitive(),
+                  ),
                 ),
+                partialRight(join, ""),
               ),
-              partialRight(join, ""),
+              "",
             ),
-            "",
-          ),
-        )}
+          )}
+        </div>
       </div>
-    </div>
-  `,
+    `,
   );
 }

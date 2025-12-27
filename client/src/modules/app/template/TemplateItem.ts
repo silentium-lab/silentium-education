@@ -3,6 +3,7 @@ import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
 import { ClickedId } from "@/modules/ClickedId";
+import { html } from "@/modules/plugins/lang/html";
 import { Encoded } from "@/modules/string/Encoded";
 import { Tr } from "@/store";
 import {
@@ -58,21 +59,24 @@ export function TemplateItem(
   );
 
   return Template(
-    (t) => `<div class="flex gap-2">
-      ${t.var(
-        Link(
-          Template(
-            "$config/$id/",
-            Record({
-              $id: Path($item, Of("_id")),
-              $config: Path($config, "path"),
-            }),
+    (t) =>
+      html`<div class="flex gap-2">
+        ${t.var(
+          Link(
+            Template(
+              "$config/$id/",
+              Record({
+                $id: Path($item, Of("_id")),
+                $config: Path($config, "path"),
+              }),
+            ),
+            ActualMessage($titleField ?? Encoded(Path($item, "title"))),
+            Of("underline"),
           ),
-          ActualMessage($titleField ?? Encoded(Path($item, "title"))),
-          Of("underline"),
-        ),
-      )}
-      <div class="cursor-pointer ${t.var(ClickedId(removeTrigger))}">&times;</div>
-    </div>`,
+        )}
+        <div class="cursor-pointer ${t.var(ClickedId(removeTrigger))}">
+          &times;
+        </div>
+      </div>`,
   );
 }

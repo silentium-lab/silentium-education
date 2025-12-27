@@ -1,7 +1,15 @@
 import { ClassName } from "@/modules/ClassName";
 import { Clicked } from "@/modules/Clicked";
 import { Id } from "@/modules/Id";
-import { ActualMessage, MaybeMessage, Of, Shared, SourceType } from "silentium";
+import { html } from "@/modules/plugins/lang/html";
+import {
+  ActualMessage,
+  Connected,
+  MaybeMessage,
+  Of,
+  Shared,
+  SourceType,
+} from "silentium";
 import { Template } from "silentium-components";
 
 export function Button(
@@ -17,12 +25,16 @@ export function Button(
     e.preventDefault();
     click.use(value ?? e);
   });
-
-  return Template(
-    (
-      t,
-    ) => `<button ${t.var(ActualMessage($attributes))} class="${t.var($id)} ${t.var(ActualMessage($class))} cursor-pointer">
-        ${t.var(ActualMessage($label))}
-      </button>`,
+  return Connected<string>(
+    Template(
+      (t) =>
+        html`<button
+          ${t.var(ActualMessage($attributes))}
+          class="${t.var($id)} ${t.var(ActualMessage($class))} cursor-pointer"
+        >
+          ${t.var(ActualMessage($label))}
+        </button>`,
+    ),
+    clicked,
   );
 }

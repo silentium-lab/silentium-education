@@ -1,4 +1,5 @@
 import { NewContext } from "@/modules/context/Context";
+import { html } from "@/modules/plugins/lang/html";
 import { Tr } from "@/store";
 import { Context, Void } from "silentium";
 import { Template } from "silentium-components";
@@ -11,9 +12,5 @@ export function Dashboard() {
   });
   $auth.catch(NewContext("error"));
   $auth.then(Void());
-  return Template(
-    (t) => `<div>
-    ${t.var(Tr("Admin panel"))}
-  </div>`,
-  );
+  return Template((t) => html`<div>${t.var(Tr("Admin panel"))}</div>`);
 }

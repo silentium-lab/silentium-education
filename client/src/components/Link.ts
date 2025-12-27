@@ -1,6 +1,7 @@
 import { ClassName } from "@/modules/ClassName";
 import { Clicked } from "@/modules/Clicked";
 import { Id } from "@/modules/Id";
+import { html } from "@/modules/plugins/lang/html";
 import { MessageType, Of, Primitive, Shared, Context } from "silentium";
 import { Template } from "silentium-components";
 
@@ -20,11 +21,9 @@ export function Link(
   });
 
   return Template(
-    (t) => `<a
-      href="${t.var($linkUrl)}"
-      class="${t.var($id)} ${t.var($class)}"
-    >
-      ${t.var($text)}
-    </a>`,
+    (t) =>
+      html`<a href="${t.var($linkUrl)}" class="${t.var($id)} ${t.var($class)}">
+        ${t.var($text)}
+      </a>`,
   );
 }

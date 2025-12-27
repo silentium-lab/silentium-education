@@ -1,22 +1,23 @@
 import { logoSrc } from "@/chunks/Logo";
 import { LinkExternal } from "@/components/LinkExternal";
+import { html } from "@/modules/plugins/lang/html";
 import { Tr } from "@/store";
 import { Of } from "silentium";
 import { Template } from "silentium-components";
 
 export function Footer() {
   return Template(
-    (
-      t,
-    ) => `<footer class="py-2 flex justify-between items-center gap-2 flex-wrap">
-      <span>
-        ${t.var(Of(new Date().getFullYear().toString()))}
-        &copy;
-      </span>
-      <div class="px-2 mr-auto">
-        ${t.var(LinkExternal(Of("https://t.me/silentium_js"), Tr("tg_group")))}
-      </div>
-      ${t.var(logoSrc)}
-    </footer>`,
+    (t) =>
+      html`<footer
+        class="py-2 flex justify-between items-center gap-2 flex-wrap"
+      >
+        <span> ${t.var(Of(new Date().getFullYear().toString()))} &copy; </span>
+        <div class="px-2 mr-auto">
+          ${t.var(
+            LinkExternal(Of("https://t.me/silentium_js"), Tr("tg_group")),
+          )}
+        </div>
+        ${t.var(logoSrc)}
+      </footer>`,
   );
 }

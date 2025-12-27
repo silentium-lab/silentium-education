@@ -28,7 +28,9 @@ export function Select(
         ${t.var(
           Applied($items, (s) =>
             s
-              .map((i: any) => `<option value="${i._id}">${i.title}</option>`)
+              .map(
+                (i: any) => html`<option value="${i._id}">${i.title}</option>`,
+              )
               .join(""),
           ),
         )}

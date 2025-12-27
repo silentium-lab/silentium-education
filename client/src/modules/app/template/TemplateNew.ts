@@ -4,6 +4,7 @@ import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
+import { html } from "@/modules/plugins/lang/html";
 import { Mount } from "@/modules/render/Mount";
 import { Tr } from "@/store";
 import {
@@ -77,20 +78,24 @@ export function TemplateNew(
   const $title = Context("title");
 
   return Template(
-    (t) => `<div class="article">
-      ${t.var(Link(Path($config, "path"), $listLabel, Of("underline")))}
-      <h1 class="title-1">${t.var($title)}</h1>
-      ${t.var(form($form, $validated))}
-      ${t.var(
-        Mount(
-          Button(
-            Branch(formUpdateLoadingSrc, Tr("Saving..."), Tr("Save")),
-            Applied($validated, (v) => `btn ${v ? "" : "disabled opacity-25"}`),
-            $clicked,
-            Applied($validated, (v) => `${v ? "" : "disabled"}`),
+    (t) =>
+      html`<div class="article">
+        ${t.var(Link(Path($config, "path"), $listLabel, Of("underline")))}
+        <h1 class="title-1">${t.var($title)}</h1>
+        ${t.var(form($form, $validated))}
+        ${t.var(
+          Mount(
+            Button(
+              Branch(formUpdateLoadingSrc, Tr("Saving..."), Tr("Save")),
+              Applied(
+                $validated,
+                (v) => `btn ${v ? "" : "disabled opacity-25"}`,
+              ),
+              $clicked,
+              Applied($validated, (v) => `${v ? "" : "disabled"}`),
+            ),
           ),
-        ),
-      )}
-    </div>`,
+        )}
+      </div>`,
   );
 }

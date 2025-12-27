@@ -1,4 +1,5 @@
 import { Button } from "@/components/Button";
+import { html } from "@/modules/plugins/lang/html";
 import { $lang } from "@/store";
 import { Applied, Late, Local, MessageType, Of } from "silentium";
 import { Constant, Template } from "silentium-components";
@@ -14,9 +15,10 @@ export function Lang($class: MessageType<string>): MessageType<string> {
   $lang.chain(Constant("en", $en));
 
   return Template(
-    (t) => `<nav class="px-2 ${t.var($class)}">
-      ${t.var(Button(Of("ru"), Active("ru"), $ru))}
-      ${t.var(Button(Of("en"), Active("en"), $en))}
-    </nav>`,
+    (t) =>
+      html`<nav class="px-2 ${t.var($class)}">
+        ${t.var(Button(Of("ru"), Active("ru"), $ru))}
+        ${t.var(Button(Of("en"), Active("en"), $en))}
+      </nav>`,
   );
 }

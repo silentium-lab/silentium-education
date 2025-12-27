@@ -4,6 +4,7 @@ import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
+import { html } from "@/modules/plugins/lang/html";
 import { Mount } from "@/modules/render/Mount";
 import { SplitPart } from "@/modules/string/SplitPart";
 import { Tr } from "@/store";
@@ -74,26 +75,30 @@ export function TemplateEdit(
   const $validated = Late(false);
 
   return Template(
-    (t) => `<div class="article">
-			${t.var(Link(Path($config, "path"), $listLabel, Of("underline")))}
-      <h1 class="title-1">${t.var($title)}</h1>
-      <div class="mb-2">
-        <div>
-          <b>id: </b>
-          ${t.var($id)}
+    (t) =>
+      html`<div class="article">
+        ${t.var(Link(Path($config, "path"), $listLabel, Of("underline")))}
+        <h1 class="title-1">${t.var($title)}</h1>
+        <div class="mb-2">
+          <div>
+            <b>id: </b>
+            ${t.var($id)}
+          </div>
+          ${t.var(form($form, $validated))}
         </div>
-        ${t.var(form($form, $validated))}
-      </div>
-      ${t.var(
-        Mount(
-          Button(
-            Branch($formUpdateLoading, Tr("Saving..."), Tr("Save")),
-            Applied($validated, (v) => `btn ${v ? "" : "disabled opacity-25"}`),
-            $clicked,
-            Applied($validated, (v) => `${v ? "" : "disabled"}`),
+        ${t.var(
+          Mount(
+            Button(
+              Branch($formUpdateLoading, Tr("Saving..."), Tr("Save")),
+              Applied(
+                $validated,
+                (v) => html`btn ${v ? "" : "disabled opacity-25"}`,
+              ),
+              $clicked,
+              Applied($validated, (v) => (v ? "" : "disabled")),
+            ),
           ),
-        ),
-      )}
-    </div>`,
+        )}
+      </div>`,
   );
 }

@@ -1,5 +1,6 @@
 import { ClassName } from "@/modules/ClassName";
 import { Id } from "@/modules/Id";
+import { html } from "@/modules/plugins/lang/html";
 import EasyMDE from "easymde";
 import "easymde/dist/easymde.min.css";
 import {
@@ -75,7 +76,7 @@ export function Editor($value: MessageSourceType<string>) {
   const $editorValue = EditorValue($el, $value);
   Chainable($value).chain($editorValue);
   return Connected(
-    Template((t) => `<textarea class="${t.var($id)}"></textarea>`),
+    Template((t) => html`<textarea class="${t.var($id)}"></textarea>`),
     $editorValue,
     $el,
   );

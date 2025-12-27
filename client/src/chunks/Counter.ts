@@ -1,4 +1,5 @@
 import { Button } from "@/components/Button";
+import { html } from "@/modules/plugins/lang/html";
 import { Applied, Late, Of } from "silentium";
 import { Concatenated, Template } from "silentium-components";
 
@@ -16,15 +17,16 @@ export function Counter() {
   });
 
   return Template(
-    (t) => `<div class="flex gap-1">
-      ${t.var(
-        Button(
-          Concatenated([Of("clicked "), Applied($count, String)]),
-          Of("btn"),
-          $clicked,
-        ),
-      )}
-      ${t.var(Button(Of("reset"), Of("btn"), $reset))}
-    </div>`,
+    (t) =>
+      html`<div class="flex gap-1">
+        ${t.var(
+          Button(
+            Concatenated([Of("clicked "), Applied($count, String)]),
+            Of("btn"),
+            $clicked,
+          ),
+        )}
+        ${t.var(Button(Of("reset"), Of("btn"), $reset))}
+      </div>`,
   );
 }

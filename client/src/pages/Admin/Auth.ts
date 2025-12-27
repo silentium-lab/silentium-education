@@ -3,6 +3,7 @@ import { Error } from "@/components/Error";
 import { InputId } from "@/components/Input";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerResponse } from "@/modules/app/ServerResponse";
+import { html } from "@/modules/plugins/lang/html";
 import { Mount } from "@/modules/render/Mount";
 import { Tr } from "@/store";
 import { MinLength, RequiredTr } from "@/validations";
@@ -72,27 +73,30 @@ export function Auth() {
   const $validated = Computed(Validated, $errors);
 
   return Template(
-    (t) => `<div class="article">
-      <h1 class="title-1">${t.var(Tr("Sign in"))}</h1>
-      <div class="mb-2">
-        <label for="login">
-          ${t.var(Tr("Login"))}
-        </label>
-        <input id="login" class="${t.var(InputId($username))} border-1 p-2 rounded-sm w-full" name="username" />
-        ${t.var(Mount(Error("name", $errors)))}
-      </div>
-      <div class="mb-2">
-        ${t.var(
-          Mount(
-            Button(
-              Tr("Sign in"),
-              Of("btn"),
-              $authenticated,
-              Branch($validated, "", "disabled"),
+    (t) =>
+      html`<div class="article">
+        <h1 class="title-1">${t.var(Tr("Sign in"))}</h1>
+        <div class="mb-2">
+          <label for="login"> ${t.var(Tr("Login"))} </label>
+          <input
+            id="login"
+            class="${t.var(InputId($username))} border-1 p-2 rounded-sm w-full"
+            name="username"
+          />
+          ${t.var(Mount(Error("name", $errors)))}
+        </div>
+        <div class="mb-2">
+          ${t.var(
+            Mount(
+              Button(
+                Tr("Sign in"),
+                Of("btn"),
+                $authenticated,
+                Branch($validated, "", "disabled"),
+              ),
             ),
-          ),
-        )}
-      </div>
-    </div>`,
+          )}
+        </div>
+      </div>`,
   );
 }

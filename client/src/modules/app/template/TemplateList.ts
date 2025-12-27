@@ -2,6 +2,7 @@ import { Link } from "@/components/Link";
 import { CRUD } from "@/modules/app/CRUD";
 import { ServerMeta, ServerResponse } from "@/modules/app/ServerResponse";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
+import { html } from "@/modules/plugins/lang/html";
 import { clone } from "lodash-es";
 import {
   Any,
@@ -41,25 +42,26 @@ export function TemplateList(
     $meta,
     $total,
     $template: Template(
-      (t) => `<div class="article">
-      <h1 class="title-1">${t.var($title)}</h1>
-      ${t.var(
-        Link(
-          Applied($config, (c) => `${c.path}/create`),
-          $creationLabel,
-          Of("block mb-3 underline"),
-        ),
-      )}
-      ${t.var(
-        Applied(
-          Any<any>(
-            Chain($filter, Of([])),
-            Map($list, (article) => itemTemplate(article, $reload)),
-          ),
-          (a) => a.join(""),
-        ),
-      )}
-    </div>`,
+      (t) =>
+        html`<div class="article">
+          <h1 class="title-1">${t.var($title)}</h1>
+          ${t.var(
+            Link(
+              Applied($config, (c) => `${c.path}/create`),
+              $creationLabel,
+              Of("block mb-3 underline"),
+            ),
+          )}
+          ${t.var(
+            Applied(
+              Any<any>(
+                Chain($filter, Of([])),
+                Map($list, (article) => itemTemplate(article, $reload)),
+              ),
+              (a) => a.join(""),
+            ),
+          )}
+        </div>`,
     ),
   };
 }

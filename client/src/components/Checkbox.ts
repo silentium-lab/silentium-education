@@ -1,5 +1,6 @@
 import { ClassName } from "@/modules/ClassName";
 import { Id } from "@/modules/Id";
+import { html } from "@/modules/plugins/lang/html";
 import {
   ActualMessage,
   All,
@@ -22,12 +23,12 @@ export function Checkbox(
 ) {
   const $label = ActualMessage(label);
   return Template(
-    (t) => `
+    (t) => html`
       <label>
-        <input class="${t.var(CheckedId($value))} " type="checkbox">
+        <input class="${t.var(CheckedId($value))} " type="checkbox" />
         ${t.var($label)}
       </label>
-  `,
+    `,
   );
 }
 
