@@ -19,7 +19,7 @@ describe("AuthGuard", () => {
     mockAuthValidated.mockReturnValueOnce(Of(true));
 
     const $child = Of({ message: "child content" });
-    const result = AuthGuard(mockReq as any, $child);
+    const result = AuthGuard(mockReq as any, () => $child);
 
     expect(mockAuthValidated).toHaveBeenCalledTimes(1);
     expect(await result).toEqual(await $child);
@@ -31,12 +31,12 @@ describe("AuthGuard", () => {
     mockAuthValidated.mockReturnValueOnce(Of(false));
 
     const $child = Of({ message: "child content" });
-    const result = AuthGuard(mockReq as any, $child);
+    const result = AuthGuard(mockReq as any, () => $child);
 
     expect(mockAuthValidated).toHaveBeenCalledTimes(1);
     expect(await result).toEqual({
       status: 401,
-      error: "No authrization",
+      error: "No authentication",
     });
   });
 });
