@@ -27,6 +27,7 @@ export default [
     rules: {
       "require-await": ["error"],
       "@typescript-eslint/no-explicit-any": ["off"],
+      "no-useless-escape": ["off"],
       "prettier.bracketSpacing": ["off"],
       "@typescript-eslint/explicit-member-accessibility": [
         "error",
