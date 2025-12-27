@@ -9,5 +9,6 @@ export function SectionNew() {
   return TemplateNew(SectionConfig(), Tr("Sections"), SectionForm, {
     title: undefined,
     code: undefined,
+    published: undefined,
   });
 }

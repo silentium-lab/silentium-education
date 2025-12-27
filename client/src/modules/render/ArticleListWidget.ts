@@ -1,4 +1,8 @@
-import { ActualMessage, Applied, MaybeMessage } from "silentium";
+import { CategoryArticlesWithMeta } from "@/models/categories/CategoryArticles";
+import { List } from "@/modules/app/common/List";
+import { html } from "@/modules/plugins/lang/html";
+import { ActualMessage, Applied, Map, MaybeMessage } from "silentium";
+import { Path, Template } from "silentium-components";
 
 /**
  * Articles widget searches for [articles]
@@ -6,9 +10,30 @@ import { ActualMessage, Applied, MaybeMessage } from "silentium";
 export function ArticleListWidget(_base: MaybeMessage<string>) {
   const $base = ActualMessage(_base);
   return Applied($base, (base) => {
-    return base.replaceAll(
-      "[articles?category=silentium-internals]",
-      "done!!!",
+    return Template((t) =>
+      base.replace(/\[articles\?category=(.*?)\]/gs, (_, code) => {
+        const $categoryArticles = CategoryArticlesWithMeta(code);
+        const $articles = Path<unknown[]>($categoryArticles, "data");
+        const $categoryTitle = Path($categoryArticles, "meta.category.title");
+        return html`
+          <div class="articles-in-article">
+            <h3>${t.var($categoryTitle)}</h3>
+            ${t.var(
+              List(
+                Map($articles, (article: any) => {
+                  return Applied(
+                    article,
+                    (c) =>
+                      html`<div class="mb-2">
+                        <a href="/article/${c.code}/view"> ${c.title} </a>
+                      </div>`,
+                  );
+                }),
+              ),
+            )}
+          </div>
+        `;
+      }),
     );
   });
 }

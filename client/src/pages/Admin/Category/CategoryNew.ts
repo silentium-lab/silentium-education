@@ -11,5 +11,6 @@ export function CategoryNew() {
     parent_id: undefined,
     section_id: undefined,
     code: undefined,
+    published: undefined,
   });
 }

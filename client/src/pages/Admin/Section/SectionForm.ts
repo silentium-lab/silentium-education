@@ -1,3 +1,4 @@
+import { Checkbox } from "@/components/Checkbox";
 import { Error } from "@/components/Error";
 import { Input } from "@/components/Input";
 import { Mount } from "@/modules/render/Mount";
@@ -18,11 +19,13 @@ export function SectionForm(
 ) {
   const $title = Part<string>($form, "title");
   const $code = Part<string>($form, "code");
+  const $published = Part<boolean>($form, "published");
 
   const $errors = ValidationErrors(
     Computed(ValidationItems, $form, {
       title: [RequiredTr],
       code: [RequiredTr],
+      published: [],
     }),
   );
   const $validated = Computed(Validated, $errors);
@@ -33,6 +36,9 @@ export function SectionForm(
       <div class="mb-2">
         <div class="font-bold">${t.var(Tr("Name"))}: ${t.var(Mount(Error("title", $errors), "span"))}</div>
         ${t.var(Input($title))}
+      </div>
+      <div class="mb-2">
+        ${t.var(Checkbox(Tr("Published"), $published))}
       </div>
       <div class="mb-2">
         <div class="font-bold">${t.var(Tr("Code"))}: ${t.var(Mount(Error("code", $errors), "span"))}</div>

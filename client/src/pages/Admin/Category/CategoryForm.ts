@@ -1,3 +1,4 @@
+import { Checkbox } from "@/components/Checkbox";
 import { Error } from "@/components/Error";
 import { Input } from "@/components/Input";
 import { Select } from "@/components/Select";
@@ -23,6 +24,7 @@ export function CategoryForm(
   const $parent = Part<string>($form, "parent_id");
   const $section = Part<string>($form, "section_id");
   const $code = Part<string>($form, "code");
+  const $published = Part<boolean>($form, "published");
 
   const $categories = Categories();
   const $sections = Sections();
@@ -33,6 +35,7 @@ export function CategoryForm(
       code: [RequiredTr],
       parent_id: [],
       section_id: [RequiredTr],
+      published: [],
     }),
   );
   const $validated = Computed(Validated, $errors);
@@ -45,6 +48,9 @@ export function CategoryForm(
           ${t.var(Tr("Section"))}: ${t.var(Mount(Error("section_id", $errors), "span"))}
         </div>
         ${t.var(Select($section, $sections))}
+      </div>
+      <div class="mb-2">
+        ${t.var(Checkbox(Tr("Published"), $published))}
       </div>
       <div class="mb-2">
         <div class="font-bold">${t.var(Tr("Parent category"))}: ${t.var(Mount(Error("parent_id", $errors), "span"))}</div>

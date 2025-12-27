@@ -1,20 +1,52 @@
-import { ServerResponse } from "@/modules/app/ServerResponse";
-import { Context, MessageType, Shared } from "silentium";
+import {
+  ServerAllResponse,
+  ServerResponse,
+} from "@/modules/app/ServerResponse";
+import {
+  ActualMessage,
+  Context,
+  Default,
+  MaybeMessage,
+  Shared,
+} from "silentium";
 import { Record } from "silentium-components";
 
-export function CategoryArticles(category: MessageType<string>) {
+export function CategoryArticles(category: MaybeMessage<string>) {
   return Shared(
-    ServerResponse(
-      Context(
-        "request",
-        Record({
-          method: "get",
-          model: "articles",
-          query: Record({
-            category,
+    Default(
+      ServerResponse(
+        Context(
+          "request",
+          Record({
+            method: "get",
+            model: "articles",
+            query: Record({
+              category: ActualMessage(category),
+            }),
           }),
-        }),
+        ),
       ),
+      [],
+    ),
+  );
+}
+
+export function CategoryArticlesWithMeta(category: MaybeMessage<string>) {
+  return Shared(
+    Default(
+      ServerAllResponse(
+        Context(
+          "request",
+          Record({
+            method: "get",
+            model: "articles",
+            query: Record({
+              category: ActualMessage(category),
+            }),
+          }),
+        ),
+      ),
+      [],
     ),
   );
 }

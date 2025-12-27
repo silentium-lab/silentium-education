@@ -1,6 +1,6 @@
 import { IncomingMessage } from "http";
-import { Any, Applied, Computed, Context } from "silentium";
-import { First, Path, Record } from "silentium-components";
+import { Any, Applied, Computed, Context, Of } from "silentium";
+import { First, Path, Record, Shot } from "silentium-components";
 import { List } from "../modules/mongo/List";
 import { RequestParams } from "../modules/request/RequestParams";
 
@@ -42,5 +42,14 @@ export function Articles() {
 
   return Record({
     data: Any($sectionArticles, $categoryArticles, $article),
+    meta: Any(
+      Record({
+        category: $category,
+      }),
+      Record({
+        section: $section,
+      }),
+      Shot(Of({}), $code),
+    ),
   });
 }

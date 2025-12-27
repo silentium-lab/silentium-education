@@ -8,6 +8,7 @@ export function ArticleNew() {
   Context("title").chain(Tr("Create article"));
   return TemplateNew(ArticleConfig(), Tr("Articles"), ArticleForm, {
     title: undefined,
+    description: undefined,
     content: undefined,
     category_id: undefined,
     section_id: undefined,

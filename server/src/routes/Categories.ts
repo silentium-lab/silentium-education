@@ -12,6 +12,7 @@ export function Categories() {
   const $articles = List(
     "categories",
     Record({
+      published: true,
       section_id: Applied(Path($section, "_id"), String),
     }),
   );
