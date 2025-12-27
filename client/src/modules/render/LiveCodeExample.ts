@@ -1,4 +1,5 @@
 import { Button } from "@/components/Button";
+import { html } from "@/modules/plugins/lang/html";
 import { JSCodeResult } from "@/modules/render/JSCodeResult";
 import { Tr } from "@/store";
 import { decode } from "html-entities";
@@ -18,7 +19,7 @@ import { v4 } from "uuid";
  * runnable by pressing button
  */
 export function LiveCodeExample($html: MessageType<string>) {
-  return Applied($html, (html: string) => {
+  return Applied($html, (_html: string) => {
     const $run = Late<[string, string]>();
     $run.then((v) => {
       Tr("Loading...").then((label) => {
@@ -31,12 +32,21 @@ export function LiveCodeExample($html: MessageType<string>) {
     });
     AppliedDestructured($run, JSCodeResult).then(Void());
     return Template((t) =>
-      html.replace(/<pre><code>(.*?)<\/code><\/pre>/gs, (match, code) => {
+      _html.replace(/<pre><code>(.*?)<\/code><\/pre>/gs, (match, code) => {
         const id = v4();
-        return `
-        ${match}
-        <div>${t.var(Button(Tr("Run"), "btn mb-2", $run, "", [decode(code), `.id_${id}`]))}</div>
-        <div class="result whitespace-pre border-gray-700 border-2 mb-2 p-2 id_${id}">${t.var(Tr("Press Run to see result"))}</div>
+        return html`
+          ${match}
+          <div>
+            ${t.raw(
+              Button(Tr("Run"), "btn mb-2", $run, "", [
+                decode(code),
+                `.id_${id}`,
+              ]),
+            )}
+          </div>
+          <div class="result border-gray-700 border-2 mb-2 p-2 id_${id}">
+            ${t.escaped(Tr("Press Run to see result"))}
+          </div>
         `;
       }),
     );

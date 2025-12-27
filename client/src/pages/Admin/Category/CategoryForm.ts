@@ -47,32 +47,32 @@ export function CategoryForm(
       html`<div class="mb-2">
         <div class="mb-2">
           <div class="font-bold">
-            ${t.var(Tr("Section"))}:
-            ${t.var(Mount(Error("section_id", $errors), "span"))}
+            ${t.escaped(Tr("Section"))}:
+            ${t.raw(Mount(Error("section_id", $errors), "span"))}
           </div>
-          ${t.var(Select($section, $sections))}
+          ${t.raw(Select($section, $sections))}
         </div>
-        <div class="mb-2">${t.var(Checkbox(Tr("Published"), $published))}</div>
+        <div class="mb-2">${t.raw(Checkbox(Tr("Published"), $published))}</div>
         <div class="mb-2">
           <div class="font-bold">
-            ${t.var(Tr("Parent category"))}:
-            ${t.var(Mount(Error("parent_id", $errors), "span"))}
+            ${t.escaped(Tr("Parent category"))}:
+            ${t.raw(Mount(Error("parent_id", $errors), "span"))}
           </div>
-          ${t.var(Select($parent, $categories))}
-        </div>
-        <div class="mb-2">
-          <div class="font-bold">
-            ${t.var(Tr("Name"))}:
-            ${t.var(Mount(Error("title", $errors), "span"))}
-          </div>
-          ${t.var(Input($title))}
+          ${t.raw(Select($parent, $categories))}
         </div>
         <div class="mb-2">
           <div class="font-bold">
-            ${t.var(Tr("Code"))}:
-            ${t.var(Mount(Error("code", $errors), "span"))}
+            ${t.escaped(Tr("Name"))}:
+            ${t.raw(Mount(Error("title", $errors), "span"))}
           </div>
-          ${t.var(Input($code))}
+          ${t.raw(Input($title))}
+        </div>
+        <div class="mb-2">
+          <div class="font-bold">
+            ${t.escaped(Tr("Code"))}:
+            ${t.raw(Mount(Error("code", $errors), "span"))}
+          </div>
+          ${t.raw(Input($code))}
         </div>
         <hr />
       </div>`,

@@ -11,7 +11,7 @@ export function Input($value: MessageSourceType<string>) {
     (t) => html`
       <input
         name="title"
-        class="${t.var(
+        class="${t.escaped(
           InputId($value),
         )} border-1 border-gray-300 bg-white p-2 rounded-sm w-full"
       />

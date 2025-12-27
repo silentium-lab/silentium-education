@@ -14,7 +14,7 @@ export function ArticleView() {
   return Piped(
     Template(
       (t) =>
-        html`<section class="article">${t.var(ArticleByCode($code))}</section>`,
+        html`<section class="article">${t.raw(ArticleByCode($code))}</section>`,
     ),
     Widgets,
   );

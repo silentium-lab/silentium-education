@@ -75,18 +75,20 @@ export function Auth() {
   return Template(
     (t) =>
       html`<div class="article">
-        <h1 class="title-1">${t.var(Tr("Sign in"))}</h1>
+        <h1 class="title-1">${t.escaped(Tr("Sign in"))}</h1>
         <div class="mb-2">
-          <label for="login"> ${t.var(Tr("Login"))} </label>
+          <label for="login"> ${t.escaped(Tr("Login"))} </label>
           <input
             id="login"
-            class="${t.var(InputId($username))} border-1 p-2 rounded-sm w-full"
+            class="${t.escaped(
+              InputId($username),
+            )} border-1 p-2 rounded-sm w-full"
             name="username"
           />
-          ${t.var(Mount(Error("name", $errors)))}
+          ${t.raw(Mount(Error("name", $errors)))}
         </div>
         <div class="mb-2">
-          ${t.var(
+          ${t.raw(
             Mount(
               Button(
                 Tr("Sign in"),

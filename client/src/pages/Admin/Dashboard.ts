@@ -12,5 +12,5 @@ export function Dashboard() {
   });
   $auth.catch(NewContext("error"));
   $auth.then(Void());
-  return Template((t) => html`<div>${t.var(Tr("Admin panel"))}</div>`);
+  return Template((t) => html`<div>${t.escaped(Tr("Admin panel"))}</div>`);
 }

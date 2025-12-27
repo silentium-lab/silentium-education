@@ -20,12 +20,12 @@ export function Select(
   return Template(
     (t) => html`
       <select
-        class="${t.var(
+        class="${t.escaped(
           SelectId($value),
         )} border-1 border-gray-300 bg-white p-2 rounded-sm w-full"
       >
         <option value=""></option>
-        ${t.var(
+        ${t.raw(
           Applied($items, (s) =>
             s
               .map(

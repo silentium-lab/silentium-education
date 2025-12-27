@@ -76,7 +76,7 @@ export function Editor($value: MessageSourceType<string>) {
   const $editorValue = EditorValue($el, $value);
   Chainable($value).chain($editorValue);
   return Connected(
-    Template((t) => html`<textarea class="${t.var($id)}"></textarea>`),
+    Template((t) => html`<textarea class="${t.escaped($id)}"></textarea>`),
     $editorValue,
     $el,
   );

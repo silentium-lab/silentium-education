@@ -7,12 +7,12 @@ export function ErrorList($errors: MessageType) {
   return Template(
     (t) =>
       html`<div
-        class="errors ${t.var(
+        class="errors ${t.escaped(
           MountPoint(
             Template(
               (t) =>
                 html`<div>
-                  ${t.var(
+                  ${t.raw(
                     Applied($errors, (e: any) =>
                       Object.keys(e)
                         .filter((i) => e[i].length)

@@ -8,6 +8,6 @@ export function About() {
   Context("title").chain(Tr("about"));
   const $section = SectionFirstArticle("about");
   return Template(
-    (t) => html`<section class="article">${t.var($section)}</section>`,
+    (t) => html`<section class="article">${t.raw($section)}</section>`,
   );
 }

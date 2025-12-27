@@ -10,7 +10,7 @@ import { Applied, Computed, Context, Default, Map, Shared } from "silentium";
 import { BranchLazy, Template } from "silentium-components";
 
 export function Documentation() {
-  const $title = Context("title").chain(Tr("documentation"));
+  const $title = Context<string>("title").chain(Tr("documentation"));
   const $categories = CategoriesOfSection("docs");
   const $url = Context("url");
   const $code = Default<string>(
@@ -27,10 +27,10 @@ export function Documentation() {
   return Template(
     (t) =>
       html`<div class="article">
-        <h1>${t.var($title)}</h1>
+        <h1>${t.escaped($title)}</h1>
         <div class="flex gap-2">
           <div class="flex-1 max-w-34">
-            ${t.var(
+            ${t.raw(
               List(
                 Map($categories, (category: any) => {
                   return Applied(
@@ -45,7 +45,7 @@ export function Documentation() {
             )}
           </div>
           <div class="column-right">
-            ${t.var(
+            ${t.raw(
               BranchLazy(
                 Computed(ListFilled, $articles),
                 () =>

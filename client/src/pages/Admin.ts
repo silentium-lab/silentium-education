@@ -61,29 +61,29 @@ export function Admin() {
             <a
               href="/admin/articles"
               class="block px-4 py-2 text-gray-700 hover:bg-gray-200 hover:text-gray-900"
-              >${t.var(Tr("Articles"))}</a
+              >${t.escaped(Tr("Articles"))}</a
             >
             <a
               href="/admin/sections"
               class="block px-4 py-2 text-gray-700 hover:bg-gray-200 hover:text-gray-900"
-              >${t.var(Tr("Sections"))}</a
+              >${t.escaped(Tr("Sections"))}</a
             >
             <a
               href="/admin/categories"
               class="block px-4 py-2 text-gray-700 hover:bg-gray-200 hover:text-gray-900"
-              >${t.var(Tr("Categories"))}</a
+              >${t.escaped(Tr("Categories"))}</a
             >
             <a
               href="/admin/categories"
-              class="${t.var(
+              class="${t.escaped(
                 ClickedId($logout),
               )} block px-4 py-2 text-gray-700 hover:bg-gray-200 hover:text-gray-900"
-              >${t.var(Tr("Logout"))}</a
+              >${t.escaped(Tr("Logout"))}</a
             >
           </nav>
         </div>
         <div class="flex-1 p-8">
-          <div id="admin-content">${t.var(rd)}</div>
+          <div id="admin-content">${t.raw(rd)}</div>
         </div>
       </div>`,
   );

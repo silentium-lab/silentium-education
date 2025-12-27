@@ -9,6 +9,7 @@ import {
   Template,
   Tick,
 } from "silentium-components";
+import { Log } from "silentium-web-api";
 
 export function Notifications() {
   const $notified = Late(false);
@@ -16,19 +17,18 @@ export function Notifications() {
   $notified.chain(
     Constant(false, Polling<unknown>(Task(NaN, 5000), $notification)),
   );
+  $notification.then(Log("notification"));
   return Template(
     (t) =>
       html`<div
-        class="fixed top-2 right-2 p-2 rounded-md bg-${t.var(
-          Of(Primitive(Path($notification, Of("type"))) as unknown as string),
-        )} ${t.var(
+        class="fixed top-2 right-2 p-2 rounded-md bg-${t.escaped(
+          Of(Primitive(Path($notification, "type")) as unknown as string),
+        )} ${t.escaped(
           Applied($notified, (show) => (show ? "visible" : "hidden")),
         )}"
       >
-        ${t.var(
-          Of(
-            Primitive(Path($notification, Of("content"))) as unknown as string,
-          ),
+        ${t.raw(
+          Of(Primitive(Path($notification, "content")) as unknown as string),
         )}
       </div>`,
   );

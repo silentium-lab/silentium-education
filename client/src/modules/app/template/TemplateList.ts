@@ -35,7 +35,7 @@ export function TemplateList(
   const $meta = ServerMeta($listResponse);
   const $total = Path($meta, "total");
 
-  const $title = Context("title");
+  const $title = Context<string>("title");
 
   return {
     $list: $list,
@@ -44,15 +44,15 @@ export function TemplateList(
     $template: Template(
       (t) =>
         html`<div class="article">
-          <h1 class="title-1">${t.var($title)}</h1>
-          ${t.var(
+          <h1 class="title-1">${t.escaped($title)}</h1>
+          ${t.raw(
             Link(
               Applied($config, (c) => `${c.path}/create`),
               $creationLabel,
               Of("block mb-3 underline"),
             ),
           )}
-          ${t.var(
+          ${t.raw(
             Applied(
               Any<any>(
                 Chain($filter, Of([])),

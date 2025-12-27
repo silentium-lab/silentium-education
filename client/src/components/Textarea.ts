@@ -11,7 +11,7 @@ export function Textarea($value: MessageSourceType<string>) {
     (t) => html`
       <textarea
         rows="3"
-        class="${t.var(
+        class="${t.escaped(
           InputId($value),
         )} border-1 border-gray-300 bg-white p-2 rounded-sm w-full"
       ></textarea>

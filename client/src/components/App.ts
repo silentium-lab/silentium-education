@@ -14,10 +14,10 @@ export function App($route: MessageType<string>) {
     Template(
       (t) =>
         html`<div class="container mx-auto px-3 h-full flex flex-col">
-          <div class="${t.var(MountPoint(Header()))}"></div>
-          <section class="content ${t.var(MountPoint($route))}"></section>
-          <div class="mt-auto ${t.var(MountPoint(Footer()))}"></div>
-          <div class="${t.var(MountPoint(Notifications()))}"></div>
+          <div class="${t.raw(MountPoint(Header()))}"></div>
+          <section class="content ${t.raw(MountPoint($route))}"></section>
+          <div class="mt-auto ${t.raw(MountPoint(Footer()))}"></div>
+          <div class="${t.raw(MountPoint(Notifications()))}"></div>
         </div>`,
     ),
   );

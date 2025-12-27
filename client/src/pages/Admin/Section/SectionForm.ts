@@ -37,18 +37,18 @@ export function SectionForm(
       html`<div class="mb-2">
         <div class="mb-2">
           <div class="font-bold">
-            ${t.var(Tr("Name"))}:
-            ${t.var(Mount(Error("title", $errors), "span"))}
+            ${t.escaped(Tr("Name"))}:
+            ${t.raw(Mount(Error("title", $errors), "span"))}
           </div>
-          ${t.var(Input($title))}
+          ${t.raw(Input($title))}
         </div>
-        <div class="mb-2">${t.var(Checkbox(Tr("Published"), $published))}</div>
+        <div class="mb-2">${t.raw(Checkbox(Tr("Published"), $published))}</div>
         <div class="mb-2">
           <div class="font-bold">
-            ${t.var(Tr("Code"))}:
-            ${t.var(Mount(Error("code", $errors), "span"))}
+            ${t.escaped(Tr("Code"))}:
+            ${t.raw(Mount(Error("code", $errors), "span"))}
           </div>
-          ${t.var(Input($code))}
+          ${t.raw(Input($code))}
         </div>
         <hr />
       </div>`,

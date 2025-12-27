@@ -28,11 +28,11 @@ export function SectionList() {
   return Template(
     (t) => html`
       <div class="articles">
-        ${t.var(Computed((v) => (v ? "Loading..." : ""), list.$loading))}
-        ${t.var($template)}
+        ${t.escaped(Computed((v) => (v ? "Loading..." : ""), list.$loading))}
+        ${t.raw($template)}
         <hr class="mt-2 mb-2" />
         <div class="flex gap-2">
-          ${t.var(
+          ${t.raw(
             Branch(
               Applied($pages, (p) => p.length > 1),
               Applied(

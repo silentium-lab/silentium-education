@@ -75,15 +75,15 @@ export function TemplateNew(
 
   const $validated = Late(false);
 
-  const $title = Context("title");
+  const $title = Context<string>("title");
 
   return Template(
     (t) =>
       html`<div class="article">
-        ${t.var(Link(Path($config, "path"), $listLabel, Of("underline")))}
-        <h1 class="title-1">${t.var($title)}</h1>
-        ${t.var(form($form, $validated))}
-        ${t.var(
+        ${t.raw(Link(Path($config, "path"), $listLabel, Of("underline")))}
+        <h1 class="title-1">${t.escaped($title)}</h1>
+        ${t.raw(form($form, $validated))}
+        ${t.raw(
           Mount(
             Button(
               Branch(formUpdateLoadingSrc, Tr("Saving..."), Tr("Save")),

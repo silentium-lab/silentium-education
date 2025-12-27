@@ -61,7 +61,7 @@ export function TemplateItem(
   return Template(
     (t) =>
       html`<div class="flex gap-2">
-        ${t.var(
+        ${t.raw(
           Link(
             Template(
               "$config/$id/",
@@ -74,7 +74,7 @@ export function TemplateItem(
             Of("underline"),
           ),
         )}
-        <div class="cursor-pointer ${t.var(ClickedId(removeTrigger))}">
+        <div class="cursor-pointer ${t.escaped(ClickedId(removeTrigger))}">
           &times;
         </div>
       </div>`,

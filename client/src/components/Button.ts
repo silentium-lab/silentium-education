@@ -29,10 +29,12 @@ export function Button(
     Template(
       (t) =>
         html`<button
-          ${t.var(ActualMessage($attributes))}
-          class="${t.var($id)} ${t.var(ActualMessage($class))} cursor-pointer"
+          ${t.escaped(ActualMessage($attributes))}
+          class="${t.escaped($id)} ${t.escaped(
+            ActualMessage($class),
+          )} cursor-pointer"
         >
-          ${t.var(ActualMessage($label))}
+          ${t.escaped(ActualMessage($label))}
         </button>`,
     ),
     clicked,

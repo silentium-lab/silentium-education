@@ -46,7 +46,7 @@
     "marked": "^17.0.1",
     "mustache": "^4.2.0",
     "silentium": "^0.0.188",
-    "silentium-components": "^0.0.99",
+    "silentium-components": "^0.0.100",
     "silentium-morphdom": "^0.0.24",
     "silentium-validation": "^0.0.4",
     "silentium-web-api": "^0.0.35",

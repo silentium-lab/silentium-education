@@ -15,12 +15,12 @@ export function ArticleFilter(
     (t) => html`
       <div class="mb-4">
         <div class="mb-2">
-          <span>${t.var(Tr("Title"))}</span>
-          ${t.var(Input($title))}
+          <span>${t.escaped(Tr("Title"))}</span>
+          ${t.raw(Input($title))}
         </div>
         <div class="flex gap-2">
-          ${t.var(Button(Tr("Search"), Of("btn"), $searched))}
-          ${t.var(Button(Tr("Reset"), Of("btn"), $reset))}
+          ${t.raw(Button(Tr("Search"), Of("btn"), $searched))}
+          ${t.raw(Button(Tr("Reset"), Of("btn"), $reset))}
         </div>
       </div>
     `,

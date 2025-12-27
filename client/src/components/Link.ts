@@ -22,8 +22,11 @@ export function Link(
 
   return Template(
     (t) =>
-      html`<a href="${t.var($linkUrl)}" class="${t.var($id)} ${t.var($class)}">
-        ${t.var($text)}
+      html`<a
+        href="${t.escaped($linkUrl)}"
+        class="${t.escaped($id)} ${t.escaped($class)}"
+      >
+        ${t.raw($text)}
       </a>`,
   );
 }

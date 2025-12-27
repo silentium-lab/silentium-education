@@ -25,8 +25,8 @@ export function Checkbox(
   return Template(
     (t) => html`
       <label>
-        <input class="${t.var(CheckedId($value))} " type="checkbox" />
-        ${t.var($label)}
+        <input class="${t.escaped(CheckedId($value))} " type="checkbox" />
+        ${t.escaped($label)}
       </label>
     `,
   );

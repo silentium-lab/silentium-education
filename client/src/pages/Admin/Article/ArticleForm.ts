@@ -52,46 +52,46 @@ export function ArticleForm(
       html`<div class="mb-2">
         <div class="mb-2">
           <div class="font-bold">
-            ${t.var(Tr("Name"))}:
-            ${t.var(Mount(Error("title", $errors), "span"))}
+            ${t.escaped(Tr("Name"))}:
+            ${t.raw(Mount(Error("title", $errors), "span"))}
           </div>
-          ${t.var(Input($title))}
+          ${t.raw(Input($title))}
         </div>
         <div class="mb-2">
           <div class="font-bold">
-            ${t.var(Tr("Description"))}:
-            ${t.var(Mount(Error("description", $errors), "span"))}
+            ${t.escaped(Tr("Description"))}:
+            ${t.raw(Mount(Error("description", $errors), "span"))}
           </div>
-          ${t.var(Textarea($description))}
+          ${t.raw(Textarea($description))}
         </div>
-        <div class="mb-2">${t.var(Checkbox(Tr("Published"), $published))}</div>
+        <div class="mb-2">${t.raw(Checkbox(Tr("Published"), $published))}</div>
         <div class="mb-2">
           <div class="font-bold">
-            ${t.var(Tr("Category"))}:
-            ${t.var(Mount(Error("category_id", $errors), "span"))}
+            ${t.escaped(Tr("Category"))}:
+            ${t.raw(Mount(Error("category_id", $errors), "span"))}
           </div>
-          ${t.var(Select($category, $categories))}
-        </div>
-        <div class="mb-2">
-          <div class="font-bold">
-            ${t.var(Tr("Section"))}:
-            ${t.var(Mount(Error("section_id", $errors), "span"))}
-          </div>
-          ${t.var(Select($section, $sections))}
+          ${t.raw(Select($category, $categories))}
         </div>
         <div class="mb-2">
           <div class="font-bold">
-            ${t.var(Tr("Content"))}:
-            ${t.var(Mount(Error("content", $errors), "span"))}
+            ${t.escaped(Tr("Section"))}:
+            ${t.raw(Mount(Error("section_id", $errors), "span"))}
           </div>
-          ${t.var(Editor($content))}
+          ${t.raw(Select($section, $sections))}
         </div>
         <div class="mb-2">
           <div class="font-bold">
-            ${t.var(Tr("Code"))}:
-            ${t.var(Mount(Error("code", $errors), "span"))}
+            ${t.escaped(Tr("Content"))}:
+            ${t.raw(Mount(Error("content", $errors), "span"))}
           </div>
-          ${t.var(Input($code))}
+          ${t.raw(Editor($content))}
+        </div>
+        <div class="mb-2">
+          <div class="font-bold">
+            ${t.escaped(Tr("Code"))}:
+            ${t.raw(Mount(Error("code", $errors), "span"))}
+          </div>
+          ${t.raw(Input($code))}
         </div>
         <hr />
       </div>`,

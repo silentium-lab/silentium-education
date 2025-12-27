@@ -9,8 +9,12 @@ export function LinkExternal(
 ) {
   return Template(
     (t) =>
-      html`<a href="${t.var($url)}" target="_blank" class="${t.var($class)}">
-        ${t.var($text)}
+      html`<a
+        href="${t.escaped($url)}"
+        target="_blank"
+        class="${t.escaped($class)}"
+      >
+        ${t.escaped($text)}
       </a>`,
   );
 }

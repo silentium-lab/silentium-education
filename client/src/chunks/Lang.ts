@@ -16,9 +16,9 @@ export function Lang($class: MessageType<string>): MessageType<string> {
 
   return Template(
     (t) =>
-      html`<nav class="px-2 ${t.var($class)}">
-        ${t.var(Button(Of("ru"), Active("ru"), $ru))}
-        ${t.var(Button(Of("en"), Active("en"), $en))}
+      html`<nav class="px-2 ${t.escaped($class)}">
+        ${t.raw(Button(Of("ru"), Active("ru"), $ru))}
+        ${t.raw(Button(Of("en"), Active("en"), $en))}
       </nav>`,
   );
 }

@@ -38,9 +38,9 @@ export function Configuration() {
   return Template(
     (t) =>
       html`<div class="article">
-        <h1 class="title-1">${t.var(Tr("System configuration"))}</h1>
+        <h1 class="title-1">${t.escaped(Tr("System configuration"))}</h1>
         <p class="mb-2">
-          ${t.var(
+          ${t.escaped(
             Tr(
               "Before using the admin panel, you need to configure the server. Specify the required parameters.",
             ),
@@ -48,15 +48,15 @@ export function Configuration() {
         </p>
         <div class="mb-2">
           <input
-            class="${t.var(
+            class="${t.escaped(
               InputId(behavior.$username),
             )} border-1 p-2 rounded-sm w-full"
             name="username"
           />
-          ${t.var(Mount(Error("name", $errors)))}
+          ${t.raw(Mount(Error("name", $errors)))}
         </div>
         <div>
-          ${t.var(
+          ${t.raw(
             Mount(
               Button(
                 Of("Регистрация"),

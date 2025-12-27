@@ -12,13 +12,13 @@ export function Header() {
       html`<header
         class="mb-2 flex justify-between py-2 gap-2 min-h-10 flex-wrap items-center"
       >
-        ${t.var(logoSrc)} ${t.var(Lang(Of("mr-auto")))}
+        ${t.raw(logoSrc)} ${t.raw(Lang(Of("mr-auto")))}
         <nav class="flex gap-2 flex-wrap">
-          ${t.var(Link(Of("/about"), Tr("about"), Of("underline")))}
-          ${t.var(
+          ${t.raw(Link(Of("/about"), Tr("about"), Of("underline")))}
+          ${t.raw(
             Link(Of("/documentation"), Tr("documentation"), Of("underline")),
           )}
-          ${t.var(Link(Of("/blog"), Tr("blog"), Of("underline")))}
+          ${t.raw(Link(Of("/blog"), Tr("blog"), Of("underline")))}
         </nav>
       </header>`,
   );

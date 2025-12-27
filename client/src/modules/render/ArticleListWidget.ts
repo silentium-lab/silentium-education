@@ -14,11 +14,14 @@ export function ArticleListWidget(_base: MaybeMessage<string>) {
       base.replace(/\[articles\?category=(.*?)\]/gs, (_, code) => {
         const $categoryArticles = CategoryArticlesWithMeta(code);
         const $articles = Path<unknown[]>($categoryArticles, "data");
-        const $categoryTitle = Path($categoryArticles, "meta.category.title");
+        const $categoryTitle = Path<string>(
+          $categoryArticles,
+          "meta.category.title",
+        );
         return html`
           <div class="articles-in-article">
-            <h3>${t.var($categoryTitle)}</h3>
-            ${t.var(
+            <h3>${t.escaped($categoryTitle)}</h3>
+            ${t.raw(
               List(
                 Map($articles, (article: any) => {
                   return Applied(

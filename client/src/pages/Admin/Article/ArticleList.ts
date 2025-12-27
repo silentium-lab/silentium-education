@@ -5,7 +5,6 @@ import { PagesRange } from "@/models/common/PagesRange";
 import { TemplateItem } from "@/modules/app/template/TemplateItem";
 import { TemplateList } from "@/modules/app/template/TemplateList";
 import { html } from "@/modules/plugins/lang/html";
-import { Encoded } from "@/modules/string/Encoded";
 import { ArticleConfig } from "@/pages/Admin/Article/ArticleConfig";
 import { ArticleFilter } from "@/pages/Admin/Article/ArticleFilter";
 import { Tr } from "@/store";
@@ -37,7 +36,12 @@ export function ArticleList() {
         $reload,
         Template(
           (t) =>
-            `<div class="grid grid-cols-[1fr_1fr] w-full mb-2 gap-2"><div>${t.var(Encoded(Path($item, "title")))}</div><div>${t.var(Published(Path($item, "published", false)))}</div></div>`,
+            html`<div class="grid grid-cols-[1fr_1fr] w-full mb-2 gap-2">
+              <div>${t.escaped(Path($item, "title"))}</div>
+              <div>
+                ${t.escaped(Published(Path($item, "published", false)))}
+              </div>
+            </div>`,
         ),
       ),
   );
@@ -55,12 +59,12 @@ export function ArticleList() {
   return Template(
     (t) => html`
       <div class="articles">
-        ${t.var(ArticleFilter(list.$filter, list.$search, list.$reset))}
-        ${t.var(Computed((v) => (v ? "Loading..." : ""), list.$loading))}
-        ${t.var($template)}
+        ${t.raw(ArticleFilter(list.$filter, list.$search, list.$reset))}
+        ${t.escaped(Computed((v) => (v ? "Loading..." : ""), list.$loading))}
+        ${t.raw($template)}
         <hr class="mt-2 mb-2" />
         <div class="flex gap-2">
-          ${t.var(
+          ${t.raw(
             Branch(
               Applied($pages, (p) => p.length > 1),
               Applied(

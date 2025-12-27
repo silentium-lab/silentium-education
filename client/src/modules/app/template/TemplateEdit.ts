@@ -43,7 +43,7 @@ export function TemplateEdit(
   >,
 ) {
   const $url = Context<string>("url");
-  const $title = Context("title");
+  const $title = Context<string>("title");
   const $localUrl = Detached($url);
   const $id = Shared(SplitPart($localUrl, Of("/"), Of(3)));
   const $article = Shared(
@@ -77,16 +77,16 @@ export function TemplateEdit(
   return Template(
     (t) =>
       html`<div class="article">
-        ${t.var(Link(Path($config, "path"), $listLabel, Of("underline")))}
-        <h1 class="title-1">${t.var($title)}</h1>
+        ${t.raw(Link(Path($config, "path"), $listLabel, Of("underline")))}
+        <h1 class="title-1">${t.escaped($title)}</h1>
         <div class="mb-2">
           <div>
             <b>id: </b>
-            ${t.var($id)}
+            ${t.escaped($id)}
           </div>
-          ${t.var(form($form, $validated))}
+          ${t.raw(form($form, $validated))}
         </div>
-        ${t.var(
+        ${t.raw(
           Mount(
             Button(
               Branch($formUpdateLoading, Tr("Saving..."), Tr("Save")),

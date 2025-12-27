@@ -11,13 +11,15 @@ export function Footer() {
       html`<footer
         class="py-2 flex justify-between items-center gap-2 flex-wrap"
       >
-        <span> ${t.var(Of(new Date().getFullYear().toString()))} &copy; </span>
+        <span>
+          ${t.escaped(Of(new Date().getFullYear().toString()))} &copy;
+        </span>
         <div class="px-2 mr-auto">
-          ${t.var(
+          ${t.raw(
             LinkExternal(Of("https://t.me/silentium_js"), Tr("tg_group")),
           )}
         </div>
-        ${t.var(logoSrc)}
+        ${t.raw(logoSrc)}
       </footer>`,
   );
 }
