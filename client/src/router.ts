@@ -1,22 +1,21 @@
 import { About } from "@/pages/About";
 import { Admin } from "@/pages/Admin";
+import { AdminAuthGuard } from "@/pages/Admin/AdminAuthGuard";
 import { AdminConfigGuard } from "@/pages/Admin/AdminConfigGuard";
+import { ArticleView } from "@/pages/ArticleView";
 import { Blog } from "@/pages/Blog";
 import { Documentation } from "@/pages/Documentation";
 import { Home } from "@/pages/Home";
-import { Context, Of, Shared } from "silentium";
+import { Context, Shared } from "silentium";
 import { Router } from "silentium-components";
 import { NotFound } from "./pages/NotFound";
-import { AdminAuthGuard } from "@/pages/Admin/AdminAuthGuard";
-import { ArticleView } from "@/pages/ArticleView";
-import { partial } from "lodash-es";
 
 const $url = Context<string>("url");
 
 export const $router = Shared(
   Router(
     $url,
-    Of([
+    [
       {
         pattern: "^/?$",
         message: Home,
@@ -30,22 +29,18 @@ export const $router = Shared(
         message: Documentation,
       },
       {
-        pattern: "^/documentation.*/view$",
-        message: partial(ArticleView, "documentation"),
-      },
-      {
         pattern: "^/blog$|^/blog.*/list$",
         message: Blog,
       },
       {
-        pattern: "^/blog.*/view$",
-        message: partial(ArticleView, "blog"),
+        pattern: "^/article.*/view$",
+        message: ArticleView,
       },
       {
         pattern: "/admin.*",
         message: () => AdminConfigGuard(AdminAuthGuard(Admin())),
       },
-    ]),
+    ],
     NotFound,
   ),
 );
