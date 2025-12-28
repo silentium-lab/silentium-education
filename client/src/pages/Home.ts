@@ -16,7 +16,7 @@ export function Home() {
     Template(
       (t) =>
         html`<section class="article">
-          ${t.raw(LiveCodeExample(Template($section)))}
+          ${t.raw(LiveCodeExample($section))}
         </section>`,
     ),
     Widgets,

@@ -1,5 +1,6 @@
 import { ArticleByCode } from "@/models/articles/ArticleByCode";
 import { html } from "@/modules/plugins/lang/html";
+import { LiveCodeExample } from "@/modules/render/LiveCodeExample";
 import { Widgets } from "@/modules/render/Widgets";
 import { SegmentBetween } from "@/modules/string/SegmentBetween";
 import { Computed, Context, Default, Piped } from "silentium";
@@ -14,7 +15,9 @@ export function ArticleView() {
   return Piped(
     Template(
       (t) =>
-        html`<section class="article">${t.raw(ArticleByCode($code))}</section>`,
+        html`<section class="article">
+          ${t.raw(LiveCodeExample(ArticleByCode($code)))}
+        </section>`,
     ),
     Widgets,
   );
