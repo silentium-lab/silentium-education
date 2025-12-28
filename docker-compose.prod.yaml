@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # MongoDB сервис
+  mongodb:
+    image: mongo:6
+    container_name: silentium-mongodb-prod
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-password}
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE:-silentium}
+    volumes:
+      - mongodb_data:/data/db
+      - ./server/docker/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - silentium-network
+    # Не экспортируем порт в проде для безопасности
+    # ports:
+    #   - "27017:27017"
+
+  # Node.js бэкенд сервис
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: silentium-backend-prod
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://${MONGO_ROOT_USERNAME:-admin}:${MONGO_ROOT_PASSWORD:-password}@mongodb:27017/${MONGO_DATABASE:-silentium}?authSource=admin
+      - PORT=4000
+    ports:
+      - "${BACKEND_PORT:-4000}:4000"
+    depends_on:
+      - mongodb
+    networks:
+      - silentium-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend сервис
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: silentium-frontend-prod
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    depends_on:
+      - backend
+    networks:
+      - silentium-network
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  silentium-network:
+    driver: bridge
