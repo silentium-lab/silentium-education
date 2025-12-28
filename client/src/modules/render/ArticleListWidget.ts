@@ -21,19 +21,21 @@ export function ArticleListWidget(_base: MaybeMessage<string>) {
         return html`
           <div class="articles-in-article">
             <h3>${t.escaped($categoryTitle)}</h3>
-            ${t.raw(
-              List(
-                Map($articles, (article: any) => {
-                  return Applied(
-                    article,
-                    (c) =>
-                      html`<div class="mb-2">
-                        <a href="/article/${c.code}/view"> ${c.title} </a>
-                      </div>`,
-                  );
-                }),
-              ),
-            )}
+            <div class="grid grid-cols-3 gap-2">
+              ${t.raw(
+                List(
+                  Map($articles, (article: any) => {
+                    return Applied(
+                      article,
+                      (c) =>
+                        html`<div class="mb-2">
+                          <a href="/article/${c.code}/view"> ${c.title} </a>
+                        </div>`,
+                    );
+                  }),
+                ),
+              )}
+            </div>
           </div>
         `;
       }),

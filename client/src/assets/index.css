@@ -6,8 +6,8 @@
   --text-logo: 25px;
   --text-h1: 20px;
 
-  --color-primary: var(--color-purple-500);
-  --color-primary-active: var(--color-purple-700);
+  --color-primary: var(--color-amber-300);
+  --color-primary-active: var(--color-amber-400);
   --color-fg-inverse: #fff;
 
   --color-success: var(--color-green-50);
@@ -30,7 +30,11 @@ body {
   }
 
   .btn {
-    @apply py-1 px-2 bg-primary rounded-sm text-fg-inverse hover:bg-primary-active transition-colors;
+    @apply py-1 px-2 bg-primary rounded-sm text-shadow-gray-800 hover:bg-primary-active transition-colors;
+  }
+
+  hr {
+    @apply bg-gray-300 border-gray-300 mb-2
   }
 
   button:disabled {
