@@ -40,7 +40,7 @@ export const CRUDRouter = (
           const $url = Computed(UrlFromMessage, $req);
           const $filter = OnlyKnownFields(
             Race(Computed(UrlParams, $url), Tick(Of({}))),
-            ["title", "page", "limit"],
+            ["title", "code", "page", "limit"],
           );
           Chainable($error).chain(Path(Catch($filter) as any, "message"));
           const $data = Shared(ListWithMeta(collectionName, $filter));

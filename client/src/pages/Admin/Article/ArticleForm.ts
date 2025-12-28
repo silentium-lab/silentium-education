@@ -93,7 +93,7 @@ export function ArticleForm(
           </div>
           ${t.raw(Input($code))}
         </div>
-        <hr />
+        <hr class="mt-8" />
       </div>`,
   );
 }

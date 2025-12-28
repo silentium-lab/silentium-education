@@ -11,12 +11,19 @@ export function ArticleFilter(
   $reset: SourceType,
 ) {
   const $title = Part<string>($filter, "title");
+  const $code = Part<string>($filter, "code");
   return Template(
     (t) => html`
       <div class="mb-4">
-        <div class="mb-2">
-          <span>${t.escaped(Tr("Title"))}</span>
-          ${t.raw(Input($title))}
+        <div class="flex gap-2 mb-2">
+          <div>
+            <span>${t.escaped(Tr("Title"))}</span>
+            ${t.raw(Input($title))}
+          </div>
+          <div>
+            <span>${t.escaped(Tr("Code"))}</span>
+            ${t.raw(Input($code))}
+          </div>
         </div>
         <div class="flex gap-2">
           ${t.raw(Button(Tr("Search"), Of("btn"), $searched))}
