@@ -11,10 +11,39 @@
 
 ## Установка Podman
 
-### На Ubuntu/Debian:
+### На Ubuntu 20.04/22.04:
+```bash
+# Добавьте репозиторий Podman (если нужно)
+sudo apt update
+sudo apt install podman
+
+# Установите docker-compose отдельно
+sudo apt install docker-compose
+
+# Или установите через pip (рекомендуется)
+sudo apt install python3-pip
+pip3 install docker-compose
+```
+
+### На Ubuntu 18.04:
+```bash
+# Добавьте репозиторий для Podman
+. /etc/os-release
+sudo sh -c "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"
+wget -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_${VERSION_ID}/Release.key -O- | sudo apt-key add -
+sudo apt update
+sudo apt install podman
+
+# Установите docker-compose
+sudo apt install docker-compose
+# Или через pip
+pip3 install docker-compose
+```
+
+### На Debian:
 ```bash
 sudo apt update
-sudo apt install podman docker-compose-plugin
+sudo apt install podman docker-compose
 ```
 
 ### На CentOS/RHEL/Fedora:
@@ -26,6 +55,16 @@ sudo dnf install podman podman-docker docker-compose
 ```bash
 sudo pacman -S podman docker-compose
 ```
+
+### Альтернатива: Использование podman-compose
+
+Вместо docker-compose можно использовать podman-compose:
+
+```bash
+pip3 install podman-compose
+```
+
+Затем используйте `podman-compose` вместо `docker compose` в командах.
 
 ## Шаги развертывания
 
@@ -63,6 +102,28 @@ FRONTEND_PORT=80
 
 Для продакшен развертывания используйте `docker-compose.prod.yaml`:
 
+**Способ 1: Docker Compose (новая версия):**
+
+```bash
+# Сборка образов
+docker compose -f docker-compose.prod.yaml build
+
+# Запуск сервисов
+docker compose -f docker-compose.prod.yaml up -d
+```
+
+**Способ 2: Docker Compose (старая версия):**
+
+```bash
+# Сборка образов
+docker-compose -f docker-compose.prod.yaml build
+
+# Запуск сервисов
+docker-compose -f docker-compose.prod.yaml up -d
+```
+
+**Способ 3: Podman Compose:**
+
 ```bash
 # Сборка образов
 podman-compose -f docker-compose.prod.yaml build
@@ -71,30 +132,23 @@ podman-compose -f docker-compose.prod.yaml build
 podman-compose -f docker-compose.prod.yaml up -d
 ```
 
-Или с Docker Compose plugin:
-
-```bash
-docker compose -f docker-compose.prod.yaml build
-docker compose -f docker-compose.prod.yaml up -d
-```
+**Примечание:** Выберите способ в зависимости от установленной версии. Если `docker compose` не работает, попробуйте `docker-compose` (с дефисом).
 
 ### 4. Проверка развертывания
 
 Проверьте статус контейнеров:
 
 ```bash
+docker-compose -f docker-compose.prod.yaml ps
+# или
 podman-compose -f docker-compose.prod.yaml ps
-```
-
-Или:
-
-```bash
-docker compose -f docker-compose.prod.yaml ps
 ```
 
 Проверьте логи:
 
 ```bash
+docker-compose -f docker-compose.prod.yaml logs -f
+# или
 podman-compose -f docker-compose.prod.yaml logs -f
 ```
 

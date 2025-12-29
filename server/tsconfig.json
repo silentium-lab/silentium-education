@@ -2,16 +2,18 @@
     "compilerOptions": {
       "module": "ESNext",
       "esModuleInterop": true,
-      "target": "ESNext",
-      "moduleResolution": "Node",
+      "target": "ES2022",
+      "moduleResolution": "bundler",
       "outDir": "dist",
       "forceConsistentCasingInFileNames": true,
       "noFallthroughCasesInSwitch": true,
-      "isolatedModules": false,
+      "isolatedModules": true,
       "strict": true,
       "noImplicitAny": true,
       "useUnknownInCatchVariables": false,
-      "inlineSourceMap": true
+      "inlineSourceMap": true,
+      "skipLibCheck": true,
+      "allowSyntheticDefaultImports": true
     },
     "ts-node": {
         "esm": true,
