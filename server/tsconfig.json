@@ -3,7 +3,7 @@
       "module": "ESNext",
       "esModuleInterop": true,
       "target": "ES2022",
-      "moduleResolution": "bundler",
+      "moduleResolution": "node",
       "outDir": "dist",
       "forceConsistentCasingInFileNames": true,
       "noFallthroughCasesInSwitch": true,
@@ -22,4 +22,5 @@
         "experimentalSpecifierResolution": "node"
     },
     "lib": ["esnext"],
+    "include": ["src/**/*", "index.ts", "router.ts", "bootstrap.ts", "transports/**/*"]
 }
