@@ -19,4 +19,4 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
-            "~/silentium-education/deploy.sh"
+            "cd ~/silentium-education && ./deploy.sh"
