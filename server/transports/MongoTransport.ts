@@ -11,7 +11,7 @@ export function MongoTransport(url: string) {
   const client = new MongoClient(url);
 
   return (context: ContextType) => {
-    const dbName = context.params?.dbName ?? "app";
+    const dbName = context.params?.dbName ?? "silentium";
     client
       .connect()
       .then(async () => {
@@ -43,10 +43,12 @@ export function MongoTransport(url: string) {
           });
         } catch (e) {
           context.error?.(e);
+          console.log("mongo error: ", url, JSON.stringify(e));
         }
       })
       .catch((e) => {
         context.error?.(e.message);
+        console.log("mongo connect", url, e);
       });
   };
 }
