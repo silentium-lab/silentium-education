@@ -27,12 +27,9 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 # Copy nginx configuration template
 COPY nginx.conf /etc/nginx/conf.d/default.conf.template
 
-# Create entrypoint script
-RUN echo '#!/bin/sh' > /docker-entrypoint.sh && \
-    echo 'DOMAIN=${DOMAIN:-localhost}' >> /docker-entrypoint.sh && \
-    echo 'envsubst "${DOMAIN}" < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf' >> /docker-entrypoint.sh && \
-    echo 'exec "$@"' >> /docker-entrypoint.sh && \
-    chmod +x /docker-entrypoint.sh
+# Copy entrypoint script
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
 # Expose ports
 EXPOSE 80 443

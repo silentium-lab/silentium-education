@@ -123,26 +123,6 @@ docker compose -f docker-compose.prod.yaml build
 docker compose -f docker-compose.prod.yaml up -d
 ```
 
-**Способ 2: Docker Compose (старая версия):**
-
-```bash
-# Сборка образов
-docker-compose -f docker-compose.prod.yaml build
-
-# Запуск сервисов
-docker-compose -f docker-compose.prod.yaml up -d
-```
-
-**Способ 3: Podman Compose:**
-
-```bash
-# Сборка образов
-podman-compose -f docker-compose.prod.yaml build
-
-# Запуск сервисов
-podman-compose -f docker-compose.prod.yaml up -d
-```
-
 **Примечание:** Выберите способ в зависимости от установленной версии. Если `docker compose` не работает, попробуйте `docker-compose` (с дефисом).
 
 ### 4. Проверка развертывания
@@ -151,16 +131,12 @@ podman-compose -f docker-compose.prod.yaml up -d
 
 ```bash
 docker-compose -f docker-compose.prod.yaml ps
-# или
-podman-compose -f docker-compose.prod.yaml ps
 ```
 
 Проверьте логи:
 
 ```bash
 docker-compose -f docker-compose.prod.yaml logs -f
-# или
-podman-compose -f docker-compose.prod.yaml logs -f
 ```
 
 ### 5. Настройка SSL сертификатов Let's Encrypt
