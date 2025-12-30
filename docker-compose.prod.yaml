@@ -14,8 +14,8 @@ services:
     networks:
       - silentium-network
     # Не экспортируем порт в проде для безопасности
-    # ports:
-    #   - "27017:27017"
+    ports:
+      - "27017:27017"
 
   # Node.js бэкенд сервис
   backend:

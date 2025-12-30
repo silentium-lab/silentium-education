@@ -3,7 +3,8 @@
     "conventionalCommits.scopes": [
         "server",
         "client",
-        "common"
+        "common",
+        "docker"
     ],
     "cSpell.words": [
         "easymde"
