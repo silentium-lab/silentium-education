@@ -27,14 +27,16 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 # Copy nginx configuration template
 COPY nginx.conf /etc/nginx/conf.d/default.conf.template
 
-# Substitute environment variables in nginx config
-RUN envsubst '${DOMAIN}' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
-
-# Remove gettext to keep image small
-RUN apk del gettext
+# Create entrypoint script
+RUN echo '#!/bin/sh' > /docker-entrypoint.sh && \
+    echo 'DOMAIN=${DOMAIN:-localhost}' >> /docker-entrypoint.sh && \
+    echo 'envsubst "${DOMAIN}" < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf' >> /docker-entrypoint.sh && \
+    echo 'exec "$@"' >> /docker-entrypoint.sh && \
+    chmod +x /docker-entrypoint.sh
 
 # Expose ports
 EXPOSE 80 443
 
-# Start nginx
+# Use custom entrypoint
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
