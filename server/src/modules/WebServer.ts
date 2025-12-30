@@ -39,7 +39,10 @@ export function WebServer(
     const server = http.createServer((req, res) => {
       const headers = () => {
         res.setHeader("content-type", "application/json");
-        res.setHeader("Access-Control-Allow-Origin", "http://localhost:1234");
+        res.setHeader(
+          "Access-Control-Allow-Origin",
+          req.headers["origin"] ?? "*",
+        );
         res.setHeader("Access-Control-Allow-Credentials", "true");
         res.setHeader("Access-Control-Allow-Headers", "*");
         res.setHeader(

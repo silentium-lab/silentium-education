@@ -303,8 +303,6 @@ export function Auth($req: MessageType<IncomingMessage>) {
                       ...(authId
                         ? {
                             headers: {
-                              "Access-Control-Allow-Origin":
-                                "http://localhost:1234",
                               "Access-Control-Allow-Credentials": "true",
                               "Set-Cookie": cookie.serialize("sid", authId, {
                                 httpOnly: true,
