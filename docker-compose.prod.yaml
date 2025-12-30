@@ -46,6 +46,7 @@ services:
     restart: unless-stopped
     environment:
       - NODE_ENV=production
+      - DOMAIN=${DOMAIN}
     ports:
       - "${FRONTEND_PORT:-443}:443"
       - "80:80"

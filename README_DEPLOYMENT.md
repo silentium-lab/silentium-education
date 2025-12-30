@@ -103,6 +103,12 @@ DOMAIN=yourdomain.com
 
 **SSL Настройка:** Замените `yourdomain.com` на ваш реальный домен. Убедитесь, что DNS записи указывают на ваш сервер.
 
+**Важно:** После изменения переменной `DOMAIN` в `.env` файле необходимо пересобрать Docker образ frontend:
+
+```bash
+docker compose -f docker-compose.prod.yaml build frontend
+```
+
 ### 3. Сборка и запуск контейнеров
 
 Для продакшен развертывания используйте `docker-compose.prod.yaml`:
