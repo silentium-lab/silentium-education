@@ -25,7 +25,7 @@ ContextOf("cache").then(CacheTransport());
 ContextOf("config").then(
   ContextChain({
     rpName: "TestApp",
-    rpID: "localhost",
+    rpID: "silentium.pw",
     origin: "http://localhost:1234",
   }),
 );
