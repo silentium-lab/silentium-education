@@ -18,7 +18,7 @@ DevTools();
 AppliedDestructured(
   All(ContextOf("request"), {
     params: {
-      baseUrl: "http://localhost:4000",
+      baseUrl: location.origin + ":4000",
     },
   }),
   merge,
