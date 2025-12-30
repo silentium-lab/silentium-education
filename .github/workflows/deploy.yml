@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   deploy:
@@ -14,4 +14,4 @@ jobs:
         ssh -o StrictHostKeyChecking=no \
             -i ${{ secrets.SSH_KEY_PATH }} \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
-            "cd /path/to/project && git pull && ~/silentium-education/deploy.sh"
+            "cd ~ && git pull && ~/silentium-education/deploy.sh"
