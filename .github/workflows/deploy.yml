@@ -1,0 +1,17 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Execute remote commands via SSH
+      run: |
+        ssh -o StrictHostKeyChecking=no \
+            -i ${{ secrets.SSH_KEY_PATH }} \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
+            "cd /path/to/project && git pull && ~/silentium-education/deploy.sh"
