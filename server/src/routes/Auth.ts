@@ -163,14 +163,14 @@ export function Auth($req: MessageType<IncomingMessage>) {
                   key: Path($body, "username"),
                 }),
               );
-              All($body, $options, $config).then(
-                async ([data, options, config]) => {
+              All($body, $options, $config, $req).then(
+                async ([data, options, config, req]) => {
                   let verification;
                   try {
                     verification = await verifyRegistrationResponse({
                       response: data.data,
                       expectedChallenge: options.challenge,
-                      expectedOrigin: config.origin,
+                      expectedOrigin: req.headers["origin"] ?? config.origin,
                       expectedRPID: config.rpID,
                       requireUserVerification: false,
                     });
@@ -262,8 +262,8 @@ export function Auth($req: MessageType<IncomingMessage>) {
                 }),
               );
               const $config = PassKeyConfig();
-              All($body, $passkey, $options, $config).then(
-                async ([body, passkey, options, config]) => {
+              All($body, $passkey, $options, $config, $req).then(
+                async ([body, passkey, options, config, req]) => {
                   if (!passkey) {
                     transport({
                       status: 400,
@@ -275,7 +275,7 @@ export function Auth($req: MessageType<IncomingMessage>) {
                     const verification = await verifyAuthenticationResponse({
                       response: body.data as any,
                       expectedChallenge: options.challenge,
-                      expectedOrigin: config.origin,
+                      expectedOrigin: req.headers["origin"] ?? config.origin,
                       expectedRPID: config.rpID,
                       requireUserVerification: false,
                       credential: {

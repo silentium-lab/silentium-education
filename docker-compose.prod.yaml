@@ -1,5 +1,4 @@
 services:
-  # MongoDB сервис
   mongodb:
     image: mongo:6
     container_name: silentium-mongodb-prod
@@ -13,11 +12,10 @@ services:
       - ./server/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     networks:
       - silentium-network
-    # Не экспортируем порт в проде для безопасности
+    # Don't export for security reasons
     ports:
       - "27017:27017"
 
-  # Node.js бэкенд сервис
   backend:
     build:
       context: ./server
@@ -28,8 +26,7 @@ services:
       - NODE_ENV=production
       - MONGODB_URI=mongodb://${MONGO_ROOT_USERNAME:-admin}:${MONGO_ROOT_PASSWORD:-password}@mongodb:27017/${MONGO_DATABASE:-silentium}?authSource=admin
       - PORT=4000
-    ports:
-      - "${BACKEND_PORT:-4000}:4000"
+    # Don't export for security reasons
     depends_on:
       - mongodb
     networks:
@@ -41,7 +38,6 @@ services:
       retries: 3
       start_period: 40s
 
-  # Frontend сервис
   frontend:
     build:
       context: ./client
