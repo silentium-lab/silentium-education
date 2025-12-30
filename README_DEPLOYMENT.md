@@ -93,10 +93,15 @@ MONGO_DATABASE=silentium
 
 # Application Ports
 BACKEND_PORT=4000
-FRONTEND_PORT=80
+FRONTEND_PORT=443
+
+# Domain for SSL certificates
+DOMAIN=yourdomain.com
 ```
 
 **Важно:** Используйте сильные пароли для MongoDB!
+
+**SSL Настройка:** Замените `yourdomain.com` на ваш реальный домен. Убедитесь, что DNS записи указывают на ваш сервер.
 
 ### 3. Сборка и запуск контейнеров
 
@@ -152,10 +157,32 @@ docker-compose -f docker-compose.prod.yaml logs -f
 podman-compose -f docker-compose.prod.yaml logs -f
 ```
 
-### 5. Проверка доступности приложения
+### 5. Настройка SSL сертификатов Let's Encrypt
 
-- Frontend: http://your-server-ip
-- Backend API: http://your-server-ip:4000
+После первого запуска контейнеров выполните следующие шаги для получения SSL сертификатов:
+
+```bash
+# Запустите certbot для получения сертификатов
+docker compose -f docker-compose.prod.yaml run --rm certbot
+
+# После успешного получения сертификатов перезапустите frontend
+docker compose -f docker-compose.prod.yaml restart frontend
+```
+
+**Важно:**
+- Убедитесь, что ваш домен указывает на IP сервера
+- Порт 80 должен быть открыт для ACME challenge
+- Для автоматического обновления сертификатов добавьте cron job:
+
+```bash
+# Добавьте в crontab (crontab -e)
+0 12 * * * /usr/bin/docker compose -f /path/to/silentium-education/docker-compose.prod.yaml run --rm certbot && /usr/bin/docker compose -f /path/to/silentium-education/docker-compose.prod.yaml restart frontend
+```
+
+### 6. Проверка доступности приложения
+
+- Frontend: https://yourdomain.com
+- Backend API: http://your-server-ip:4000 (внутренний доступ)
 - Health check: http://your-server-ip:4000/health
 
 ## Управление развертыванием
@@ -208,17 +235,20 @@ podman-compose -f docker-compose.prod.yaml up -d
 | MONGO_ROOT_PASSWORD | Пароль пользователя MongoDB | password |
 | MONGO_DATABASE | Имя базы данных | silentium |
 | BACKEND_PORT | Порт бэкенда | 4000 |
-| FRONTEND_PORT | Порт фронтенда | 80 |
+| FRONTEND_PORT | Порт фронтенда | 443 |
+| DOMAIN | Домен для SSL сертификатов | yourdomain.com |
 
 ### Порты
 
-- **Frontend (Nginx)**: 80 (HTTP)
+- **Frontend (Nginx)**: 443 (HTTPS), 80 (HTTP для редиректа и ACME)
 - **Backend (Node.js)**: 4000 (HTTP)
 - **MongoDB**: Не экспортируется наружу для безопасности
 
 ### Volumes
 
 - `mongodb_data`: Хранит данные MongoDB
+- `letsencrypt_certs`: Хранит SSL сертификаты Let's Encrypt
+- `letsencrypt_webroot`: Веб-корень для ACME challenge
 
 ## Безопасность
 
