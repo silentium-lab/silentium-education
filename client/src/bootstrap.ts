@@ -18,7 +18,10 @@ DevTools();
 AppliedDestructured(
   All(ContextOf("request"), {
     params: {
-      baseUrl: location.origin,
+      baseUrl:
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:4000"
+          : location.origin,
     },
   }),
   merge,
