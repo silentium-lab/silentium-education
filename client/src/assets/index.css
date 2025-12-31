@@ -78,5 +78,27 @@ body {
       border: solid 1px #ccc;
       white-space: pre;
     }
+
+    blockquote {
+      @apply text-gray-400 pl-2 border-l-4;
+    }
+
+    ol {
+      @apply pl-6 mb-3;
+      list-style-type: decimal;
+
+      li {
+        @apply mb-1;
+      }
+    }
+
+    ul {
+      @apply pl-6 mb-3;
+      list-style-type: disc;
+
+      li {
+        @apply mb-1;
+      }
+    }
   }
 }
