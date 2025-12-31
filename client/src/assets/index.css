@@ -34,7 +34,7 @@ body {
   }
 
   hr {
-    @apply bg-gray-300 border-gray-300 mb-2
+    @apply bg-gray-300 border-gray-300 mb-6 mt-6
   }
 
   button:disabled {
