@@ -14,7 +14,6 @@ export function Header() {
       >
         ${t.raw(logoSrc)} ${t.raw(Lang(Of("mr-auto")))}
         <nav class="flex gap-2 flex-wrap">
-          ${t.raw(Link(Of("/about"), Tr("about"), Of("underline")))}
           ${t.raw(
             Link(Of("/documentation"), Tr("documentation"), Of("underline")),
           )}

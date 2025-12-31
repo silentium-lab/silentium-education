@@ -21,10 +21,6 @@ export const $router = Shared(
         message: Home,
       },
       {
-        pattern: "^/about$",
-        message: About,
-      },
-      {
         pattern: "^/documentation$|^/documentation.*/list$",
         message: Documentation,
       },
