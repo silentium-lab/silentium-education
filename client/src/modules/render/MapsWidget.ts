@@ -10,7 +10,7 @@ export function MapsWidget(_base: MaybeMessage<string>) {
     return base.replace(/\[map\?url=(.*?)\]/gs, (_, url) => {
       return html`
         <div class="articles-in-article">
-          <iframe src="${url}" border="0" height="500" width="100%" />
+          <iframe src="${url}" border="0" height="500" width="100%"></iframe>
         </div>
       `;
     });
