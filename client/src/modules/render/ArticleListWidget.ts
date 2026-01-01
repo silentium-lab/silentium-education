@@ -1,6 +1,7 @@
 import { CategoryArticlesWithMeta } from "@/models/categories/CategoryArticles";
 import { List } from "@/modules/app/common/List";
 import { html } from "@/modules/plugins/lang/html";
+import { ArticleType } from "@/types/ArticleType";
 import { ActualMessage, Applied, Map, MaybeMessage } from "silentium";
 import { Path, Template } from "silentium-components";
 
@@ -13,7 +14,10 @@ export function ArticleListWidget(_base: MaybeMessage<string>) {
     return Template((t) =>
       base.replace(/\[articles\?category=(.*?)\]/gs, (_, code) => {
         const $categoryArticles = CategoryArticlesWithMeta(code);
-        const $articles = Path<unknown[]>($categoryArticles, "data");
+        const $articles = Applied(
+          Path<ArticleType[]>($categoryArticles, "data", []),
+          (items) => items.toSorted((a, b) => a.order - b.order),
+        );
         const $categoryTitle = Path<string>(
           $categoryArticles,
           "meta.category.title",

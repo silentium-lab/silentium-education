@@ -7,6 +7,7 @@ import { Context } from "silentium";
 export function ArticleNew() {
   Context("title").chain(Tr("Create article"));
   return TemplateNew(ArticleConfig(), Tr("Articles"), ArticleForm, {
+    order: undefined,
     title: undefined,
     description: undefined,
     content: undefined,

@@ -23,6 +23,7 @@ export function ArticleForm(
   $form: MessageSourceType<ArticleType>,
   validated: SourceType<boolean>,
 ) {
+  const $order = Part<string>($form, "order");
   const $title = Part<string>($form, "title");
   const $description = Part<string>($form, "description");
   const $content = Part<string>($form, "content");
@@ -42,6 +43,7 @@ export function ArticleForm(
       category_id: [RequiredTr],
       section_id: [],
       code: [],
+      order: [],
     }),
   );
   const $validated = Computed(Validated, $errors);
@@ -50,6 +52,13 @@ export function ArticleForm(
   return Template(
     (t) =>
       html`<div class="mb-2">
+        <div class="mb-2">
+          <div class="font-bold">
+            ${t.escaped(Tr("Sort order"))}:
+            ${t.raw(Mount(Error("order", $errors), "span"))}
+          </div>
+          ${t.raw(Input($order))}
+        </div>
         <div class="mb-2">
           <div class="font-bold">
             ${t.escaped(Tr("Name"))}:
