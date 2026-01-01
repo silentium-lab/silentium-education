@@ -53,6 +53,7 @@ services:
     volumes:
       - letsencrypt_certs:/etc/letsencrypt
       - letsencrypt_webroot:/var/www/html
+      - ./static:/var/www/static:ro
     depends_on:
       - backend
     networks:
