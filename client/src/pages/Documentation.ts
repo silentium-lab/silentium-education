@@ -14,7 +14,7 @@ export function Documentation() {
   const $categories = CategoriesOfSection("docs");
   const $url = Context("url");
   const $code = Default<string>(
-    Computed(SegmentBetween, $url, "documentation/", "/view"),
+    Computed(SegmentBetween, $url, "documentation/", "/list"),
     "",
   );
   const $articles = Shared(
