@@ -12,7 +12,7 @@ export function Footer() {
         class="py-2 flex justify-between items-center gap-2 flex-wrap"
       >
         <span>
-          ${t.escaped(Of(new Date().getFullYear().toString()))} &copy;
+          2025 - ${t.escaped(Of(new Date().getFullYear().toString()))} &copy;
         </span>
         <div class="px-2 mr-auto">
           ${t.raw(
