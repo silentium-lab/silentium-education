@@ -32,7 +32,7 @@ export async function JSCodeResult(code: string, selector: string) {
         const url = URL.createObjectURL(blob);
         await import(url);
         URL.revokeObjectURL(url);
-        result.innerHTML = logs.join("\n");
+        result.innerHTML = logs.join("<br>");
       } catch (e) {
         result.innerHTML = "Error: " + e.message;
       }
