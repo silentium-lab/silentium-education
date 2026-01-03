@@ -34,6 +34,7 @@ export function ArticleListWidget(_base: MaybeMessage<string>) {
                       (c) =>
                         html`<div class="mb-2">
                           <a href="/article/${c.code}/view"> ${c.title} </a>
+                          <p>${c.description}</p>
                         </div>`,
                     );
                   }),
