@@ -32,10 +32,12 @@ export function ArticleListWidget(_base: MaybeMessage<string>) {
                     return Applied(
                       article,
                       (c) =>
-                        html`<div class="mb-2">
-                          <a href="/article/${c.code}/view"> ${c.title} </a>
-                          <p>${c.description}</p>
-                        </div>`,
+                        html`<article class="mb-2">
+                          <div class="article-title mb-1">
+                            <a href="/article/${c.code}/view"> ${c.title} </a>
+                          </div>
+                          <p class="text-small">${c.description}</p>
+                        </article>`,
                     );
                   }),
                 ),
