@@ -1,3 +1,4 @@
+import { omit } from "lodash-es";
 import { MongoClient } from "mongodb";
 import { ContextType } from "silentium";
 
@@ -38,7 +39,7 @@ export function MongoTransport(url: string) {
             }
           }
           context.result?.({
-            data: result,
+            data: result.map((item: object) => omit(item, ["data"])),
             meta: { total },
           });
         } catch (e) {
