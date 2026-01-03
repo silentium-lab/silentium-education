@@ -39,7 +39,9 @@ export function MongoTransport(url: string) {
             }
           }
           context.result?.({
-            data: result.map((item: object) => omit(item, ["data"])),
+            data: Array.isArray(result)
+              ? result.map((item: object) => omit(item, ["data"]))
+              : omit(result, ["data"]),
             meta: { total },
           });
         } catch (e) {
