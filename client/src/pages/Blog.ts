@@ -25,7 +25,7 @@ export function Blog() {
     (t) =>
       html`<div class="article">
         <h1>${t.escaped($title)}</h1>
-        <div class="flex gap-2">
+        <div class="flex gap-4">
           <div class="flex-1 max-w-34">
             ${t.raw(
               List(
