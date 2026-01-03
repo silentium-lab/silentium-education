@@ -6,7 +6,6 @@ import {
   ActualMessage,
   Connected,
   MaybeMessage,
-  Of,
   Shared,
   SourceType,
 } from "silentium";
@@ -16,7 +15,7 @@ export function Button(
   $label: MaybeMessage<string>,
   $class: MaybeMessage<string>,
   click: SourceType,
-  $attributes: MaybeMessage<string> = Of(""),
+  $attributes: MaybeMessage<string> = "",
   value?: unknown,
 ) {
   const $id = Shared(Id());
@@ -34,7 +33,7 @@ export function Button(
             ActualMessage($class),
           )} cursor-pointer"
         >
-          ${t.escaped(ActualMessage($label))}
+          ${t.raw(ActualMessage($label))}
         </button>`,
     ),
     clicked,
