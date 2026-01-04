@@ -25,7 +25,7 @@ export function ArticleListWidget(_base: MaybeMessage<string>) {
         return html`
           <div class="articles-in-article">
             <h3>${t.escaped($categoryTitle)}</h3>
-            <div class="grid grid-cols-3 gap-2">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
               ${t.raw(
                 List(
                   Map($articles, (article: any) => {
