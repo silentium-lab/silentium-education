@@ -33,8 +33,8 @@
     "Loading...": "Подождите...",
     "Press Run to see result": "Нажмите Запуск, чтобы увидеть результат",
     "Parent category": "Родительская категория",
-    "blog": "Блог",
-    "documentation": "Документация",
+    "Blog": "Блог",
+    "Documentation": "Документация",
     "System configuration": "Конфигурирование системы",
     "Saved successfully": "Успешно сохранено",
     "Before using the admin panel, you need to configure the server. Specify the required parameters.": "Перед использованием панели администратора необходимо провести конфигурацию сервера, Укажите обязательные параметры",
@@ -42,6 +42,6 @@
     "title": "Название",
     "Must be greater than": "Должно быть длиннее чем ",
     "Field required": "Обязательное поле",
-    "tg_group": "Телеграм группа"
+    "Telegram group": "Телеграм группа"
   }
 }

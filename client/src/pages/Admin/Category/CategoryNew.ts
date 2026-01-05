@@ -1,7 +1,7 @@
 import { TemplateNew } from "@/modules/app/template/TemplateNew";
+import { Tr } from "@/modules/I18n";
 import { CategoryConfig } from "@/pages/Admin/Category/CategoryConfig";
 import { CategoryForm } from "@/pages/Admin/Category/CategoryForm";
-import { Tr } from "@/store";
 import { Context } from "silentium";
 
 export function CategoryNew() {

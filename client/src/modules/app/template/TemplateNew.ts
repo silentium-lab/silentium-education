@@ -4,9 +4,9 @@ import { Link } from "@/components/ui/Link";
 import { CRUDCreated } from "@/modules/app/crud/CRUDCreated";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
+import { Tr } from "@/modules/I18n";
 import { html } from "@/modules/plugins/lang/html";
 import { Mount } from "@/modules/render/Mount";
-import { Tr } from "@/store";
 import {
   Any,
   Applied,

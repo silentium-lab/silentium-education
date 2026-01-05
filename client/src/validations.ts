@@ -1,4 +1,4 @@
-import { Tr } from "@/store";
+import { Tr } from "@/modules/I18n";
 import { Of } from "silentium";
 import { Concatenated } from "silentium-components";
 import { Required } from "silentium-validation";

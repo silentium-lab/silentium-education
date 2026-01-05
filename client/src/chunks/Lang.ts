@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/Button";
 import { html } from "@/modules/plugins/lang/html";
-import { $lang } from "@/store";
-import { Applied, Late, Local, MessageType, Of } from "silentium";
+import { Applied, Context, Late, Local, MessageType, Of } from "silentium";
 import { Constant, Template } from "silentium-components";
+
+const $lang = Context<string>("lang");
 
 const Active = (lang: string) =>
   Applied(Local($lang), (l) => (l === lang ? "font-bold" : ""));

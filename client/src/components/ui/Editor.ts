@@ -24,8 +24,7 @@ const EditorValue = (
   Shared(
     Message<string>((resolve, reject) => {
       const dc = DestroyContainer();
-
-      All($el, Any(Once($value), ""))
+      All($el, $value)
         .catch(reject)
         .then(([element, value]) => {
           dc.destroy();
@@ -72,7 +71,7 @@ const EditorValue = (
 export function Editor($value: MessageSourceType<string>) {
   const $id = Shared(Id());
   const $el = Shared(Element<HTMLInputElement>(ClassName($id)));
-  const $editorValue = EditorValue($el, $value);
+  const $editorValue = EditorValue($el, Any("", Once($value)));
   $value.chain($editorValue);
   return Connected(
     Template((t) => html`<textarea class="${t.escaped($id)}"></textarea>`),

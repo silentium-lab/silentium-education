@@ -1,25 +1,34 @@
-import {
-  ActualMessage,
-  All,
-  Applied,
-  MaybeMessage,
-  MessageType,
-} from "silentium";
+import { get } from "lodash-es";
+import { ActualMessage, All, Applied, Context, MaybeMessage } from "silentium";
 
-/**
- * Representation of static translation texts
- */
-export const i18n = (
-  langSrc: MessageType<string>,
-  translationsSrc: MessageType<Record<string, Record<string, string>>>,
-) => ({
-  tr: (field: MaybeMessage<string>) => {
-    const $field = ActualMessage(field);
-    return Applied(
-      All(langSrc, translationsSrc, $field),
-      ([l, translations, field]) => {
-        return translations?.[l]?.[field] ?? field;
-      },
-    );
-  },
-});
+const $lang = Context<string>("lang");
+const $translations = Context<Record<string, any>>("translations");
+
+export function Tr(field: MaybeMessage<string>) {
+  const $field = ActualMessage(field);
+  return Applied(
+    All($lang, $translations, $field),
+    ([l, translations, field]) => {
+      return translations?.[l]?.[field] ?? field;
+    },
+  );
+}
+
+export function TrDynamic(
+  basePath: string,
+  translatedPath: string,
+  lang: string,
+) {
+  return lang === "ru" ? basePath : translatedPath.replaceAll("$l", lang);
+}
+
+export function TrDynamicValue(
+  record: any,
+  basePath: string,
+  translatedPath: string,
+  lang: string,
+) {
+  return lang === "ru"
+    ? record[basePath]
+    : (get(record, translatedPath.replaceAll("$l", lang)) ?? record[basePath]);
+}

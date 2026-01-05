@@ -1,7 +1,7 @@
 import { TemplateNew } from "@/modules/app/template/TemplateNew";
+import { Tr } from "@/modules/I18n";
 import { ArticleConfig } from "@/pages/Admin/Article/ArticleConfig";
 import { ArticleForm } from "@/pages/Admin/Article/ArticleForm";
-import { Tr } from "@/store";
 import { Context } from "silentium";
 
 export function ArticleNew() {

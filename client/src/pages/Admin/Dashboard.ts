@@ -1,6 +1,6 @@
 import { NewContext } from "@/modules/context/Context";
+import { Tr } from "@/modules/I18n";
 import { html } from "@/modules/plugins/lang/html";
-import { Tr } from "@/store";
 import { Context, Void } from "silentium";
 import { Template } from "silentium-components";
 

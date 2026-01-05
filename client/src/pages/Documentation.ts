@@ -2,15 +2,24 @@ import { CategoriesOfSection } from "@/models/categories/CategoriesOfSection";
 import { CategoryArticles } from "@/models/categories/CategoryArticles";
 import { SectionArticles } from "@/models/sections/SectionArticles";
 import { List } from "@/modules/app/common/List";
+import { Tr, TrDynamicValue } from "@/modules/I18n";
 import { ListFilled } from "@/modules/list/ListFilled";
 import { html } from "@/modules/plugins/lang/html";
 import { SegmentBetween } from "@/modules/string/SegmentBetween";
-import { Tr } from "@/store";
-import { Applied, Computed, Context, Default, Map, Shared } from "silentium";
+import {
+  All,
+  Applied,
+  Computed,
+  Context,
+  Default,
+  Map,
+  Shared,
+} from "silentium";
 import { BranchLazy, Template } from "silentium-components";
 
 export function Documentation() {
-  const $title = Context<string>("title").chain(Tr("documentation"));
+  const $lang = Context<string>("lang");
+  const $title = Context<string>("title").chain(Tr("Documentation"));
   const $categories = CategoriesOfSection("docs");
   const $url = Context("url");
   const $code = Default<string>(
@@ -34,10 +43,12 @@ export function Documentation() {
               List(
                 Map($categories, (category: any) => {
                   return Applied(
-                    category,
-                    (c) =>
+                    All(category, $lang),
+                    ([c, l]) =>
                       html`<div>
-                        <a href="/documentation/${c.code}/list"> ${c.title} </a>
+                        <a href="/documentation/${c.code}/list">
+                          ${TrDynamicValue(c, "title", "$l.title", l)}
+                        </a>
                       </div>`,
                   );
                 }),
@@ -52,13 +63,22 @@ export function Documentation() {
                   List(
                     Map($articles, (article: any) => {
                       return Applied(
-                        article,
-                        (c) =>
+                        All(article, $lang),
+                        ([c, l]) =>
                           html`<div class="mb-2">
                             <h4>
-                              <a href="/article/${c.code}/view"> ${c.title} </a>
+                              <a href="/article/${c.code}/view">
+                                ${TrDynamicValue(c, "title", "$l.title", l)}
+                              </a>
                             </h4>
-                            <p>${c.description}</p>
+                            <p>
+                              ${TrDynamicValue(
+                                c,
+                                "description",
+                                "$l.description",
+                                l,
+                              )}
+                            </p>
                           </div>`,
                       );
                     }),

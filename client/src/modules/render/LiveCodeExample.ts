@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/Button";
 import { html } from "@/modules/plugins/lang/html";
 import { JSCodeResult } from "@/modules/render/JSCodeResult";
-import { Tr } from "@/store";
 import { decode } from "html-entities";
 import {
   Applied,
@@ -16,6 +15,7 @@ import { v4 } from "uuid";
 import hljs from "highlight.js/lib/core";
 import javascript from "highlight.js/lib/languages/javascript";
 import "highlight.js/styles/github-dark.min.css";
+import { Tr } from "@/modules/I18n";
 
 hljs.registerLanguage("javascript", javascript);
 

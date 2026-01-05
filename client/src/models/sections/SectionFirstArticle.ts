@@ -1,9 +1,12 @@
 import { ServerResponse } from "@/modules/app/ServerResponse";
+import { TrDynamic } from "@/modules/I18n";
 import { Markable } from "@/modules/plugins/markable/Markable";
-import { Computed, Context } from "silentium";
+import { partial } from "lodash-es";
+import { Applied, Computed, Context } from "silentium";
 import { Path } from "silentium-components";
 
 export function SectionFirstArticle(section: string) {
+  const $lang = Context<string>("lang");
   return Computed(
     Markable,
     Path<string>(
@@ -16,7 +19,7 @@ export function SectionFirstArticle(section: string) {
           },
         }),
       ),
-      "0.content",
+      Applied($lang, partial(TrDynamic, "0.content", "0.$l.content")),
       "",
     ),
   );

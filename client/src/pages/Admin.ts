@@ -1,13 +1,13 @@
 import { Logout } from "@/modules/app/common/Logout";
 import { ClickedId } from "@/modules/ClickedId";
 import { FromContext } from "@/modules/context/Context";
+import { Tr } from "@/modules/I18n";
 import { html } from "@/modules/plugins/lang/html";
 import { ArticleRouter } from "@/pages/Admin/Article/ArticleRouter";
 import { Auth } from "@/pages/Admin/Auth";
 import { CategoryRouter } from "@/pages/Admin/Category/CategoryRouter";
 import { Dashboard } from "@/pages/Admin/Dashboard";
 import { SectionRouter } from "@/pages/Admin/Section/SectionRouter";
-import { Tr } from "@/store";
 import { Connected, Context, Filtered, Late, Of } from "silentium";
 import { Detached, Polling, Router, Template } from "silentium-components";
 import { Log } from "silentium-web-api";

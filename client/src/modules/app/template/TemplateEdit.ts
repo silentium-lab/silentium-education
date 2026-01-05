@@ -5,10 +5,10 @@ import { CRUDEntity } from "@/modules/app/crud/CRUDEntity";
 import { CRUDUpdated } from "@/modules/app/crud/CRUDUpdated";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
+import { Tr } from "@/modules/I18n";
 import { html } from "@/modules/plugins/lang/html";
 import { Mount } from "@/modules/render/Mount";
 import { SplitPart } from "@/modules/string/SplitPart";
-import { Tr } from "@/store";
 import { omit, partialRight } from "lodash-es";
 import {
   Any,
@@ -85,7 +85,7 @@ export function TemplateEdit(
             <b>id: </b>
             ${t.escaped($id)}
           </div>
-          ${t.raw(form($form, $validated))}
+          ${t.raw(Mount(form($form, $validated)))}
         </div>
         ${t.raw(
           Mount(

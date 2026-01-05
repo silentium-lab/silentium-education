@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { Tr } from "@/modules/I18n";
 import { html } from "@/modules/plugins/lang/html";
-import { Tr } from "@/store";
 import { MessageSourceType, Of, SourceType } from "silentium";
 import { Part, Template } from "silentium-components";
 

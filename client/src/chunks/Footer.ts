@@ -1,7 +1,7 @@
 import { logoSrc } from "@/chunks/Logo";
 import { LinkExternal } from "@/components/ui/LinkExternal";
+import { Tr } from "@/modules/I18n";
 import { html } from "@/modules/plugins/lang/html";
-import { Tr } from "@/store";
 import { Of } from "silentium";
 import { Template } from "silentium-components";
 
@@ -16,7 +16,7 @@ export function Footer() {
         </span>
         <div class="px-2 mr-auto">
           ${t.raw(
-            LinkExternal(Of("https://t.me/silentium_js"), Tr("tg_group")),
+            LinkExternal(Of("https://t.me/silentium_js"), Tr("Telegram group")),
           )}
         </div>
         ${t.raw(logoSrc)}

@@ -4,10 +4,10 @@ import { ListPaginated } from "@/models/common/ListPaginated";
 import { PagesRange } from "@/models/common/PagesRange";
 import { TemplateItem } from "@/modules/app/template/TemplateItem";
 import { TemplateList } from "@/modules/app/template/TemplateList";
+import { Tr } from "@/modules/I18n";
 import { html } from "@/modules/plugins/lang/html";
 import { ArticleConfig } from "@/pages/Admin/Article/ArticleConfig";
 import { ArticleFilter } from "@/pages/Admin/Article/ArticleFilter";
-import { Tr } from "@/store";
 import { join, partialRight } from "lodash-es";
 import {
   Applied,

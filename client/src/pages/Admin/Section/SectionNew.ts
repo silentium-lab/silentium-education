@@ -1,7 +1,7 @@
 import { TemplateNew } from "@/modules/app/template/TemplateNew";
+import { Tr } from "@/modules/I18n";
 import { SectionConfig } from "@/pages/Admin/Section/SectionConfig";
 import { SectionForm } from "@/pages/Admin/Section/SectionForm";
-import { Tr } from "@/store";
 import { Context } from "silentium";
 
 export function SectionNew() {

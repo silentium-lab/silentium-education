@@ -3,9 +3,9 @@ import { Error } from "@/components/ui/Error";
 import { InputId } from "@/components/ui/Input";
 import { CRUDCreated } from "@/modules/app/crud/CRUDCreated";
 import { ServerResponse } from "@/modules/app/ServerResponse";
+import { Tr } from "@/modules/I18n";
 import { html } from "@/modules/plugins/lang/html";
 import { Mount } from "@/modules/render/Mount";
-import { Tr } from "@/store";
 import { MinLength, RequiredTr } from "@/validations";
 import { startAuthentication } from "@simplewebauthn/browser";
 import {

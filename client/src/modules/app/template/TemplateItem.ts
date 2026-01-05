@@ -3,9 +3,9 @@ import { Link } from "@/components/ui/Link";
 import { CRUDDeleted } from "@/modules/app/crud/CRUDDeleted";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
 import { ClickedId } from "@/modules/ClickedId";
+import { Tr } from "@/modules/I18n";
 import { html } from "@/modules/plugins/lang/html";
 import { Encoded } from "@/modules/string/Encoded";
-import { Tr } from "@/store";
 import {
   ActualMessage,
   Late,

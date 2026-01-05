@@ -1,8 +1,8 @@
 import { Lang } from "@/chunks/Lang";
 import { logoSrc } from "@/chunks/Logo";
 import { Link } from "@/components/ui/Link";
+import { Tr } from "@/modules/I18n";
 import { html } from "@/modules/plugins/lang/html";
-import { Tr } from "@/store";
 import { Of } from "silentium";
 import { Template } from "silentium-components";
 
@@ -15,9 +15,9 @@ export function Header() {
         ${t.raw(logoSrc)} ${t.raw(Lang(Of("mr-auto")))}
         <nav class="flex gap-2 flex-wrap">
           ${t.raw(
-            Link(Of("/documentation"), Tr("documentation"), Of("underline")),
+            Link(Of("/documentation"), Tr("Documentation"), Of("underline")),
           )}
-          ${t.raw(Link(Of("/blog"), Tr("blog"), Of("underline")))}
+          ${t.raw(Link(Of("/blog"), Tr("Blog"), Of("underline")))}
         </nav>
       </header>`,
   );
