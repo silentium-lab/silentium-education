@@ -1,4 +1,4 @@
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/Button";
 import { html } from "@/modules/plugins/lang/html";
 import { $lang } from "@/store";
 import { Applied, Late, Local, MessageType, Of } from "silentium";

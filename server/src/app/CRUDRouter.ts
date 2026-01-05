@@ -2,7 +2,6 @@ import { IncomingMessage } from "http";
 import {
   Any,
   Catch,
-  Chainable,
   Computed,
   Context,
   Late,
@@ -42,7 +41,7 @@ export const CRUDRouter = (
             Race(Computed(UrlParams, $url), Tick(Of({}))),
             ["title", "code", "page", "limit"],
           );
-          Chainable($error).chain(Path(Catch($filter) as any, "message"));
+          $error.chain(Path(Catch($filter) as any, "message"));
           const $data = Shared(ListWithMeta(collectionName, $filter));
           return Truncated(
             Record({

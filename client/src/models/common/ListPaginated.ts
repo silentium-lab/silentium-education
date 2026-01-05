@@ -1,13 +1,5 @@
 import { merge } from "lodash-es";
-import {
-  Any,
-  Chainable,
-  Computed,
-  Late,
-  MessageSourceType,
-  New,
-  Once,
-} from "silentium";
+import { Any, Computed, Late, MessageSourceType, New, Once } from "silentium";
 import {
   Constant,
   Loading,
@@ -30,12 +22,11 @@ export function ListPaginated(
   const $filter = Late(filterValues());
   const $error = Late();
 
-  Chainable($filter).chain(Polling(New(filterValues), $reset));
+  $filter.chain(Polling(New(filterValues), $reset));
   const $page = Late(1);
 
   const $actualSearch = Any($search, Tick($reset));
-  Chainable($page).chain(Constant(1, $actualSearch));
-
+  $page.chain(Constant(1, $actualSearch));
   $page.then(Log("page"));
 
   const $listFilter = Tick(

@@ -1,7 +1,7 @@
-import { Button } from "@/components/Button";
-import { Error } from "@/components/Error";
-import { InputId } from "@/components/Input";
-import { CRUD } from "@/modules/app/CRUD";
+import { Button } from "@/components/ui/Button";
+import { Error } from "@/components/ui/Error";
+import { InputId } from "@/components/ui/Input";
+import { CRUDCreated } from "@/modules/app/crud/CRUDCreated";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { html } from "@/modules/plugins/lang/html";
 import { Mount } from "@/modules/render/Mount";
@@ -31,7 +31,8 @@ export function Auth() {
 
   const $loginStart = Shared(
     ServerResponse(
-      CRUD(Of("auth/login/start")).created(
+      CRUDCreated(
+        Of("auth/login/start"),
         Shot(Record({ username: $username }), $authenticated),
       ),
     ),
@@ -46,7 +47,8 @@ export function Auth() {
 
   const $loginFinish = Shared(
     ServerResponse(
-      CRUD(Of("auth/login/finish")).created(
+      CRUDCreated(
+        Of("auth/login/finish"),
         Record({
           data: $authData,
           username: $username,

@@ -1,17 +1,17 @@
-import { Checkbox } from "@/components/Checkbox";
-import { Editor } from "@/components/Editor";
-import { Error } from "@/components/Error";
-import { Input } from "@/components/Input";
-import { Select } from "@/components/Select";
-import { Textarea } from "@/components/Textarea";
-import { Categories } from "@/models/categories/Categries";
+import { Checkbox } from "@/components/ui/Checkbox";
+import { Editor } from "@/components/ui/Editor";
+import { Error } from "@/components/ui/Error";
+import { Input } from "@/components/ui/Input";
+import { Select } from "@/components/ui/Select";
+import { Textarea } from "@/components/ui/Textarea";
+import { Categories } from "@/models/categories/Categories";
 import { Sections } from "@/models/sections/Sections";
 import { html } from "@/modules/plugins/lang/html";
 import { Mount } from "@/modules/render/Mount";
 import { Tr } from "@/store";
 import type { ArticleType } from "@/types/ArticleType";
 import { RequiredTr } from "@/validations";
-import { Chainable, Computed, MessageSourceType, SourceType } from "silentium";
+import { Computed, MessageSourceType, SourceType } from "silentium";
 import { Memo, Part, Template } from "silentium-components";
 import {
   Validated,
@@ -47,7 +47,7 @@ export function ArticleForm(
     }),
   );
   const $validated = Computed(Validated, $errors);
-  Chainable(validated).chain(Memo($validated));
+  validated.chain(Memo($validated));
 
   return Template(
     (t) =>

@@ -1,7 +1,7 @@
-import { Button } from "@/components/Button";
-import { Error } from "@/components/Error";
-import { InputId } from "@/components/Input";
-import { CRUD } from "@/modules/app/CRUD";
+import { Button } from "@/components/ui/Button";
+import { Error } from "@/components/ui/Error";
+import { InputId } from "@/components/ui/Input";
+import { CRUDCreated } from "@/modules/app/crud/CRUDCreated";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { html } from "@/modules/plugins/lang/html";
 import { Mount } from "@/modules/render/Mount";
@@ -77,7 +77,8 @@ export function ConfigurationBehavior() {
   const $username = Late<string>("");
   const $regStart = Shared(
     ServerResponse(
-      CRUD("auth/registration/start").created(
+      CRUDCreated(
+        "auth/registration/start",
         Shot(Record({ username: $username }), $register),
       ),
     ),
@@ -93,7 +94,8 @@ export function ConfigurationBehavior() {
 
   const $regFinish = Shared(
     ServerResponse(
-      CRUD(Of("auth/registration/finish")).created(
+      CRUDCreated(
+        Of("auth/registration/finish"),
         Record({
           data: $authData,
           username: $username,

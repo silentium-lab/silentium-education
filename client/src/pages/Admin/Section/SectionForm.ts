@@ -1,12 +1,12 @@
-import { Checkbox } from "@/components/Checkbox";
-import { Error } from "@/components/Error";
-import { Input } from "@/components/Input";
+import { Checkbox } from "@/components/ui/Checkbox";
+import { Error } from "@/components/ui/Error";
+import { Input } from "@/components/ui/Input";
 import { html } from "@/modules/plugins/lang/html";
 import { Mount } from "@/modules/render/Mount";
 import { Tr } from "@/store";
 import type { ArticleType } from "@/types/ArticleType";
 import { RequiredTr } from "@/validations";
-import { Chainable, Computed, MessageSourceType, SourceType } from "silentium";
+import { Computed, MessageSourceType, SourceType } from "silentium";
 import { Memo, Part, Template } from "silentium-components";
 import {
   Validated,
@@ -30,7 +30,7 @@ export function SectionForm(
     }),
   );
   const $validated = Computed(Validated, $errors);
-  Chainable(validated).chain(Memo($validated));
+  validated.chain(Memo($validated));
 
   return Template(
     (t) =>

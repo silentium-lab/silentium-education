@@ -6,7 +6,6 @@ import "easymde/dist/easymde.min.css";
 import {
   All,
   Any,
-  Chainable,
   Connected,
   DestroyContainer,
   Message,
@@ -74,7 +73,7 @@ export function Editor($value: MessageSourceType<string>) {
   const $id = Shared(Id());
   const $el = Shared(Element<HTMLInputElement>(ClassName($id)));
   const $editorValue = EditorValue($el, $value);
-  Chainable($value).chain($editorValue);
+  $value.chain($editorValue);
   return Connected(
     Template((t) => html`<textarea class="${t.escaped($id)}"></textarea>`),
     $editorValue,

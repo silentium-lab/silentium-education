@@ -1,6 +1,6 @@
 import { Footer } from "@/chunks/Footer";
 import { Header } from "@/chunks/Header";
-import { Notifications } from "@/components/Notifications";
+import { Notifications } from "@/components/ui/Notifications";
 import { html } from "@/modules/plugins/lang/html";
 import { MountPoint } from "@/modules/render/MountPoint";
 import { MessageType, Of } from "silentium";

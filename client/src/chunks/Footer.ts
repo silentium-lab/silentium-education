@@ -1,5 +1,5 @@
 import { logoSrc } from "@/chunks/Logo";
-import { LinkExternal } from "@/components/LinkExternal";
+import { LinkExternal } from "@/components/ui/LinkExternal";
 import { html } from "@/modules/plugins/lang/html";
 import { Tr } from "@/store";
 import { Of } from "silentium";

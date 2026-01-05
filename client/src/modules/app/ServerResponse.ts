@@ -1,6 +1,9 @@
 import { MessageType } from "silentium";
 import { FromJson, Path } from "silentium-components";
 
+/**
+ * Raw response from server as js object
+ */
 export function ServerAllResponse($base: MessageType<string>) {
   return FromJson($base);
 }

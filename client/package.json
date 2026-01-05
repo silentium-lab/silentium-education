@@ -48,7 +48,7 @@
     "lodash-es": "^4.17.21",
     "marked": "^17.0.1",
     "mustache": "^4.2.0",
-    "silentium": "^0.0.188",
+    "silentium": "^0.0.190",
     "silentium-components": "^0.0.100",
     "silentium-morphdom": "^0.0.24",
     "silentium-validation": "^0.0.4",

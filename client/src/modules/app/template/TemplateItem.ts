@@ -1,6 +1,6 @@
 import { $notification } from "@/bootstrap";
-import { Link } from "@/components/Link";
-import { CRUD } from "@/modules/app/CRUD";
+import { Link } from "@/components/ui/Link";
+import { CRUDDeleted } from "@/modules/app/crud/CRUDDeleted";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
 import { ClickedId } from "@/modules/ClickedId";
 import { html } from "@/modules/plugins/lang/html";
@@ -37,7 +37,8 @@ export function TemplateItem(
 
   const localItem = Detached<any>($item);
   const $removed = Shared<string>(
-    CRUD(Path($config, "model")).deleted(
+    CRUDDeleted(
+      Path($config, "model"),
       Shot(Once(Path(localItem, "_id")), Once(removeTrigger)),
     ),
   );

@@ -1,6 +1,6 @@
 import { Lang } from "@/chunks/Lang";
 import { logoSrc } from "@/chunks/Logo";
-import { Link } from "@/components/Link";
+import { Link } from "@/components/ui/Link";
 import { html } from "@/modules/plugins/lang/html";
 import { Tr } from "@/store";
 import { Of } from "silentium";

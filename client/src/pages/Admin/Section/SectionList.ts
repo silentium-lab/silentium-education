@@ -1,4 +1,4 @@
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/Button";
 import { ListPaginated } from "@/models/common/ListPaginated";
 import { PagesRange } from "@/models/common/PagesRange";
 import { TemplateItem } from "@/modules/app/template/TemplateItem";

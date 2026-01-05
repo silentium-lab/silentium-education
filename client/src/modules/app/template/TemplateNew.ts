@@ -1,7 +1,7 @@
 import { $notification } from "@/bootstrap";
-import { Button } from "@/components/Button";
-import { Link } from "@/components/Link";
-import { CRUD } from "@/modules/app/CRUD";
+import { Button } from "@/components/ui/Button";
+import { Link } from "@/components/ui/Link";
+import { CRUDCreated } from "@/modules/app/crud/CRUDCreated";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
 import { html } from "@/modules/plugins/lang/html";
@@ -45,7 +45,7 @@ export function TemplateNew(
   const $form = Late<any>(defaultForm);
 
   const $formUpdated = Shared<any>(
-    ServerResponse(CRUD(Path($config, "model")).created(Shot($form, $clicked))),
+    ServerResponse(CRUDCreated(Path($config, "model"), Shot($form, $clicked))),
   );
   const formUpdateLoadingSrc = Any(Loading($clicked, $formUpdated), Of(false));
 

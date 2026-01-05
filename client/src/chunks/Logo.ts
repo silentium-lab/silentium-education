@@ -1,5 +1,5 @@
 import { Of } from "silentium";
-import { Link } from "@/components/Link";
+import { Link } from "@/components/ui/Link";
 import { html } from "@/modules/plugins/lang/html";
 
 export const logoSrc = Link(

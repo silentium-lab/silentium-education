@@ -1,4 +1,4 @@
-import { InputId } from "@/components/Input";
+import { InputId } from "@/components/ui/Input";
 import { html } from "@/modules/plugins/lang/html";
 import { MessageSourceType } from "silentium";
 import { Template } from "silentium-components";

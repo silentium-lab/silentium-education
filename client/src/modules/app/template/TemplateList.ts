@@ -1,5 +1,5 @@
-import { Link } from "@/components/Link";
-import { CRUD } from "@/modules/app/CRUD";
+import { Link } from "@/components/ui/Link";
+import { CRUDList } from "@/modules/app/crud/CRUDList";
 import { ServerMeta, ServerResponse } from "@/modules/app/ServerResponse";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
 import { html } from "@/modules/plugins/lang/html";
@@ -27,7 +27,8 @@ export function TemplateList(
 ) {
   const $reload = Late<any>();
   const $listResponse = Shared<string>(
-    CRUD(Path($config, "model")).list(
+    CRUDList(
+      Path($config, "model"),
       Any(Polling<any>(Applied($filter, clone), $reload), $filter),
     ),
   );

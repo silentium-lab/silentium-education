@@ -1,5 +1,5 @@
-import { Button } from "@/components/Button";
 import { Published } from "@/components/common/Published";
+import { Button } from "@/components/ui/Button";
 import { ListPaginated } from "@/models/common/ListPaginated";
 import { PagesRange } from "@/models/common/PagesRange";
 import { TemplateItem } from "@/modules/app/template/TemplateItem";
@@ -12,7 +12,6 @@ import { join, partialRight } from "lodash-es";
 import {
   Applied,
   Catch,
-  Chainable,
   Computed,
   Context,
   Late,
@@ -52,8 +51,7 @@ export function ArticleList() {
     $list,
   );
   $filter.chain(list.$listFilter);
-  Chainable(list.$error).chain(Catch($list));
-
+  list.$error.chain(Catch($list));
   const $pages = Computed(PagesRange, $total, list.limit);
 
   return Template(

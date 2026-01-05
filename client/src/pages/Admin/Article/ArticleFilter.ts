@@ -1,5 +1,5 @@
-import { Button } from "@/components/Button";
-import { Input } from "@/components/Input";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import { html } from "@/modules/plugins/lang/html";
 import { Tr } from "@/store";
 import { MessageSourceType, Of, SourceType } from "silentium";

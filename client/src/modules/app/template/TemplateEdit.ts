@@ -1,7 +1,8 @@
 import { $notification } from "@/bootstrap";
-import { Button } from "@/components/Button";
-import { Link } from "@/components/Link";
-import { CRUD } from "@/modules/app/CRUD";
+import { Button } from "@/components/ui/Button";
+import { Link } from "@/components/ui/Link";
+import { CRUDEntity } from "@/modules/app/crud/CRUDEntity";
+import { CRUDUpdated } from "@/modules/app/crud/CRUDUpdated";
 import { ServerResponse } from "@/modules/app/ServerResponse";
 import { TemplateConfig } from "@/modules/app/template/TemplateConfig";
 import { html } from "@/modules/plugins/lang/html";
@@ -47,14 +48,14 @@ export function TemplateEdit(
   const $localUrl = Detached($url);
   const $id = Shared(SplitPart($localUrl, Of("/"), Of(3)));
   const $article = Shared(
-    ServerResponse(CRUD(Path($config, "model")).entity($id)),
+    ServerResponse(CRUDEntity(Path($config, "model"), $id)),
   );
   const $clicked = Late();
   const $form = Late<any>();
 
   const $formUpdated = Shared(
     ServerResponse(
-      CRUD(Path($config, "model")).updated($id, Shot($form, $clicked)),
+      CRUDUpdated(Path($config, "model"), $id, Shot($form, $clicked)),
     ),
   );
   const $formUpdateLoading = Any(Loading($clicked, $formUpdated), false);

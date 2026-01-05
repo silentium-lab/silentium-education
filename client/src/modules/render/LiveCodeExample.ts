@@ -1,4 +1,4 @@
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/Button";
 import { html } from "@/modules/plugins/lang/html";
 import { JSCodeResult } from "@/modules/render/JSCodeResult";
 import { Tr } from "@/store";
