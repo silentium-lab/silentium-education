@@ -29,7 +29,7 @@ export function NewSid($sid: MessageType) {
             createdAt: 1,
           }),
           {
-            expireAfterSeconds: 3600,
+            expireAfterSeconds: 3600 * 24,
           },
         ),
       }),
