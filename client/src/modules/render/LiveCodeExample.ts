@@ -16,6 +16,7 @@ import hljs from "highlight.js/lib/core";
 import javascript from "highlight.js/lib/languages/javascript";
 import "highlight.js/styles/github-dark.min.css";
 import { Tr } from "@/modules/I18n";
+import { Mount } from "@/modules/render/Mount";
 
 hljs.registerLanguage("javascript", javascript);
 
@@ -48,14 +49,16 @@ export function LiveCodeExample($html: MessageType<string>) {
             <pre>${highlightedCode}</pre>
             <div>
               ${t.raw(
-                Button(Tr("Run"), "btn mb-2", $run, "", [
-                  decode(code),
-                  `.id_${id}`,
-                ]),
+                Mount(
+                  Button(Tr("Run"), "btn mb-2", $run, "", [
+                    decode(code),
+                    `.id_${id}`,
+                  ]),
+                ),
               )}
             </div>
             <div class="result border-gray-700 border-2 mb-2 p-2 id_${id}">
-              ${t.escaped(Tr("Press Run to see result"))}
+              ${t.raw(Mount(Tr("Press Run to see result")))}
             </div>
           `;
         },
