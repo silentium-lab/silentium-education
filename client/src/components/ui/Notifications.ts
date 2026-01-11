@@ -1,6 +1,6 @@
 import { $notification } from "@/bootstrap";
 import { html } from "@/modules/plugins/lang/html";
-import { Applied, Late, Of, Primitive } from "silentium";
+import { Applied, Late } from "silentium";
 import {
   Constant,
   Path,
@@ -9,7 +9,6 @@ import {
   Template,
   Tick,
 } from "silentium-components";
-import { Log } from "silentium-web-api";
 
 export function Notifications() {
   const $notified = Late(false);
@@ -17,7 +16,6 @@ export function Notifications() {
   $notified.chain(
     Constant(false, Polling<unknown>(Task(NaN, 5000), $notification)),
   );
-  $notification.then(Log("notification"));
   return Template(
     (t) =>
       html`<div

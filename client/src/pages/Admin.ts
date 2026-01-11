@@ -10,7 +10,6 @@ import { Dashboard } from "@/pages/Admin/Dashboard";
 import { SectionRouter } from "@/pages/Admin/Section/SectionRouter";
 import { Connected, Context, Filtered, Late, Of } from "silentium";
 import { Detached, Polling, Router, Template } from "silentium-components";
-import { Log } from "silentium-web-api";
 
 export function Admin() {
   Context("title").use("Админ панель");
@@ -21,8 +20,6 @@ export function Admin() {
   const result = Late<string>();
 
   result.chain(Polling<string>(Auth(), $error));
-
-  $error.then(Log("login error"));
 
   const rd = Router(
     $localUrl,

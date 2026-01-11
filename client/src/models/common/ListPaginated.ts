@@ -9,7 +9,6 @@ import {
   RecordTruncated,
   Tick,
 } from "silentium-components";
-import { Log } from "silentium-web-api";
 
 export function ListPaginated(
   filterValues: () => any,
@@ -27,7 +26,6 @@ export function ListPaginated(
 
   const $actualSearch = Any($search, Tick($reset));
   $page.chain(Constant(1, $actualSearch));
-  $page.then(Log("page"));
 
   const $listFilter = Tick(
     Polling(

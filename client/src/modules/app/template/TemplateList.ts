@@ -29,7 +29,10 @@ export function TemplateList(
   const $listResponse = Shared<string>(
     CRUDList(
       Path($config, "model"),
-      Any(Polling<any>(Applied($filter, clone), $reload), $filter),
+      Any(
+        Polling<any>(Applied($filter, clone), $reload),
+        Applied($filter, clone),
+      ),
     ),
   );
   const $list = Shared(ServerResponse($listResponse));

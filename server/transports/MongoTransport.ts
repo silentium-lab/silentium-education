@@ -1,4 +1,4 @@
-import { omit } from "lodash-es";
+import { merge, omit } from "lodash-es";
 import { MongoClient } from "mongodb";
 import { ContextType } from "silentium";
 
@@ -21,8 +21,9 @@ export function MongoTransport(url: string) {
           const collection = db.collection(
             context.params?.collection ?? "unknown",
           );
-          const total = await collection.countDocuments({});
           const args = context.params?.args ?? [];
+          const argsObject = merge({}, ...args);
+          const total = await collection.countDocuments(argsObject);
           const method = context.params?.method;
           let result = await (collection as any)[method](...args);
           const postProcess = context.params?.postProcess;
@@ -42,7 +43,7 @@ export function MongoTransport(url: string) {
             data: Array.isArray(result)
               ? result.map((item: object) => omit(item, ["data"]))
               : omit(result, ["data"]),
-            meta: { total },
+            meta: { total, time: Date.now() },
           });
         } catch (e) {
           context.error?.(e);
