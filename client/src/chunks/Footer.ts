@@ -14,6 +14,14 @@ export function Footer() {
         <span>
           2025 - ${t.escaped(Of(new Date().getFullYear().toString()))} &copy;
         </span>
+        <div class="px-2">
+          ${t.raw(
+            LinkExternal(
+              Of("mailto:support@silentium.pw"),
+              Of("support@silentium.pw"),
+            ),
+          )}
+        </div>
         <div class="px-2 mr-auto">
           ${t.raw(
             LinkExternal(Of("https://t.me/silentium_js"), Tr("Telegram group")),
