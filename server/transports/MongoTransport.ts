@@ -23,7 +23,9 @@ export function MongoTransport(url: string) {
           );
           const args = context.params?.args ?? [];
           const argsObject = merge({}, ...args);
-          const total = await collection.countDocuments(argsObject);
+          const total = await collection.countDocuments(
+            argsObject.$set ? {} : argsObject,
+          );
           const method = context.params?.method;
           let result = await (collection as any)[method](...args);
           const postProcess = context.params?.postProcess;
