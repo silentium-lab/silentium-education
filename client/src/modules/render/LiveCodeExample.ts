@@ -17,6 +17,7 @@ import javascript from "highlight.js/lib/languages/javascript";
 import "highlight.js/styles/github-dark.min.css";
 import { Tr } from "@/modules/I18n";
 import { Mount } from "@/modules/render/Mount";
+import { JSIsolatedCodeResult } from "@/modules/render/JSIsolatedCodeResult";
 
 hljs.registerLanguage("javascript", javascript);
 
@@ -36,11 +37,13 @@ export function LiveCodeExample($html: MessageType<string>) {
       });
       $run.use(ResetSilenceCache as any);
     });
-    AppliedDestructured($run, JSCodeResult).then(Void());
+    AppliedDestructured($run, (type, ...args: [string, string]) =>
+      type === "js-iso" ? JSIsolatedCodeResult(...args) : JSCodeResult(...args),
+    ).then(Void());
     return Template((t) =>
       _html.replace(
-        /<pre><code class\="language-js">(.*?)<\/code><\/pre>/gs,
-        (_, code) => {
+        /<pre><code class\="language-(?<type>(js|js-iso))">(?<code>.*?)<\/code><\/pre>/gs,
+        (_, __, type, code) => {
           const id = v4();
           const highlightedCode = hljs.highlight(decode(code), {
             language: "javascript",
@@ -51,6 +54,7 @@ export function LiveCodeExample($html: MessageType<string>) {
               ${t.raw(
                 Mount(
                   Button(Tr("Run"), "btn mb-2", $run, "", [
+                    type,
                     decode(code),
                     `.id_${id}`,
                   ]),
