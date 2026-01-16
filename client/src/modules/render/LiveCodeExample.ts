@@ -27,10 +27,10 @@ hljs.registerLanguage("javascript", javascript);
  */
 export function LiveCodeExample($html: MessageType<string>) {
   return Applied($html, (_html: string) => {
-    const $run = Late<[string, string]>();
+    const $run = Late<[string, string, string, string]>();
     $run.then((v) => {
       Tr("Loading...").then((label) => {
-        const el = document.querySelector(v[1]);
+        const el = document.querySelector(v[2]);
         if (el) {
           el.innerHTML = label;
         }
