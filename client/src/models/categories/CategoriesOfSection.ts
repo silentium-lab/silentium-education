@@ -1,5 +1,5 @@
 import { ServerResponse } from "@/modules/app/ServerResponse";
-import { ActualMessage, Context, MaybeMessage, Shared } from "silentium";
+import { Actual, Context, MaybeMessage, Shared } from "silentium";
 import { Record } from "silentium-components";
 
 export function CategoriesOfSection(code: MaybeMessage<string>) {
@@ -11,7 +11,7 @@ export function CategoriesOfSection(code: MaybeMessage<string>) {
           method: "get",
           model: "categories",
           query: Record({
-            sectionCode: ActualMessage(code),
+            sectionCode: Actual(code),
           }),
         }),
       ),

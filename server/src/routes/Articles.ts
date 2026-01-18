@@ -53,3 +53,23 @@ export function Articles() {
     ),
   });
 }
+
+export function ArticlesUnpublished() {
+  const $req = Context<IncomingMessage>("request");
+  const $params = Computed(RequestParams, $req);
+
+  const $code = Path($params, "code");
+  const $article = First(
+    List(
+      "documents",
+      Record({
+        code: $code,
+      }),
+    ),
+  );
+
+  return Record({
+    data: $article,
+    meta: Of({}),
+  });
+}

@@ -1,12 +1,6 @@
 import { CRUDTransport } from "@/modules/app/crud/CRUDTransport";
 import { NewContext } from "@/modules/context/Context";
-import {
-  ActualMessage,
-  Context,
-  MaybeMessage,
-  MessageType,
-  Of,
-} from "silentium";
+import { Actual, Context, MaybeMessage, MessageType, Of } from "silentium";
 import { Concatenated, Record } from "silentium-components";
 
 export function CRUDUpdated<R = unknown>(
@@ -14,7 +8,7 @@ export function CRUDUpdated<R = unknown>(
   $id: MessageType<string>,
   $form: MessageType,
 ) {
-  const $model = ActualMessage(model);
+  const $model = Actual(model);
   return Context<R>(
     CRUDTransport(),
     Record({

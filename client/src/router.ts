@@ -1,7 +1,7 @@
-import { About } from "@/pages/About";
 import { Admin } from "@/pages/Admin";
 import { AdminAuthGuard } from "@/pages/Admin/AdminAuthGuard";
 import { AdminConfigGuard } from "@/pages/Admin/AdminConfigGuard";
+import { ArticlePreview } from "@/pages/ArticlePreview";
 import { ArticleView } from "@/pages/ArticleView";
 import { Blog } from "@/pages/Blog";
 import { Documentation } from "@/pages/Documentation";
@@ -31,6 +31,10 @@ export const $router = Shared(
       {
         pattern: "^/article.*/view$",
         message: ArticleView,
+      },
+      {
+        pattern: "^/article.*/preview$",
+        message: ArticlePreview,
       },
       {
         pattern: "/admin.*",

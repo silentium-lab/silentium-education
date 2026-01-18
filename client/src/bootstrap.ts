@@ -6,7 +6,7 @@ import { FetchAPITransport } from "@/transports/FetchAPITransport";
 import { merge } from "lodash-es";
 import {
   All,
-  AppliedDestructured,
+  Destructured,
   ContextChain,
   ContextOf,
   DevTools,
@@ -18,7 +18,7 @@ import translations from "@/data/translations.json";
 
 DevTools();
 
-AppliedDestructured(
+Destructured(
   All(ContextOf("request"), {
     params: {
       baseUrl:

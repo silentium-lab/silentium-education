@@ -1,13 +1,13 @@
 import { CRUDTransport } from "@/modules/app/crud/CRUDTransport";
 import { NewContext } from "@/modules/context/Context";
-import { ActualMessage, Context, MaybeMessage, MessageType } from "silentium";
+import { Actual, Context, MaybeMessage, MessageType } from "silentium";
 import { Record } from "silentium-components";
 
 export function CRUDCustom<R = unknown>(
   model: MaybeMessage<string>,
   $search?: MessageType<Record<string, unknown>>,
 ) {
-  const $model = ActualMessage(model);
+  const $model = Actual(model);
   return Context<R>(
     CRUDTransport(),
     Record({

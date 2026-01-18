@@ -2,13 +2,7 @@ import {
   ServerAllResponse,
   ServerResponse,
 } from "@/modules/app/ServerResponse";
-import {
-  ActualMessage,
-  Context,
-  Default,
-  MaybeMessage,
-  Shared,
-} from "silentium";
+import { Actual, Context, Default, MaybeMessage, Shared } from "silentium";
 import { Record } from "silentium-components";
 
 export function CategoryArticles(category: MaybeMessage<string>) {
@@ -21,7 +15,7 @@ export function CategoryArticles(category: MaybeMessage<string>) {
             method: "get",
             model: "articles",
             query: Record({
-              category: ActualMessage(category),
+              category: Actual(category),
             }),
           }),
         ),
@@ -41,7 +35,7 @@ export function CategoryArticlesWithMeta(category: MaybeMessage<string>) {
             method: "get",
             model: "articles",
             query: Record({
-              category: ActualMessage(category),
+              category: Actual(category),
             }),
           }),
         ),

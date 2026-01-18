@@ -1,3 +1,4 @@
+import { Loading } from "@/components/ui/Loading";
 import { CategoriesOfSection } from "@/models/categories/CategoriesOfSection";
 import { CategoryArticles } from "@/models/categories/CategoryArticles";
 import { SectionArticles } from "@/models/sections/SectionArticles";
@@ -29,45 +30,49 @@ export function Blog() {
         <div class="flex gap-4">
           <div class="flex-1 max-w-34">
             ${t.raw(
-              List(
-                Map($categories, (category: any) => {
-                  return Applied(
-                    All(category, $lang),
-                    ([c, l]) =>
-                      html`<div>
-                        <a href="/blog/${c.code}/list">
-                          ${TrDynamicValue(c, "title", "$l.title", l)}
-                        </a>
-                      </div>`,
-                  );
-                }),
+              Loading(
+                List(
+                  Map($categories, (category: any) => {
+                    return Applied(
+                      All(category, $lang),
+                      ([c, l]) =>
+                        html`<div>
+                          <a href="/blog/${c.code}/list">
+                            ${TrDynamicValue(c, "title", "$l.title", l)}
+                          </a>
+                        </div>`,
+                    );
+                  }),
+                ),
               ),
             )}
           </div>
           <div class="column-right">
             ${t.raw(
-              List(
-                Map($articles, (article: any) => {
-                  return Applied(
-                    All(article, $lang),
-                    ([c, l]) =>
-                      html`<div class="mb-2">
-                        <h4>
-                          <a href="/article/${c.code}/view">
-                            ${TrDynamicValue(c, "title", "$l.title", l)}
-                          </a>
-                        </h4>
-                        <p>
-                          ${TrDynamicValue(
-                            c,
-                            "description",
-                            "$l.description",
-                            l,
-                          )}
-                        </p>
-                      </div>`,
-                  );
-                }),
+              Loading(
+                List(
+                  Map($articles, (article: any) => {
+                    return Applied(
+                      All(article, $lang),
+                      ([c, l]) =>
+                        html`<div class="mb-2">
+                          <h4>
+                            <a href="/article/${c.code}/view">
+                              ${TrDynamicValue(c, "title", "$l.title", l)}
+                            </a>
+                          </h4>
+                          <p>
+                            ${TrDynamicValue(
+                              c,
+                              "description",
+                              "$l.description",
+                              l,
+                            )}
+                          </p>
+                        </div>`,
+                    );
+                  }),
+                ),
               ),
             )}
           </div>

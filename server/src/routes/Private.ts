@@ -5,6 +5,7 @@ import { NotFoundSrc } from "../../store";
 import { CRUDRouter } from "../app/CRUDRouter";
 import { Query } from "../modules/string/Query";
 import { Logout } from "./Logout";
+import { ArticlesUnpublished } from "./Articles";
 
 export function Private() {
   const $req = Context<IncomingMessage>("request");
@@ -26,6 +27,10 @@ export function Private() {
         {
           pattern: "^.+:/private/articles.*$",
           message: () => CRUDRouter("/private/articles", "documents"),
+        },
+        {
+          pattern: "^.+:/private/article.*$",
+          message: ArticlesUnpublished,
         },
         {
           pattern: "^.+:/private/categories.*$",

@@ -1,3 +1,4 @@
+import { Loading } from "@/components/ui/Loading";
 import { SectionFirstArticle } from "@/models/sections/SectionFirstArticle";
 import { Tr } from "@/modules/I18n";
 import { html } from "@/modules/plugins/lang/html";
@@ -16,7 +17,7 @@ export function Home() {
     Template(
       (t) =>
         html`<section class="article">
-          ${t.raw(LiveCodeExample($section))}
+          ${t.raw(Loading(LiveCodeExample($section)))}
         </section>`,
     ),
     Widgets,

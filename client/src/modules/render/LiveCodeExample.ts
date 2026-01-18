@@ -4,7 +4,7 @@ import { JSCodeResult } from "@/modules/render/JSCodeResult";
 import { decode } from "html-entities";
 import {
   Applied,
-  AppliedDestructured,
+  Destructured,
   Late,
   MessageType,
   ResetSilenceCache,
@@ -37,7 +37,7 @@ export function LiveCodeExample($html: MessageType<string>) {
       });
       $run.use(ResetSilenceCache as any);
     });
-    AppliedDestructured($run, (type, ...args: [string, string]) =>
+    Destructured($run, (type, ...args: [string, string]) =>
       type === "js-iso" ? JSIsolatedCodeResult(...args) : JSCodeResult(...args),
     ).then(Void());
     return Template((t) =>

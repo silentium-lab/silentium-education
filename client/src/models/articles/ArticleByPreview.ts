@@ -16,34 +16,33 @@ import {
 } from "silentium";
 import { Path, Record } from "silentium-components";
 
-export function ArticleByCode(code: MessageType<string>) {
+export function ArticleByPreview(code: MessageType<string>) {
   const $lang = Context<string>("lang");
   const $resp = Shared<string>(
     Context(
       "request",
       Record({
         method: "get",
-        model: "articles",
+        model: "private/article",
         query: Record({
           code,
         }),
+        credentials: "include",
       }),
     ),
   );
   const $error = Catch($resp);
-  return Shared(
-    Computed(
-      Markable,
-      Default(
-        Empty(
-          Path<string>(
-            ServerResponse($resp),
-            Applied($lang, partial(TrDynamic, "content", "$l.content")),
-          ),
-          $error,
+  return Computed(
+    Markable,
+    Default(
+      Empty(
+        Path<string>(
+          ServerResponse($resp),
+          Applied($lang, partial(TrDynamic, "content", "$l.content")),
         ),
-        Lazy(NotFound),
+        $error,
       ),
+      Lazy(NotFound),
     ),
   );
 }

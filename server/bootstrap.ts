@@ -1,7 +1,7 @@
 import { merge } from "lodash-es";
 import {
   All,
-  AppliedDestructured,
+  Destructured,
   ContextChain,
   ContextOf,
   DevTools,
@@ -11,7 +11,7 @@ import { MongoTransport } from "./transports/MongoTransport";
 
 DevTools();
 
-AppliedDestructured(
+Destructured(
   All(ContextOf("db"), {
     params: {
       dbName: "myapp",
@@ -19,6 +19,12 @@ AppliedDestructured(
   }),
   merge,
 ).then(MongoTransport(process.env.MONGODB_URI ?? ""));
+
+ContextOf("trackable").then((v) => {
+  if (v?.params?.action === "value") {
+    console.log("trackable: ", JSON.stringify(v));
+  }
+});
 
 ContextOf("cache").then(CacheTransport());
 

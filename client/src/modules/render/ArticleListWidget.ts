@@ -4,14 +4,7 @@ import { TrDynamic, TrDynamicValue } from "@/modules/I18n";
 import { html } from "@/modules/plugins/lang/html";
 import { ArticleType } from "@/types/ArticleType";
 import { partial } from "lodash-es";
-import {
-  ActualMessage,
-  All,
-  Applied,
-  Context,
-  Map,
-  MaybeMessage,
-} from "silentium";
+import { Actual, All, Applied, Context, Map, MaybeMessage } from "silentium";
 import { Path, Template } from "silentium-components";
 
 /**
@@ -19,7 +12,7 @@ import { Path, Template } from "silentium-components";
  */
 export function ArticleListWidget(_base: MaybeMessage<string>) {
   const $lang = Context<string>("lang");
-  const $base = ActualMessage(_base);
+  const $base = Actual(_base);
   return Applied($base, (base) => {
     return Template((t) =>
       base.replace(/\[articles\?category=(.*?)\]/gs, (_, code) => {

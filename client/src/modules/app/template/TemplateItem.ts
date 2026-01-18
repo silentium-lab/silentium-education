@@ -7,7 +7,7 @@ import { Tr } from "@/modules/I18n";
 import { html } from "@/modules/plugins/lang/html";
 import { Encoded } from "@/modules/string/Encoded";
 import {
-  ActualMessage,
+  Actual,
   Late,
   MaybeMessage,
   MessageType,
@@ -71,7 +71,7 @@ export function TemplateItem(
                 $config: Path($config, "path"),
               }),
             ),
-            ActualMessage($titleField ?? Encoded(Path($item, "title"))),
+            Actual($titleField ?? Encoded(Path($item, "title"))),
             Of("underline"),
           ),
         )}

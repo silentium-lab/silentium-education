@@ -1,4 +1,4 @@
-import { ActualMessage, Applied, MaybeMessage } from "silentium";
+import { Actual, Applied, MaybeMessage } from "silentium";
 
 const escapeMap = {
   "&": "&amp;",
@@ -13,7 +13,7 @@ const escapeMap = {
  * String with html encoded
  */
 export function Encoded(_base: MaybeMessage<string>) {
-  const $base = ActualMessage(_base);
+  const $base = Actual(_base);
   return Applied($base, (b) =>
     b.replace(
       /[&<>"'/]/g,

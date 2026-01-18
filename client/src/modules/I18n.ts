@@ -1,11 +1,11 @@
 import { get } from "lodash-es";
-import { ActualMessage, All, Applied, Context, MaybeMessage } from "silentium";
+import { Actual, All, Applied, Context, MaybeMessage } from "silentium";
 
 const $lang = Context<string>("lang");
 const $translations = Context<Record<string, any>>("translations");
 
 export function Tr(field: MaybeMessage<string>) {
-  const $field = ActualMessage(field);
+  const $field = Actual(field);
   return Applied(
     All($lang, $translations, $field),
     ([l, translations, field]) => {

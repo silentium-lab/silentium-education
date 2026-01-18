@@ -1,11 +1,11 @@
 import { html } from "@/modules/plugins/lang/html";
-import { ActualMessage, Applied, MaybeMessage } from "silentium";
+import { Actual, Applied, MaybeMessage } from "silentium";
 
 /**
  * Maps widget searches for [map?url=...]
  */
 export function MapsWidget(_base: MaybeMessage<string>) {
-  const $base = ActualMessage(_base);
+  const $base = Actual(_base);
   return Applied($base, (base) => {
     return base.replace(/\[map\?url=(.*?)\]/gs, (_, url) => {
       return html`

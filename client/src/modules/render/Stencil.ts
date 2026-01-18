@@ -1,5 +1,5 @@
 import {
-  ActualMessage,
+  Actual,
   All,
   Applied,
   ConstructorType,
@@ -27,7 +27,7 @@ export function Stencil(
 ) {
   const $src = Late<string>();
   if (typeof src === "string" || isMessage(src)) {
-    $src.chain(ActualMessage(src));
+    $src.chain(Actual(src));
   }
   const t = new StencilImpl($src);
 
