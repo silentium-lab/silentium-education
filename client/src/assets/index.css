@@ -78,6 +78,7 @@ body {
       @apply p-2 bg-gray-700 text-gray-50;
       border: solid 1px #ccc;
       white-space: pre;
+      overflow-y: auto;
     }
 
     blockquote {
