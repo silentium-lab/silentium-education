@@ -31,13 +31,18 @@ export function ArticleByCode(code: MessageType<string>) {
     ),
   );
   const $error = Catch($resp);
+  const $title = Context("title");
+  const $articleData = ServerResponse($resp);
+  $title.chain(
+    Path($articleData, Applied($lang, partial(TrDynamic, "title", "$l.title"))),
+  );
   return Shared(
     Computed(
       Markable,
       Default(
         Empty(
           Path<string>(
-            ServerResponse($resp),
+            $articleData,
             Applied($lang, partial(TrDynamic, "content", "$l.content")),
           ),
           $error,
